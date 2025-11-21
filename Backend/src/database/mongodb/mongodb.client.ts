@@ -1,4 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 let db: Db | null;
@@ -14,7 +15,8 @@ export async function initMongoDB(configService: ConfigService): Promise<Db> {
 
     db = client.db(dbName);
 
-    console.log(`MongoDB connected → ${dbName}`);
+    const logger = new Logger('MongoDBClient');
+    logger.log(`MongoDB connected → ${dbName}`);
   }
 
   return db;
