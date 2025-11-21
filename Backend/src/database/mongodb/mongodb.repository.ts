@@ -15,9 +15,13 @@ export abstract class MongoDBRepo {
   ) {}
 
   async findOne(filter: Document): Promise<WithId<Document> | null> {
-    console.log(this.db);
     const collection = this.db.collection(this.collectionName);
     return await collection.findOne(filter);
+  }
+
+  async findMany(filter: Document): Promise<WithId<Document>[] | null> {
+    const collection = this.db.collection(this.collectionName);
+    return await collection.find(filter).toArray();
   }
 
   async insertOne(data: Document): Promise<InsertOneResult<Document>> {

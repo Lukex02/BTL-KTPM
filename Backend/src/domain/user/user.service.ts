@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { NotFoundException, Injectable } from '@nestjs/common';
 import { MongoUserRepo } from './user.repository';
 import { User } from './models/user.models';
+import { ChangePasswordDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class FindUserById {
   constructor(private readonly userRepo: MongoUserRepo) {}
 
   async execute(userId: string): Promise<User | null> {
-    return await this.userRepo.findById(userId);
+    const user = await this.userRepo.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 }
 
@@ -16,7 +19,23 @@ export class FindUserByUsername {
   constructor(private readonly userRepo: MongoUserRepo) {}
 
   async execute(username: string): Promise<User | null> {
-    return await this.userRepo.findByUsername(username);
+    const user = await this.userRepo.findByUsername(username);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+}
+
+@Injectable()
+export class ChangeUserPassword {
+  constructor(private readonly userRepo: MongoUserRepo) {}
+
+  async execute(userId: string, update: ChangePasswordDto): Promise<String> {
+    const res = await this.userRepo.changePassword(userId, update);
+    if (res.modifiedCount) {
+      return 'Password changed';
+    } else {
+      throw new NotFoundException("Couldn't change password");
+    }
   }
 }
 
@@ -29,7 +48,7 @@ export class CreateUser {
     if (res.insertedId) {
       return 'User created';
     } else {
-      return 'Error creating user';
+      throw new NotFoundException("Couldn't create user");
     }
   }
 }
@@ -43,7 +62,7 @@ export class UpdateUser {
     if (res.modifiedCount) {
       return 'User updated';
     } else {
-      return 'Error updating user';
+      throw new NotFoundException("Couldn't update user");
     }
   }
 }
@@ -57,7 +76,47 @@ export class DeleteUser {
     if (res.deletedCount) {
       return 'User deleted';
     } else {
-      return 'Error deleting user';
+      throw new NotFoundException("Couldn't delete user");
     }
+  }
+}
+
+// Facade
+@Injectable()
+export class UserService {
+  constructor(
+    private readonly findUserById: FindUserById,
+    private readonly findUserByUsername: FindUserByUsername,
+    private readonly changeUserPassword: ChangeUserPassword,
+    private readonly createUser: CreateUser,
+    private readonly updateUser: UpdateUser,
+    private readonly deleteUser: DeleteUser,
+  ) {}
+
+  async findById(userId: string): Promise<User | null> {
+    return await this.findUserById.execute(userId);
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.findUserByUsername.execute(username);
+  }
+
+  async changePassword(
+    userId: string,
+    update: ChangePasswordDto,
+  ): Promise<String> {
+    return await this.changeUserPassword.execute(userId, update);
+  }
+
+  async create(user: User): Promise<String> {
+    return await this.createUser.execute(user);
+  }
+
+  async update(userId: string, update: UpdateUserDto): Promise<String> {
+    return await this.updateUser.execute(userId, update);
+  }
+
+  async delete(userId: string): Promise<String> {
+    return await this.deleteUser.execute(userId);
   }
 }
