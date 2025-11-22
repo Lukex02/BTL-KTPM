@@ -23,6 +23,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  OmitType,
 } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Quiz } from './models/assessment.models';
@@ -51,7 +52,7 @@ export class AssessmentController {
 
   @Get('ai/gen')
   @ApiOperation({ summary: 'Generate quiz with AI' })
-  @ApiOkResponse({ type: Quiz })
+  @ApiOkResponse({ type: OmitType(Quiz, ['id']) })
   async generateQuizAI(@Query() request: GenQuizRequestDto) {
     return await this.assessmentService.generateQuizAI(request);
   }
