@@ -10,7 +10,7 @@ import {
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
-import { JwtAccessGuard } from 'src/common/jwt/jwt.access.guard';
+import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
 import { ObjectIdPipe } from 'src/common/pipe/objectid.pipe';
 
 @UseGuards(JwtAccessGuard)

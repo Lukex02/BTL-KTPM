@@ -50,14 +50,14 @@ export class UpdateUserDto {
 
   @ApiProperty({
     description: 'User name',
-    example: 'NgVanA',
+    example: 'Nguyen Van A',
     required: false,
   })
   name?: string;
 
   @ApiProperty({
     description: 'User email',
-    example: 'NgVanA',
+    example: 'ngvana@gmail.com',
     required: false,
   })
   email?: string;
