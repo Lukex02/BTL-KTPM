@@ -35,10 +35,13 @@ export class ChangeUserPassword {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string, update: ChangePasswordDto): Promise<String> {
+  async execute(
+    userId: string,
+    update: ChangePasswordDto,
+  ): Promise<{ message: string }> {
     const res = await this.userRepo.changePassword(userId, update);
     if (res.modifiedCount) {
-      return 'Password changed';
+      return { message: 'Password changed successfully' };
     } else {
       throw new NotFoundException("Couldn't change password");
     }
@@ -51,10 +54,10 @@ export class CreateUser {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(user: User): Promise<String> {
+  async execute(user: User): Promise<{ message: string }> {
     const res = await this.userRepo.createUser(user);
     if (res.insertedId) {
-      return 'User created';
+      return { message: 'User created' };
     } else {
       throw new NotFoundException("Couldn't create user");
     }
@@ -67,10 +70,10 @@ export class UpdateUser {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string, update: object): Promise<String> {
+  async execute(userId: string, update: object): Promise<{ message: string }> {
     const res = await this.userRepo.updateUser(userId, update);
-    if (res.modifiedCount) {
-      return 'User updated';
+    if (res.modifiedCount || res.matchedCount) {
+      return { message: 'User updated' };
     } else {
       throw new NotFoundException("Couldn't update user");
     }
@@ -83,10 +86,10 @@ export class DeleteUser {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string): Promise<String> {
+  async execute(userId: string): Promise<{ message: string }> {
     const res = await this.userRepo.deleteUser(userId);
     if (res.deletedCount) {
-      return 'User deleted';
+      return { message: 'User deleted' };
     } else {
       throw new NotFoundException("Couldn't delete user");
     }
@@ -116,19 +119,22 @@ export class UserService {
   async changeUserPassword(
     userId: string,
     update: ChangePasswordDto,
-  ): Promise<String> {
+  ): Promise<{ message: string }> {
     return await this.ChangeUserPassword.execute(userId, update);
   }
 
-  async createUser(user: User): Promise<String> {
+  async createUser(user: User): Promise<{ message: string }> {
     return await this.CreateUser.execute(user);
   }
 
-  async updateUser(userId: string, update: UpdateUserDto): Promise<String> {
+  async updateUser(
+    userId: string,
+    update: UpdateUserDto,
+  ): Promise<{ message: string }> {
     return await this.UpdateUser.execute(userId, update);
   }
 
-  async deleteUser(userId: string): Promise<String> {
+  async deleteUser(userId: string): Promise<{ message: string }> {
     return await this.DeleteUser.execute(userId);
   }
 }

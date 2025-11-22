@@ -16,11 +16,12 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const { method, originalUrl } = request;
     const now = Date.now();
+    const response = context.switchToHttp().getResponse();
 
     this.logger.log(`➡️  ${method} ${originalUrl} called`);
 
     return next.handle().pipe(
-      tap((response: ServerResponse) => {
+      tap(() => {
         // Log response
         this.logger.log(
           `⬅️  ${method} [${response.statusCode}] ${originalUrl} completed in ${Date.now() - now}ms`,
