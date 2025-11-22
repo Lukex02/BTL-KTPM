@@ -39,7 +39,11 @@ Run Ollama in default port 11234:
 ollama serve
 ```
 
-We're good to go!
+Also currently the AI service is using model "gpt-oss", you can change it in src/common/AI/ollama.service.ts MODEL or pull the model (must run after 'ollama serve')
+
+```bash
+ollama pull gpt-oss
+```
 
 <!-- ## Run tests
 
