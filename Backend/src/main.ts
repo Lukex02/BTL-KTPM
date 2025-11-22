@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LoggingInterceptor } from './logging.interceptor';
+import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
+import { ObjectIdPipe } from './common/pipe/objectid.pipe';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
-  });
+  const app = await NestFactory.create(AppModule);
 
+  // Swagger
   const config = new DocumentBuilder()
     .setTitle('ITS API')
     .setDescription('ITS API documentation')
@@ -22,7 +22,9 @@ async function bootstrap() {
     },
   });
 
+  // Global configurations
   app.useGlobalInterceptors(new LoggingInterceptor());
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

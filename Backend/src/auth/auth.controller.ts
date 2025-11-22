@@ -14,7 +14,7 @@ import {
   ApiOperation,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtRefreshGuard } from './guards/jwt/jwt.refresh.guard';
+import { JwtRefreshGuard } from '../common/jwt/jwt.refresh.guard';
 import type { Response } from 'express';
 
 @Controller('auth')
