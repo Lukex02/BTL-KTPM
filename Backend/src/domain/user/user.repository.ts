@@ -19,7 +19,7 @@ import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
 
 @Injectable()
 export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
-  constructor(@Inject('DATABASE_CONNECTION') db: Db) {
+  constructor(@Inject('MONGO_DB_CONN') db: Db) {
     super(db, 'user'); // collectionName
   }
 

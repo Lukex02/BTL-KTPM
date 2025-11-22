@@ -22,14 +22,14 @@ export class UserController {
   @ApiOperation({ summary: 'Find user by id' })
   @ApiOkResponse({ type: UserDto })
   async findById(@Param('userId') userId: string) {
-    return await this.userService.findById(userId);
+    return await this.userService.findUserById(userId);
   }
 
   @Get('/findByName/:username')
   @ApiOperation({ summary: 'Find user by username' })
   @ApiOkResponse({ type: UserDto })
   async findByUsername(@Param('username') username: string) {
-    return await this.userService.findByUsername(username);
+    return await this.userService.findUserByUsername(username);
   }
 
   @Put('/changePassword/:userId')
@@ -39,20 +39,20 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() update: ChangePasswordDto,
   ) {
-    return await this.userService.changePassword(userId, update);
+    return await this.userService.changeUserPassword(userId, update);
   }
 
   @Put('/update/:userId')
   @ApiOperation({ summary: 'Update user' })
   @ApiOkResponse({ schema: { type: 'string', example: 'User updated' } })
   async update(@Param('userId') userId: string, @Body() update: UpdateUserDto) {
-    return await this.userService.update(userId, update);
+    return await this.userService.updateUser(userId, update);
   }
 
   @Delete('/delete/:userId')
   @ApiOperation({ summary: 'Delete user' })
   @ApiOkResponse({ schema: { type: 'string', example: 'User deleted' } })
   async delete(@Param('userId') userId: string) {
-    return await this.userService.delete(userId);
+    return await this.userService.deleteUser(userId);
   }
 }

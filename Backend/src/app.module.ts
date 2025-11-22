@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AssessmentModule } from 'src/domain/assessment/assessment.module';
 import mongoDbConfig from 'src/database/mongodb/mongodb.config';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './domain/user/user.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
       load: [mongoDbConfig],
     }),
     AssessmentModule,
+    UserModule,
     AuthModule,
   ],
 })

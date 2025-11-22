@@ -7,12 +7,12 @@ import { initMongoDB } from './mongodb.client';
   imports: [ConfigModule],
   providers: [
     {
-      provide: 'DATABASE_CONNECTION',
+      provide: 'MONGO_DB_CONN',
       useFactory: async (configService: ConfigService) =>
         await initMongoDB(configService),
       inject: [ConfigService],
     },
   ],
-  exports: ['DATABASE_CONNECTION'],
+  exports: ['MONGO_DB_CONN'],
 })
 export class MongoModule {}
