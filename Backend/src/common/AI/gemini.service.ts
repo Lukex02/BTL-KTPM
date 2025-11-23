@@ -16,6 +16,7 @@ export class GeminiService extends AIRepository {
 
   async checkServiceOnline(): Promise<boolean> {
     try {
+      return false;
       await this.client.models.generateContent({
         model: this.MODEL,
         contents: 'Return "Y"',

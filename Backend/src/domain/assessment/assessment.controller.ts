@@ -61,7 +61,7 @@ export class AssessmentController {
   @ApiOperation({ summary: 'Grade quiz with AI' })
   @ApiResponse({
     status: 201,
-    schema: { type: 'object', example: { message: 'Very well answered' } },
+    schema: { type: 'string', example: 'Very well answered' },
   })
   async gradeQuizAI(@Body() request: StudentAnswerDto) {
     return await this.assessmentService.gradeQuizAI(request);
@@ -73,7 +73,7 @@ export class AssessmentController {
   })
   @ApiResponse({
     status: 201,
-    schema: { type: 'object', example: 'Very well answered' },
+    schema: { type: 'string', example: 'Very well answered' },
   })
   async gradeQuizAIRealtime(
     @Res() res: Response,
