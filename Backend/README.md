@@ -68,6 +68,35 @@ Change the Service in src/common/AI/ai.module.ts to OllamaService
 
 Gemini API is currently free to use and haven't got any issues.
 
+Limitation (gemini-2.5-flash):
+
+- Peak requests per minute: 10
+- Peak input tokens per minute: 250K
+- Peak requests per day: 250
+
+If API got exceeded limit, it will return to default answer that a LLM would generate.
+
+=> For testing response format, don't use Gemini API, use Ollama API instead or use the default answer. Do it by change this in src/common/AI/gemini.service.ts
+
+```bash
+export class GeminiService extends AIRepository {
+  ...
+  async checkServiceOnline(): Promise<boolean> {
+    return false; // <- Add this line
+    try {
+      await this.client.models.generateContent({
+        model: this.MODEL,
+        contents: 'Hello',
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+  ...
+}
+```
+
 <!-- ## Run tests
 
 ```bash

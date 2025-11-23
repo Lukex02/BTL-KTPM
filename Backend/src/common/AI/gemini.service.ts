@@ -18,7 +18,7 @@ export class GeminiService extends AIRepository {
     try {
       await this.client.models.generateContent({
         model: this.MODEL,
-        contents: 'Hello',
+        contents: 'Return "Y"',
       });
       return true;
     } catch (error) {
