@@ -30,14 +30,14 @@ export class GenQuizRequestDto {
     example: 'multiple-choice',
     required: true,
   })
-  type: 'multiple-choice' | 'number' | 'text';
+  type: string;
 
   @ApiProperty({
     description: 'Difficulty (easy | medium | hard)',
     example: 'easy',
     required: true,
   })
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: string;
 
   @ApiProperty({
     description: 'Number of questions',
