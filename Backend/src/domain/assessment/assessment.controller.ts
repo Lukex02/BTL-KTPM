@@ -68,10 +68,12 @@ export class AssessmentController {
   }
 
   @Post('ai/grade/realtime')
-  @ApiOperation({ summary: 'Grade quiz with AI (realtime chunk response)' })
+  @ApiOperation({
+    summary: 'Grade quiz with AI (realtime chunk response in plain text)',
+  })
   @ApiResponse({
     status: 201,
-    schema: { type: 'object', example: { message: 'Very well answered' } },
+    schema: { type: 'object', example: 'Very well answered' },
   })
   async gradeQuizAIRealtime(
     @Res() res: Response,

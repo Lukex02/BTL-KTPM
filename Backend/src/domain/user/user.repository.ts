@@ -23,22 +23,20 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
     super(db, 'user'); // collectionName
   }
 
-  async getUserPasswordByUsername(
-    username: string,
-  ): Promise<{ userId: string; password: string } | null> {
+  async getUserPasswordByUsername(username: string) {
     const user = await this.findOne({ username });
     if (!user) return null;
     return { userId: user._id.toString(), password: user.password };
   }
 
-  async findById(userId: string): Promise<UserDto | null> {
+  async findById(userId: string) {
     const user = await this.findOne({ _id: new ObjectId(userId) });
     if (!user) return null;
     const { _id, ...rest } = user;
     return { id: _id.toString(), ...rest } as UserDto;
   }
 
-  async findByUsername(username: string): Promise<UserDto | null> {
+  async findByUsername(username: string) {
     const user = await this.findOne({ username });
     if (!user) return null;
     const { _id, ...rest } = user;
@@ -48,7 +46,7 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
   async changePassword(
     userId: string,
     update: ChangePasswordDto,
-  ): Promise<any> {
+  ): Promise<UpdateResult> {
     const { oldPassword, newPassword, confirmNewPassword } = update;
 
     if (newPassword !== confirmNewPassword) {

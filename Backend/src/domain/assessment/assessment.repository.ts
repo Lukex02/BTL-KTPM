@@ -55,28 +55,24 @@ export class MongoAssessmentRepo
     return quiz;
   }
 
-  async gradeQuizAI(request: StudentAnswerDto): Promise<any> {
+  async gradeQuizAI(request: StudentAnswerDto): Promise<string> {
     const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
-      return {
-        message: 'Very well answered',
-      };
+      return 'Very well answered';
     // throw new InternalServerErrorException('AI service is not open');
 
     const grade = await this.AIService.gradeQuiz(request);
-    return { message: grade };
+    return grade;
   }
 
   async gradeQuizAIRealtime(
     request: StudentAnswerDto,
-  ): Promise<AsyncGenerator | { message: string }> {
+  ): Promise<AsyncGenerator | string> {
     const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
-      return {
-        message: 'Very well answered',
-      };
+      return 'Very well answered';
     // throw new InternalServerErrorException('AI service is not open');
 
     const gradeStream = this.AIService.gradeQuizRealtime(request);

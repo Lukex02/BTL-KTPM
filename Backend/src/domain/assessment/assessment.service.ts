@@ -15,10 +15,10 @@ export class CreateQuiz {
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(request: CreateQuizRequestDto): Promise<{ message: string }> {
+  async execute(request: CreateQuizRequestDto): Promise<string> {
     const res = await this.assessmentRepo.createQuiz(request);
     if (res.insertedId) {
-      return { message: 'Quiz created' };
+      return 'Quiz created';
     } else {
       throw new NotFoundException("Couldn't create quiz");
     }
@@ -44,7 +44,7 @@ export class GradeQuizAI {
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(request: StudentAnswerDto): Promise<any> {
+  async execute(request: StudentAnswerDto): Promise<string> {
     return this.assessmentRepo.gradeQuizAI(request);
   }
 }
@@ -56,7 +56,7 @@ export class GradeQuizAIRealtime {
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(request: StudentAnswerDto): Promise<any> {
+  async execute(request: StudentAnswerDto): Promise<AsyncGenerator | string> {
     return this.assessmentRepo.gradeQuizAIRealtime(request);
   }
 }
@@ -82,13 +82,10 @@ export class UpdateQuiz {
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(
-    quizId: string,
-    update: UpdateQuizDto,
-  ): Promise<{ message: string }> {
+  async execute(quizId: string, update: UpdateQuizDto): Promise<string> {
     const res = await this.assessmentRepo.updateQuiz(quizId, update);
     if (res.modifiedCount || res.matchedCount) {
-      return { message: 'Quiz updated' };
+      return 'Quiz updated';
     } else {
       throw new NotFoundException("Couldn't update quiz");
     }
@@ -102,10 +99,10 @@ export class DeleteQuiz {
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(quizId: string): Promise<{ message: string }> {
+  async execute(quizId: string): Promise<string> {
     const res = await this.assessmentRepo.deleteQuiz(quizId);
     if (res.deletedCount) {
-      return { message: 'Quiz deleted' };
+      return 'Quiz deleted';
     } else {
       throw new NotFoundException("Couldn't delete quiz");
     }
@@ -128,18 +125,20 @@ export class AssessmentService {
   async createQuiz(
     request: CreateQuizRequestDto,
   ): Promise<{ message: string }> {
-    return await this.CreateQuiz.execute(request);
+    return { message: await this.CreateQuiz.execute(request) };
   }
 
   async generateQuizAI(request: GenQuizRequestDto): Promise<Quiz> {
     return await this.GenerateQuizAI.execute(request);
   }
 
-  async gradeQuizAI(request: StudentAnswerDto): Promise<any> {
+  async gradeQuizAI(request: StudentAnswerDto): Promise<string> {
     return await this.GradeQuizAI.execute(request);
   }
 
-  async gradeQuizAIRealtime(request: StudentAnswerDto): Promise<any> {
+  async gradeQuizAIRealtime(
+    request: StudentAnswerDto,
+  ): Promise<AsyncGenerator | string> {
     return await this.GradeQuizAIRealtime.execute(request);
   }
 
@@ -151,10 +150,10 @@ export class AssessmentService {
     quizId: string,
     update: UpdateQuizDto,
   ): Promise<{ message: string }> {
-    return await this.UpdateQuiz.execute(quizId, update);
+    return { message: await this.UpdateQuiz.execute(quizId, update) };
   }
 
   async deleteQuiz(quizId: string): Promise<{ message: string }> {
-    return await this.DeleteQuiz.execute(quizId);
+    return { message: await this.DeleteQuiz.execute(quizId) };
   }
 }
