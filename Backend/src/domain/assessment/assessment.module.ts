@@ -13,10 +13,10 @@ import {
 import { MongoAssessmentRepo } from './assessment.repository';
 import { Db } from 'mongodb';
 import { MongoModule } from 'src/database/mongodb/mongodb.module';
-import { OllamaService } from 'src/common/AI/ollama.service';
+import { AIModule } from 'src/common/AI/ai.module';
 
 @Module({
-  imports: [MongoModule],
+  imports: [MongoModule, AIModule],
   controllers: [AssessmentController],
   providers: [
     MongoAssessmentRepo,
@@ -25,7 +25,6 @@ import { OllamaService } from 'src/common/AI/ollama.service';
       provide: 'IAssessmentRepository',
       useClass: MongoAssessmentRepo,
     },
-    OllamaService,
     AssessmentService,
     CreateQuiz,
     GenerateQuizAI,

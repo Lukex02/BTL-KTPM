@@ -5,13 +5,7 @@ import {
   ObjectId,
   UpdateResult,
 } from 'mongodb';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotImplementedException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IAssessmentRepository } from '../assessment/assessment.interface';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import {
@@ -21,8 +15,7 @@ import {
   StudentAnswerDto,
 } from './dto/assessment.dto';
 import { Quiz } from './models/assessment.models';
-import { OllamaService } from 'src/common/AI/ollama.service';
-import { Readable } from 'stream';
+import { AIRepository } from 'src/common/AI/ai.repository';
 
 @Injectable()
 export class MongoAssessmentRepo
@@ -31,16 +24,13 @@ export class MongoAssessmentRepo
 {
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
-    private readonly ollamaService: OllamaService,
+    @Inject('AI_SERVICE') private readonly AIService: AIRepository,
   ) {
     super(db, 'assessment'); // collectionName
   }
 
   async generateQuizAI(request: GenQuizRequestDto): Promise<Quiz> {
-    const isAIServiceOpen = await this.ollamaService.checkPort(
-      '127.0.0.1',
-      11434,
-    ); // Check if ollama is open in default port
+    const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
       return {
@@ -61,12 +51,12 @@ export class MongoAssessmentRepo
       } as Quiz;
     // throw new InternalServerErrorException('AI service is not open');
 
-    const quiz = await this.ollamaService.generateQuiz(request);
-    return quiz as Quiz;
+    const quiz = await this.AIService.generateQuiz(request);
+    return quiz;
   }
 
   async gradeQuizAI(request: StudentAnswerDto): Promise<any> {
-    const isAIServiceOpen = this.ollamaService.checkPort('127.0.0.1', 11434); // Check if ollama is open in default port
+    const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
       return {
@@ -74,14 +64,14 @@ export class MongoAssessmentRepo
       };
     // throw new InternalServerErrorException('AI service is not open');
 
-    const grade = await this.ollamaService.gradeQuiz(request);
+    const grade = await this.AIService.gradeQuiz(request);
     return { message: grade };
   }
 
   async gradeQuizAIRealtime(
     request: StudentAnswerDto,
   ): Promise<AsyncGenerator | { message: string }> {
-    const isAIServiceOpen = this.ollamaService.checkPort('127.0.0.1', 11434); // Check if ollama is open in default port
+    const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
       return {
@@ -89,7 +79,7 @@ export class MongoAssessmentRepo
       };
     // throw new InternalServerErrorException('AI service is not open');
 
-    const gradeStream = this.ollamaService.gradeQuizRealtime(request);
+    const gradeStream = this.AIService.gradeQuizRealtime(request);
     return gradeStream;
   }
 

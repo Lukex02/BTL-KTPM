@@ -60,7 +60,7 @@ export class AssessmentController {
   @Post('ai/grade')
   @ApiOperation({ summary: 'Grade quiz with AI' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     schema: { type: 'object', example: { message: 'Very well answered' } },
   })
   async gradeQuizAI(@Body() request: StudentAnswerDto) {
@@ -70,7 +70,7 @@ export class AssessmentController {
   @Post('ai/grade/realtime')
   @ApiOperation({ summary: 'Grade quiz with AI (realtime chunk response)' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     schema: { type: 'object', example: { message: 'Very well answered' } },
   })
   async gradeQuizAIRealtime(

@@ -29,9 +29,11 @@ The API documentation can be found at [http://localhost:3000/api](http://localho
 
 ## AI Service
 
-Currently, some endpoints using AI service will need Ollama to work properly, if Ollama is not running, those endpoints will return a default answer that a LLM would generate.
+Currently, some endpoints using AI service is using Gemini API (free unlimited tier), or Ollama for local LLM using. If none of the service is running, those endpoints will return a default answer that a LLM would generate.
 
-To run the AI service, you need to install [Ollama](https://ollama.com/download) on your PC:
+### Ollama
+
+To run the Ollama service, you need to install [Ollama](https://ollama.com/download) on your PC:
 
 Run Ollama in default port 11234:
 
@@ -44,6 +46,27 @@ Also currently the AI service is using model "gpt-oss", you can change it in src
 ```bash
 ollama pull gpt-oss
 ```
+
+Change the Service in src/common/AI/ai.module.ts to OllamaService
+
+```bash
+...
+@Module({
+  ...
+  providers: [
+    {
+      provide: 'AI_SERVICE',
+      useClass: OllamaService, // <- here
+    },
+  ],
+  ...
+})
+...
+```
+
+### Gemini
+
+Gemini API is currently free to use and haven't got any issues.
 
 <!-- ## Run tests
 
