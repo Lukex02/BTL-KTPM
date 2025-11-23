@@ -7,9 +7,10 @@ import {
   StudentAnswerDto,
   UpdateQuizDto,
 } from './dto/assessment.dto';
+import { Command } from 'src/common/command';
 
 @Injectable()
-export class CreateQuiz {
+export class CreateQuiz implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -26,7 +27,7 @@ export class CreateQuiz {
 }
 
 @Injectable()
-export class GenerateQuizAI {
+export class GenerateQuizAI implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -38,7 +39,7 @@ export class GenerateQuizAI {
 }
 
 @Injectable()
-export class GradeQuizAI {
+export class GradeQuizAI implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -50,7 +51,7 @@ export class GradeQuizAI {
 }
 
 @Injectable()
-export class GradeQuizAIRealtime {
+export class GradeQuizAIRealtime implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -62,7 +63,7 @@ export class GradeQuizAIRealtime {
 }
 
 @Injectable()
-export class FindQuizById {
+export class FindQuizById implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -76,14 +77,14 @@ export class FindQuizById {
 }
 
 @Injectable()
-export class UpdateQuiz {
+export class UpdateQuiz implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
   ) {}
 
-  async execute(quizId: string, update: UpdateQuizDto): Promise<string> {
-    const res = await this.assessmentRepo.updateQuiz(quizId, update);
+  async execute(update: UpdateQuizDto): Promise<string> {
+    const res = await this.assessmentRepo.updateQuiz(update);
     if (res.modifiedCount || res.matchedCount) {
       return 'Quiz updated';
     } else {
@@ -93,7 +94,7 @@ export class UpdateQuiz {
 }
 
 @Injectable()
-export class DeleteQuiz {
+export class DeleteQuiz implements Command {
   constructor(
     @Inject('IAssessmentRepository')
     private readonly assessmentRepo: IAssessmentRepository,
@@ -146,11 +147,8 @@ export class AssessmentService {
     return await this.FindQuizById.execute(quizId);
   }
 
-  async updateQuiz(
-    quizId: string,
-    update: UpdateQuizDto,
-  ): Promise<{ message: string }> {
-    return { message: await this.UpdateQuiz.execute(quizId, update) };
+  async updateQuiz(update: UpdateQuizDto): Promise<{ message: string }> {
+    return { message: await this.UpdateQuiz.execute(update) };
   }
 
   async deleteQuiz(quizId: string): Promise<{ message: string }> {

@@ -14,6 +14,6 @@ export interface IAssessmentRepository {
     request: StudentAnswerDto,
   ): Promise<AsyncGenerator | string>;
   findQuizById(quizId: string): Promise<Quiz | null>;
-  updateQuiz(quizId: string, update: UpdateQuizDto): Promise<any>;
+  updateQuiz(update: UpdateQuizDto): Promise<any>;
   deleteQuiz(quizId: string): Promise<any>;
 }

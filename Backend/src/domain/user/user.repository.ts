@@ -43,11 +43,8 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
     return { id: _id.toString(), ...rest } as UserDto;
   }
 
-  async changePassword(
-    userId: string,
-    update: ChangePasswordDto,
-  ): Promise<UpdateResult> {
-    const { oldPassword, newPassword, confirmNewPassword } = update;
+  async changePassword(update: ChangePasswordDto): Promise<UpdateResult> {
+    const { userId, oldPassword, newPassword, confirmNewPassword } = update;
 
     if (newPassword !== confirmNewPassword) {
       throw new BadRequestException('Passwords do not match');
@@ -69,13 +66,11 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
     return await this.insertOne(user);
   }
 
-  async updateUser(
-    userId: string,
-    update: UpdateUserDto,
-  ): Promise<UpdateResult> {
+  async updateUser(update: UpdateUserDto): Promise<UpdateResult> {
+    const { id: userId, ...updateBody } = update;
     return await this.updateOne(
       { _id: new ObjectId(userId) },
-      { $set: update },
+      { $set: updateBody },
     );
   }
 

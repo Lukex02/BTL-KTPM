@@ -99,7 +99,7 @@ export class AssessmentController {
     return await this.assessmentService.findQuizById(quizId);
   }
 
-  @Put('update/:quizId')
+  @Put('update')
   @ApiOperation({ summary: 'Update quiz' })
   @ApiResponse({
     status: 201,
@@ -112,7 +112,7 @@ export class AssessmentController {
     @Param('quizId', new ObjectIdPipe()) quizId: string,
     @Body() update: UpdateQuizDto,
   ) {
-    return await this.assessmentService.updateQuiz(quizId, update);
+    return await this.assessmentService.updateQuiz(update);
   }
 
   @Delete('delete/:quizId')

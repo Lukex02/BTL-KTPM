@@ -2,9 +2,10 @@ import { NotFoundException, Injectable, Inject } from '@nestjs/common';
 import type { IUserRepository } from './user.interface';
 import { User } from './models/user.models';
 import { ChangePasswordDto, UpdateUserDto } from './dto/user.dto';
+import { Command } from 'src/common/command';
 
 @Injectable()
-export class FindUserById {
+export class FindUserById implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
@@ -17,7 +18,7 @@ export class FindUserById {
 }
 
 @Injectable()
-export class FindUserByUsername {
+export class FindUserByUsername implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
@@ -30,13 +31,13 @@ export class FindUserByUsername {
 }
 
 @Injectable()
-export class ChangeUserPassword {
+export class ChangeUserPassword implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string, update: ChangePasswordDto): Promise<string> {
-    const res = await this.userRepo.changePassword(userId, update);
+  async execute(update: ChangePasswordDto): Promise<string> {
+    const res = await this.userRepo.changePassword(update);
     if (res.modifiedCount) {
       return 'Password changed successfully';
     } else {
@@ -46,7 +47,7 @@ export class ChangeUserPassword {
 }
 
 @Injectable()
-export class CreateUser {
+export class CreateUser implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
@@ -62,13 +63,13 @@ export class CreateUser {
 }
 
 @Injectable()
-export class UpdateUser {
+export class UpdateUser implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string, update: object): Promise<string> {
-    const res = await this.userRepo.updateUser(userId, update);
+  async execute(update: object): Promise<string> {
+    const res = await this.userRepo.updateUser(update);
     if (res.modifiedCount || res.matchedCount) {
       return 'User updated';
     } else {
@@ -78,7 +79,7 @@ export class UpdateUser {
 }
 
 @Injectable()
-export class DeleteUser {
+export class DeleteUser implements Command {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
@@ -114,21 +115,17 @@ export class UserService {
   }
 
   async changeUserPassword(
-    userId: string,
     update: ChangePasswordDto,
   ): Promise<{ message: string }> {
-    return { message: await this.ChangeUserPassword.execute(userId, update) };
+    return { message: await this.ChangeUserPassword.execute(update) };
   }
 
   async createUser(user: User): Promise<{ message: string }> {
     return { message: await this.CreateUser.execute(user) };
   }
 
-  async updateUser(
-    userId: string,
-    update: UpdateUserDto,
-  ): Promise<{ message: string }> {
-    return { message: await this.UpdateUser.execute(userId, update) };
+  async updateUser(update: UpdateUserDto): Promise<{ message: string }> {
+    return { message: await this.UpdateUser.execute(update) };
   }
 
   async deleteUser(userId: string): Promise<{ message: string }> {

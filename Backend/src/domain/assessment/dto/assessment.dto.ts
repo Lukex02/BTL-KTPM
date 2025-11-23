@@ -73,6 +73,9 @@ export class CreateQuizRequestDto {
 }
 
 export class UpdateQuizDto {
+  @ApiProperty({ description: 'Quiz id', example: '0000', required: true })
+  quizId: string;
+
   @ApiProperty({
     description: 'Quiz title',
     example: 'Math Quiz',

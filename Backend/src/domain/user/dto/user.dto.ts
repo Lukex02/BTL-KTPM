@@ -34,8 +34,11 @@ export class UserDto {
 }
 
 export class UpdateUserDto {
+  @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
+  id?: string;
+
   @ApiProperty({
-    description: 'User id',
+    description: 'User name',
     example: 'NgVanA',
     required: false,
   })

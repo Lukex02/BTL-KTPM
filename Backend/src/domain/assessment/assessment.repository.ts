@@ -90,13 +90,11 @@ export class MongoAssessmentRepo
     return { id: _id.toString(), ...rest } as Quiz;
   }
 
-  async updateQuiz(
-    quizId: string,
-    update: UpdateQuizDto,
-  ): Promise<UpdateResult> {
+  async updateQuiz(update: UpdateQuizDto): Promise<UpdateResult> {
+    const { quizId, ...updateBody } = update;
     return await this.updateOne(
       { _id: new ObjectId(quizId) },
-      { $set: update },
+      { $set: updateBody },
     );
   }
 
