@@ -98,3 +98,19 @@ export class UpdateQuizDto {
   })
   questions?: Question[];
 }
+
+export class AssignQuizToUserRequestDto {
+  @ApiProperty({
+    description: 'Quiz id',
+    example: '0000',
+    required: true,
+  })
+  quizId: string;
+
+  @ApiProperty({
+    description: 'User id',
+    example: '1badfas3231',
+    required: true,
+  })
+  userId: string;
+}

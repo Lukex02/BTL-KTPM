@@ -85,3 +85,47 @@ export class Answer {
   })
   answer: string | number;
 }
+
+export class AssessmentResult {
+  @ApiProperty({
+    description: 'Result id',
+    example: '0000',
+    required: true,
+  })
+  id?: string;
+
+  @ApiProperty({
+    description: 'Student id',
+    example: 'Math',
+    required: true,
+  })
+  studentId: string;
+
+  @ApiProperty({
+    description: 'Quiz id',
+    example: 'Math',
+    required: true,
+  })
+  quizId: string;
+
+  @ApiProperty({
+    description: 'Rating',
+    example: 10,
+    required: true,
+  })
+  rating: number;
+
+  @ApiProperty({
+    description: 'Assessment comment',
+    example: 'This is the assessment comment',
+    required: true,
+  })
+  comment: string;
+
+  @ApiProperty({
+    description: 'Created time',
+    example: '12/12/2022',
+    required: true,
+  })
+  createdAt: Date;
+}

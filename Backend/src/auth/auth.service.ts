@@ -2,39 +2,40 @@ import {
   BadRequestException,
   Inject,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import type { IUserRepository } from 'src/domain/user/user.interface';
 import { RefreshDto } from './dto/token.dto';
 import { UserPayload } from './interface/user.interface';
+import { UserDto } from 'src/domain/user/dto/user.dto';
+import { UserService } from 'src/domain/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    @Inject('IUserRepository') private userRepository: IUserRepository,
+    @Inject('UserService') private userService: UserService,
   ) {}
 
   // ===== Validate username/password =====
   private async validateUser(
     username: string,
     password: string,
-  ): Promise<string | null> {
-    const user = await this.userRepository.getUserPasswordByUsername(username);
+  ): Promise<UserDto | null> {
+    const user = await this.userService.findUserByUsername(username);
+    console.log(user);
     if (!user) return null;
 
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) return null;
 
-    return user.userId;
+    return user;
   }
 
   // ===== Generate Access Token =====
-  private async generateAccessToken(userId: string) {
-    const payload: UserPayload = { userId, jti: crypto.randomUUID() };
+  private async generateAccessToken(user: UserPayload) {
+    const payload: UserPayload = { ...user, jti: crypto.randomUUID() };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_SECRET || 'jwtAccessSecret',
       expiresIn: '15m', // Access token expire after 1 hour
@@ -42,8 +43,8 @@ export class AuthService {
   }
 
   // ===== Generate Refresh Token =====
-  private async generateRefreshToken(userId: string) {
-    const payload: UserPayload = { userId, jti: crypto.randomUUID() };
+  private async generateRefreshToken(user: UserPayload) {
+    const payload: UserPayload = { ...user, jti: crypto.randomUUID() };
     const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET || 'jwtRefreshSecret',
       expiresIn: '7d', // Refresh token expire after 7 days
@@ -54,11 +55,11 @@ export class AuthService {
 
   // ===== Register =====
   async register(username: string, password: string, role: string) {
-    const user = await this.userRepository.findByUsername(username);
+    const user = await this.userService.findUserByUsername(username);
     if (user) throw new BadRequestException('Username already exists');
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await this.userRepository.createUser({
+    await this.userService.createUser({
       username,
       password: hashedPassword,
       role,
@@ -69,11 +70,13 @@ export class AuthService {
 
   // ===== Login =====
   async login(username: string, password: string) {
-    const userId = await this.validateUser(username, password);
-    if (!userId) throw new UnauthorizedException('Invalid credentials');
+    const user = await this.validateUser(username, password);
+    if (!user || !user.id || !user.role)
+      throw new UnauthorizedException('Invalid credentials');
+    const payload: UserPayload = { userId: user.id, role: user.role };
 
-    const access_token = await this.generateAccessToken(userId);
-    const refresh_token = await this.generateRefreshToken(userId);
+    const access_token = await this.generateAccessToken(payload);
+    const refresh_token = await this.generateRefreshToken(payload);
 
     return { access_token, refresh_token };
   }
@@ -89,7 +92,17 @@ export class AuthService {
       process.env.JWT_REFRESH_SECRET || 'jwtRefreshSecret',
     );
     if (!verifyRF) throw new UnauthorizedException('Refresh token expired');
-    const access_token = await this.generateAccessToken(user.userId);
+    const payload: UserPayload = {
+      userId: verifyRF.userId,
+      role: verifyRF.role,
+    };
+    const access_token = await this.generateAccessToken(payload);
     return { access_token };
+  }
+
+  // ===== Check user role =====
+  hasRole(user: any, requiredRoles: string[]): boolean {
+    if (!user?.role) return false;
+    return requiredRoles.some((role) => user.role.includes(role));
   }
 }

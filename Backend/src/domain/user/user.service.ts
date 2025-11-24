@@ -1,8 +1,26 @@
 import { NotFoundException, Injectable, Inject } from '@nestjs/common';
 import type { IUserRepository } from './user.interface';
 import { User } from './models/user.models';
-import { ChangePasswordDto, UpdateUserDto } from './dto/user.dto';
+import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
 import { Command } from 'src/common/command';
+
+@Injectable()
+export class GetAll implements Command {
+  constructor(
+    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+  ) {}
+
+  async execute(): Promise<UserDto[]> {
+    const users = await this.userRepo.getAll();
+    if (!users) throw new NotFoundException('User not found');
+    // const res = users.map((user) => {
+    //   const { password, ...rest } = user;
+    //   return rest;
+    // });
+    // return res;
+    return users;
+  }
+}
 
 @Injectable()
 export class FindUserById implements Command {
@@ -10,9 +28,12 @@ export class FindUserById implements Command {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(userId: string): Promise<User | null> {
+  async execute(userId: string): Promise<UserDto> {
     const user = await this.userRepo.findById(userId);
     if (!user) throw new NotFoundException('User not found');
+    // Password is hashed tho so maybe isn't neccesary to exclude it
+    // const { password, ...rest } = user;
+    // return rest;
     return user;
   }
 }
@@ -23,9 +44,12 @@ export class FindUserByUsername implements Command {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(username: string): Promise<User | null> {
+  async execute(username: string): Promise<UserDto> {
     const user = await this.userRepo.findByUsername(username);
     if (!user) throw new NotFoundException('User not found');
+    // Password is hashed tho so maybe isn't neccesary to exclude it
+    // const { password, ...rest } = user;
+    // return rest;
     return user;
   }
 }
@@ -68,7 +92,7 @@ export class UpdateUser implements Command {
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
 
-  async execute(update: object): Promise<string> {
+  async execute(update: UpdateUserDto): Promise<string> {
     const res = await this.userRepo.updateUser(update);
     if (res.modifiedCount || res.matchedCount) {
       return 'User updated';
@@ -98,6 +122,7 @@ export class DeleteUser implements Command {
 @Injectable()
 export class UserService {
   constructor(
+    private readonly GetAll: GetAll,
     private readonly FindUserById: FindUserById,
     private readonly FindUserByUsername: FindUserByUsername,
     private readonly ChangeUserPassword: ChangeUserPassword,
@@ -106,11 +131,15 @@ export class UserService {
     private readonly DeleteUser: DeleteUser,
   ) {}
 
-  async findUserById(userId: string): Promise<User | null> {
+  async getAll(): Promise<UserDto[]> {
+    return await this.GetAll.execute();
+  }
+
+  async findUserById(userId: string): Promise<UserDto> {
     return await this.FindUserById.execute(userId);
   }
 
-  async findUserByUsername(username: string): Promise<User | null> {
+  async findUserByUsername(username: string): Promise<UserDto> {
     return await this.FindUserByUsername.execute(username);
   }
 

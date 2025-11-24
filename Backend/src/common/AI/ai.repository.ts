@@ -2,7 +2,12 @@ import {
   GenQuizRequestDto,
   StudentAnswerDto,
 } from 'src/domain/assessment/dto/assessment.dto';
-import { Question, Quiz } from 'src/domain/assessment/models/assessment.models';
+import {
+  Answer,
+  AssessmentResult,
+  Question,
+  Quiz,
+} from 'src/domain/assessment/models/assessment.models';
 import { IAIRepository } from './ai.interface';
 
 export abstract class AIRepository implements IAIRepository {
@@ -26,8 +31,7 @@ export abstract class AIRepository implements IAIRepository {
     `;
   }
 
-  gradeQuizMessage(request: StudentAnswerDto): string {
-    const { answers } = request;
+  gradeQuizMessage(answers: Answer[], isRealtime: boolean): string {
     return `Grade a quiz with the following answers:
       ${answers
         .map((answer) => {
@@ -43,12 +47,24 @@ export abstract class AIRepository implements IAIRepository {
       Response attitude should be positive and constructive towards the student.
       Response sentences shouldn't be repetitive.
       Text is written in ${this.LANGUAGE}.
+      ${
+        isRealtime
+          ? ''
+          : `Respond in a JSON schema:
+        {
+          "rating": int,
+          "comment": string,
+        }
+      `
+      }
     `;
   }
 
   abstract MODEL: string;
   abstract checkServiceOnline(): Promise<boolean>;
   abstract generateQuiz(request: GenQuizRequestDto): Promise<Quiz>;
-  abstract gradeQuiz(request: StudentAnswerDto): Promise<string>;
-  abstract gradeQuizRealtime(request: StudentAnswerDto): AsyncGenerator<string>;
+  abstract gradeQuiz(
+    request: StudentAnswerDto,
+  ): Promise<{ rating: number; comment: string }>;
+  abstract gradeQuizRealtime(request: Answer[]): AsyncGenerator<string>;
 }

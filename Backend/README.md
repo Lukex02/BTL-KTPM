@@ -68,11 +68,17 @@ Change the Service in src/common/AI/ai.module.ts to OllamaService
 
 Gemini API is currently free to use and haven't got any issues.
 
-Limitation (gemini-2.5-flash):
+Limitation
 
-- Peak requests per minute: 10
-- Peak input tokens per minute: 250K
-- Peak requests per day: 250
+- gemini-2.5-flash:
+  - Peak requests per minute: 10
+  - Peak input tokens per minute: 250K
+  - Peak requests per day: 250
+
+- gemini-2.0-flash-lite:
+  - Peak requests per minute: 30
+  - Peak input tokens per minute: 1M
+  - Peak requests per day: 200
 
 If API got exceeded limit, it will return to default answer that a LLM would generate.
 

@@ -19,6 +19,13 @@ export class UserDto {
   role?: string;
 
   @ApiProperty({
+    description: 'Password (hashed)',
+    example: '$2abc$12$0$0$1234567890123456789012345678901234567890',
+    required: false,
+  })
+  password?: string;
+
+  @ApiProperty({
     description: 'User name',
     example: 'NgVanA',
     required: false,

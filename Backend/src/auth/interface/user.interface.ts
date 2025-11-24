@@ -1,4 +1,5 @@
 export interface UserPayload {
   userId: string;
-  jti: string;
+  role: string;
+  jti?: string;
 }

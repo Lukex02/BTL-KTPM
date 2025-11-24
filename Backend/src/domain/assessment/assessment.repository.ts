@@ -5,7 +5,12 @@ import {
   ObjectId,
   UpdateResult,
 } from 'mongodb';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IAssessmentRepository } from '../assessment/assessment.interface';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import {
@@ -13,8 +18,9 @@ import {
   CreateQuizRequestDto,
   UpdateQuizDto,
   StudentAnswerDto,
+  AssignQuizToUserRequestDto,
 } from './dto/assessment.dto';
-import { Quiz } from './models/assessment.models';
+import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
 import { AIRepository } from 'src/common/AI/ai.repository';
 
 @Injectable()
@@ -55,39 +61,59 @@ export class MongoAssessmentRepo
     return quiz;
   }
 
-  async gradeQuizAI(request: StudentAnswerDto): Promise<string> {
+  async gradeQuizAI(request: StudentAnswerDto): Promise<AssessmentResult> {
     const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
-      return 'Very well answered';
+      return {
+        studentId: request.studentId,
+        quizId: request.quizId,
+        rating: 10,
+        comment:
+          'Tuyệt vời! Bạn đã trả lời hoàn toàn chính xác. Kiến thức rất vững vàng! Tiếp tục phát huy nhé.',
+        createdAt: new Date(),
+      };
     // throw new InternalServerErrorException('AI service is not open');
 
     const grade = await this.AIService.gradeQuiz(request);
-    return grade;
+    return {
+      studentId: request.studentId,
+      quizId: request.quizId,
+      ...grade,
+      createdAt: new Date(),
+    };
   }
 
-  async gradeQuizAIRealtime(
-    request: StudentAnswerDto,
-  ): Promise<AsyncGenerator | string> {
+  async gradeQuizAIRealtime(request: Answer): Promise<AsyncGenerator | string> {
     const isAIServiceOpen = await this.AIService.checkServiceOnline(); // Check if AI service is open
     if (!isAIServiceOpen)
       // Dummy return
       return 'Very well answered';
     // throw new InternalServerErrorException('AI service is not open');
 
-    const gradeStream = this.AIService.gradeQuizRealtime(request);
+    const gradeStream = this.AIService.gradeQuizRealtime([request]);
     return gradeStream;
   }
 
   async createQuiz(quiz: CreateQuizRequestDto): Promise<InsertOneResult> {
-    return await this.insertOne(quiz);
+    return await this.insertOne(quiz, 'quiz');
   }
 
   async findQuizById(quizId: string): Promise<Quiz | null> {
-    const quiz = await this.findOne({ _id: new ObjectId(quizId) });
+    const quiz = await this.findOne({ _id: new ObjectId(quizId) }, 'quiz');
     if (!quiz) return null;
     const { _id, ...rest } = quiz;
     return { id: _id.toString(), ...rest } as Quiz;
+  }
+
+  async findQuizByUserId(userId: string): Promise<Quiz[]> {
+    const quizIdList = await this.findOne({ userId }, 'user');
+    const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
+    if (!quizzes) return [];
+    return quizzes.map((q) => {
+      const { _id, ...rest } = q;
+      return { id: _id.toString(), ...rest } as Quiz;
+    });
   }
 
   async updateQuiz(update: UpdateQuizDto): Promise<UpdateResult> {
@@ -95,10 +121,54 @@ export class MongoAssessmentRepo
     return await this.updateOne(
       { _id: new ObjectId(quizId) },
       { $set: updateBody },
+      'quiz',
     );
   }
 
   async deleteQuiz(quizId: string): Promise<DeleteResult> {
-    return await this.deleteOne({ _id: new ObjectId(quizId) });
+    return await this.deleteOne({ _id: new ObjectId(quizId) }, 'quiz');
+  }
+
+  async getAssessResult(studentId: string): Promise<AssessmentResult[]> {
+    const assessRes = await this.findMany({ studentId });
+    if (!assessRes) return [];
+    return assessRes.map((res) => {
+      const { _id, ...rest } = res;
+      return { id: _id.toString(), ...rest } as AssessmentResult;
+    });
+  }
+
+  async deleteAssessResult(assessResId: string): Promise<DeleteResult> {
+    return await this.deleteOne({ _id: new ObjectId(assessResId) });
+  }
+
+  async saveAssessResult(
+    assessRes: AssessmentResult,
+  ): Promise<InsertOneResult> {
+    return await this.insertOne(assessRes);
+  }
+
+  async assignQuizToUser(
+    request: AssignQuizToUserRequestDto,
+  ): Promise<UpdateResult> {
+    const { quizId, userId } = request;
+    const user = await this.findOne({ _id: new ObjectId(userId) }, 'user');
+    if (!user) throw new NotFoundException('User not found');
+
+    const quiz = await this.findOne({ _id: new ObjectId(quizId) }, 'quiz');
+    if (!quiz) throw new NotFoundException('Quiz not found');
+
+    const userQuiz = await this.findOne(
+      { _id: new ObjectId(userId), quizId },
+      'user',
+    );
+    if (userQuiz)
+      throw new BadRequestException('Quiz already assigned to user');
+
+    return await this.updateOne(
+      { _id: new ObjectId(userId) },
+      { $addToSet: { quizId } },
+      'user',
+    );
   }
 }

@@ -9,6 +9,10 @@ export class User {
   ) {}
 }
 
-export class Student extends User {}
-export class Teacher extends User {}
+export class Student extends User {
+  quizIds: string[];
+}
+export class Teacher extends User {
+  createdQuizIds: string[];
+}
 export class Admin extends User {}

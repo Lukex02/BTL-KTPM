@@ -5,7 +5,12 @@ import {
   GenQuizRequestDto,
   StudentAnswerDto,
 } from 'src/domain/assessment/dto/assessment.dto';
-import { Question, Quiz } from 'src/domain/assessment/models/assessment.models';
+import {
+  Answer,
+  AssessmentResult,
+  Question,
+  Quiz,
+} from 'src/domain/assessment/models/assessment.models';
 import { AIRepository } from './ai.repository';
 
 @Injectable()
@@ -22,18 +27,19 @@ export class OllamaService extends AIRepository {
   }
 
   async gradeQuiz(request: StudentAnswerDto) {
-    const message = this.gradeQuizMessage(request);
+    const { answers } = request;
+    const message = this.gradeQuizMessage(answers, false);
     const response = await ollama.chat({
       model: this.MODEL,
       messages: [{ role: 'user', content: message }],
     });
 
-    return response.message.content;
+    return JSON.parse(response.message.content) as AssessmentResult;
   }
 
   // Stream response
-  async *gradeQuizRealtime(request: StudentAnswerDto) {
-    const message = this.gradeQuizMessage(request);
+  async *gradeQuizRealtime(request: Answer[]) {
+    const message = this.gradeQuizMessage(request, true);
     const stream = await ollama.chat({
       model: this.MODEL,
       messages: [{ role: 'user', content: message }],

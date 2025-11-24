@@ -23,10 +23,13 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
     super(db, 'user'); // collectionName
   }
 
-  async getUserPasswordByUsername(username: string) {
-    const user = await this.findOne({ username });
-    if (!user) return null;
-    return { userId: user._id.toString(), password: user.password };
+  async getAll(): Promise<UserDto[]> {
+    const users = await this.findMany({});
+    if (!users) return [];
+    return users.map((user) => {
+      const { _id, ...rest } = user;
+      return { id: _id.toString(), ...rest } as UserDto;
+    });
   }
 
   async findById(userId: string) {
