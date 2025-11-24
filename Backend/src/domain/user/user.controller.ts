@@ -14,7 +14,6 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
-  OmitType,
 } from '@nestjs/swagger';
 import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';

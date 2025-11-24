@@ -2,8 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
-import { ObjectIdPipe } from './common/pipe/objectid.pipe';
-import { RolesGuard } from './auth/guards/role.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -4,10 +4,6 @@ import { AssessmentModule } from 'src/domain/assessment/assessment.module';
 import mongoDbConfig from 'src/database/mongodb/mongodb.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './domain/user/user.module';
-import { RolesGuard } from './auth/guards/role.guard';
-import { AuthService } from './auth/auth.service';
-import { APP_GUARD, Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
