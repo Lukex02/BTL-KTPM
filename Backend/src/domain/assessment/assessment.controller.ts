@@ -61,45 +61,6 @@ export class AssessmentController {
     return await this.assessmentService.generateQuizAI(request);
   }
 
-  @Post('result/ai/grade')
-  @ApiOperation({ summary: 'Grade quiz with AI' })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      example: {
-        rating: 10,
-        comment:
-          'Tuyệt vời! Bạn đã trả lời hoàn toàn chính xác. Kiến thức rất vững vàng! Tiếp tục phát huy nhé.',
-      },
-    },
-  })
-  async gradeQuizAI(@Body() request: StudentAnswerDto) {
-    return await this.assessmentService.gradeQuizAI(request);
-  }
-
-  @Post('quiz/ai/grade/realtime')
-  @ApiOperation({
-    summary: 'Grade quiz with AI (realtime chunk response in plain text)',
-  })
-  @ApiResponse({
-    status: 201,
-    schema: { type: 'string', example: 'Very well answered' },
-  })
-  async gradeQuizAIRealtime(@Res() res: Response, @Body() request: Answer) {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked');
-    res.flushHeaders();
-    const generator = await this.assessmentService.gradeQuizAIRealtime(request);
-
-    for await (const chunk of generator) {
-      const text = chunk;
-      res.write(text);
-    }
-
-    res.end();
-  }
-
   @Get('quiz/findById/:quizId')
   @ApiOperation({ summary: 'Find quiz by id' })
   @ApiOkResponse({ type: Quiz })
@@ -141,6 +102,64 @@ export class AssessmentController {
     return await this.assessmentService.deleteQuiz(quizId);
   }
 
+  @Put('quiz/assign')
+  @ApiOperation({ summary: 'Assign quiz to user' })
+  @ApiResponse({
+    status: 201,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Quiz assigned to user' },
+      },
+    },
+  })
+  @Roles('Admin', 'Teacher')
+  async assignQuizToUser(@Body() request: AssignQuizToUserRequestDto) {
+    return await this.assessmentService.assignQuizToUser(request);
+  }
+
+  @Post('result/ai/grade')
+  @ApiOperation({
+    summary: 'Grade quiz with AI - Does save result as Assessment Result',
+  })
+  @ApiResponse({
+    status: 201,
+    schema: {
+      type: 'object',
+      example: {
+        rating: 10,
+        comment:
+          'Tuyệt vời! Bạn đã trả lời hoàn toàn chính xác. Kiến thức rất vững vàng! Tiếp tục phát huy nhé.',
+      },
+    },
+  })
+  async gradeQuizAI(@Body() request: StudentAnswerDto) {
+    return await this.assessmentService.gradeQuizAI(request);
+  }
+
+  @Post('result/ai/grade/realtime')
+  @ApiOperation({
+    summary:
+      "Grade quiz with AI (realtime chunk response in plain text) - Doesn't save result",
+  })
+  @ApiResponse({
+    status: 201,
+    schema: { type: 'string', example: 'Very well answered' },
+  })
+  async gradeQuizAIRealtime(@Res() res: Response, @Body() request: Answer) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
+    res.flushHeaders();
+    const generator = await this.assessmentService.gradeQuizAIRealtime(request);
+
+    for await (const chunk of generator) {
+      const text = chunk;
+      res.write(text);
+    }
+
+    res.end();
+  }
+
   @Get('result/user/:studentId')
   @ApiOperation({ summary: 'Get assessment result' })
   @ApiOkResponse({ type: AssessmentResult, isArray: true })
@@ -166,21 +185,5 @@ export class AssessmentController {
     @Param('assessResId', new ObjectIdPipe()) assessResId: string,
   ) {
     return await this.assessmentService.deleteAssessResult(assessResId);
-  }
-
-  @Put('quiz/assign')
-  @ApiOperation({ summary: 'Assign quiz to user' })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      properties: {
-        message: { type: 'string', example: 'Quiz assigned to user' },
-      },
-    },
-  })
-  @Roles('Admin', 'Teacher')
-  async assignQuizToUser(@Body() request: AssignQuizToUserRequestDto) {
-    return await this.assessmentService.assignQuizToUser(request);
   }
 }

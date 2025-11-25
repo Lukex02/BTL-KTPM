@@ -24,7 +24,6 @@ export class AuthService {
     password: string,
   ): Promise<UserDto | null> {
     const user = await this.userService.findUserByUsername(username);
-    console.log(user);
     if (!user) return null;
 
     const passwordValid = await bcrypt.compare(password, user.password);

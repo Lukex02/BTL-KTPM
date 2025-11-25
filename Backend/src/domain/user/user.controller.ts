@@ -86,15 +86,12 @@ export class UserController {
       },
     },
   })
-  async update(
-    @Param('userId', new ObjectIdPipe()) userId: string,
-    @Body() update: UpdateUserDto,
-  ) {
+  async update(@Body() update: UpdateUserDto) {
     return await this.userService.updateUser(update);
   }
 
   @Delete('delete')
-  @ApiOperation({ summary: 'Delete user' })
+  @ApiOperation({ summary: 'Delete current used user' })
   @ApiResponse({
     status: 201,
     schema: {
@@ -110,7 +107,7 @@ export class UserController {
   }
 
   @Delete('delete/:userId')
-  @ApiOperation({ summary: 'Delete user' })
+  @ApiOperation({ summary: 'Delete user by id' })
   @ApiResponse({
     status: 201,
     schema: {

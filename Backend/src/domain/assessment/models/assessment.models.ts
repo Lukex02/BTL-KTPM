@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class Question {
   @ApiProperty({ description: 'Question id', example: 1, required: true })
@@ -76,6 +77,7 @@ export class Answer {
     example: "What's the capital of France?",
     required: true,
   })
+  @IsString()
   question: string;
 
   @ApiProperty({

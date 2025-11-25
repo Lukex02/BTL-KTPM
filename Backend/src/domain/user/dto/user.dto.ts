@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class UserDto {
   @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
+  @IsString()
   id?: string;
 
   @ApiProperty({
@@ -9,6 +11,7 @@ export class UserDto {
     example: 'NgVanA',
     required: false,
   })
+  @IsString()
   username?: string;
 
   @ApiProperty({
@@ -16,6 +19,7 @@ export class UserDto {
     example: 'Student',
     required: false,
   })
+  @IsString()
   role?: string;
 
   @ApiProperty({
@@ -23,6 +27,7 @@ export class UserDto {
     example: '$2abc$12$0$0$1234567890123456789012345678901234567890',
     required: false,
   })
+  @IsString()
   password?: string;
 
   @ApiProperty({
@@ -30,6 +35,7 @@ export class UserDto {
     example: 'NgVanA',
     required: false,
   })
+  @IsString()
   name?: string;
 
   @ApiProperty({
@@ -37,11 +43,22 @@ export class UserDto {
     example: 'NgVanA',
     required: false,
   })
+  @IsEmail()
   email?: string;
+
+  @ApiProperty({
+    description:
+      '(For student) Assigned quiz ids - (For teacher) Created quiz ids',
+    example: ['123456', 'abcdef'],
+    required: false,
+  })
+  @IsArray()
+  assignedQuizIds?: string[];
 }
 
 export class UpdateUserDto {
   @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
+  @IsString()
   id?: string;
 
   @ApiProperty({
@@ -49,6 +66,7 @@ export class UpdateUserDto {
     example: 'NgVanA',
     required: false,
   })
+  @IsString()
   username?: string;
 
   @ApiProperty({
@@ -56,6 +74,7 @@ export class UpdateUserDto {
     example: 'Student',
     required: false,
   })
+  @IsString()
   role?: string;
 
   @ApiProperty({
@@ -63,6 +82,7 @@ export class UpdateUserDto {
     example: 'Nguyen Van A',
     required: false,
   })
+  @IsString()
   name?: string;
 
   @ApiProperty({
@@ -70,6 +90,7 @@ export class UpdateUserDto {
     example: 'ngvana@gmail.com',
     required: false,
   })
+  @IsEmail()
   email?: string;
 }
 
@@ -79,6 +100,8 @@ export class ChangePasswordDto {
     example: 'NgVanA',
     required: false,
   })
+  @IsString()
+  @IsNotEmpty()
   userId: string;
 
   @ApiProperty({
@@ -86,6 +109,7 @@ export class ChangePasswordDto {
     example: '123456',
     required: true,
   })
+  @IsString()
   oldPassword: string;
 
   @ApiProperty({
@@ -93,6 +117,7 @@ export class ChangePasswordDto {
     example: '123456',
     required: true,
   })
+  @IsString()
   newPassword: string;
 
   @ApiProperty({
@@ -100,5 +125,6 @@ export class ChangePasswordDto {
     example: '123456',
     required: true,
   })
+  @IsString()
   confirmNewPassword: string;
 }

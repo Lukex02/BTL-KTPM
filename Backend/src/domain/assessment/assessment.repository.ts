@@ -22,6 +22,7 @@ import {
 } from './dto/assessment.dto';
 import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
 import { AIRepository } from 'src/common/AI/ai.repository';
+import { UserService } from 'src/domain/user/user.service';
 
 @Injectable()
 export class MongoAssessmentRepo
@@ -31,6 +32,7 @@ export class MongoAssessmentRepo
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
     @Inject('AI_SERVICE') private readonly AIService: AIRepository,
+    @Inject('UserService') private readonly UserService: UserService,
   ) {
     super(db, 'assessment'); // collectionName
   }
@@ -107,7 +109,9 @@ export class MongoAssessmentRepo
   }
 
   async findQuizByUserId(userId: string): Promise<Quiz[]> {
-    const quizIdList = await this.findOne({ userId }, 'user');
+    const quizIdList = await this.UserService.findUserById(userId).then(
+      (user) => user.assignedQuizIds?.map((id) => new ObjectId(id)),
+    );
     const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
     if (!quizzes) return [];
     return quizzes.map((q) => {
@@ -126,6 +130,11 @@ export class MongoAssessmentRepo
   }
 
   async deleteQuiz(quizId: string): Promise<DeleteResult> {
+    await this.updateMany(
+      { assignedQuizIds: quizId },
+      { $pull: { assignedQuizIds: quizId } },
+      'user',
+    );
     return await this.deleteOne({ _id: new ObjectId(quizId) }, 'quiz');
   }
 
@@ -152,14 +161,14 @@ export class MongoAssessmentRepo
     request: AssignQuizToUserRequestDto,
   ): Promise<UpdateResult> {
     const { quizId, userId } = request;
-    const user = await this.findOne({ _id: new ObjectId(userId) }, 'user');
+    const user = await this.UserService.findUserById(userId);
     if (!user) throw new NotFoundException('User not found');
 
     const quiz = await this.findOne({ _id: new ObjectId(quizId) }, 'quiz');
     if (!quiz) throw new NotFoundException('Quiz not found');
 
     const userQuiz = await this.findOne(
-      { _id: new ObjectId(userId), quizId },
+      { _id: new ObjectId(userId), assignedQuizIds: quizId },
       'user',
     );
     if (userQuiz)
@@ -167,7 +176,7 @@ export class MongoAssessmentRepo
 
     return await this.updateOne(
       { _id: new ObjectId(userId) },
-      { $addToSet: { quizId } },
+      { $addToSet: { assignedQuizIds: quizId } },
       'user',
     );
   }

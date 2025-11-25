@@ -1,11 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Answer, Question } from '../models/assessment.models';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class StudentAnswerDto {
   @ApiProperty({ description: 'Quiz id', example: '0000', required: true })
+  @IsNotEmpty()
+  @IsString()
   quizId: string;
 
   @ApiProperty({ description: 'Student id', example: 'abcdef', required: true })
+  @IsNotEmpty()
+  @IsString()
   studentId: string;
 
   @ApiProperty({
@@ -14,6 +19,8 @@ export class StudentAnswerDto {
     type: Answer,
     isArray: true,
   })
+  @IsNotEmpty()
+  @IsArray()
   answers: Answer[];
 }
 
@@ -23,6 +30,8 @@ export class GenQuizRequestDto {
     example: 'Math',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   topic: string;
 
   @ApiProperty({
@@ -30,6 +39,8 @@ export class GenQuizRequestDto {
     example: 'multiple-choice',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   type: string;
 
   @ApiProperty({
@@ -37,6 +48,8 @@ export class GenQuizRequestDto {
     example: 'easy',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   difficulty: string;
 
   @ApiProperty({
@@ -44,16 +57,28 @@ export class GenQuizRequestDto {
     example: 1,
     required: true,
   })
+  @IsNumber()
   numberOfQuestions: number;
 }
 
 export class CreateQuizRequestDto {
+  @ApiProperty({
+    description: 'Created user id',
+    example: '0000',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  userId: string;
+
   @ApiProperty({
     description: 'Quiz title',
     example: 'Math Quiz',
     required: true,
     isArray: true,
   })
+  @IsNotEmpty()
+  @IsString()
   title: string;
 
   @ApiProperty({
@@ -61,6 +86,8 @@ export class CreateQuizRequestDto {
     example: 'Quiz description',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   description: string;
 
   @ApiProperty({
@@ -69,11 +96,15 @@ export class CreateQuizRequestDto {
     type: Question,
     isArray: true,
   })
+  @IsNotEmpty()
+  @IsArray()
   questions: Question[];
 }
 
 export class UpdateQuizDto {
   @ApiProperty({ description: 'Quiz id', example: '0000', required: true })
+  @IsNotEmpty()
+  @IsString()
   quizId: string;
 
   @ApiProperty({
@@ -81,6 +112,7 @@ export class UpdateQuizDto {
     example: 'Math Quiz',
     required: false,
   })
+  @IsString()
   title?: string;
 
   @ApiProperty({
@@ -88,6 +120,7 @@ export class UpdateQuizDto {
     example: 'Quiz description',
     required: false,
   })
+  @IsString()
   description?: string;
 
   @ApiProperty({
@@ -96,6 +129,7 @@ export class UpdateQuizDto {
     type: Question,
     isArray: true,
   })
+  @IsArray()
   questions?: Question[];
 }
 
@@ -105,6 +139,8 @@ export class AssignQuizToUserRequestDto {
     example: '0000',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   quizId: string;
 
   @ApiProperty({
@@ -112,5 +148,7 @@ export class AssignQuizToUserRequestDto {
     example: '1badfas3231',
     required: true,
   })
+  @IsNotEmpty()
+  @IsString()
   userId: string;
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AssessmentController } from './assessment.controller';
 import {
   AssessmentService,
@@ -19,9 +19,10 @@ import { MongoAssessmentRepo } from './assessment.repository';
 import { Db } from 'mongodb';
 import { MongoModule } from 'src/database/mongodb/mongodb.module';
 import { AIModule } from 'src/common/AI/ai.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [MongoModule, AIModule],
+  imports: [MongoModule, AIModule, forwardRef(() => UserModule)],
   controllers: [AssessmentController],
   providers: [
     MongoAssessmentRepo,

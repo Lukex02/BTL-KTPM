@@ -10,9 +10,9 @@ export class User {
 }
 
 export class Student extends User {
-  quizIds: string[];
+  assignedQuizIds: string[];
 }
 export class Teacher extends User {
-  createdQuizIds: string[];
+  assignedQuizIds: string[];
 }
 export class Admin extends User {}
