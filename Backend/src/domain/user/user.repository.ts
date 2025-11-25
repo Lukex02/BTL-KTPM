@@ -7,6 +7,7 @@ import {
 } from 'mongodb';
 import {
   BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
@@ -16,10 +17,15 @@ import { IUserRepository } from '../user/user.interface';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import { User } from './models/user.models';
 import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
+import { AssessmentService } from 'src/domain/assessment/assessment.service';
 
 @Injectable()
 export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
-  constructor(@Inject('MONGO_DB_CONN') db: Db) {
+  constructor(
+    @Inject('MONGO_DB_CONN') db: Db,
+    @Inject(forwardRef(() => AssessmentService))
+    private readonly AssessmentService: AssessmentService,
+  ) {
     super(db, 'user'); // collectionName
   }
 
@@ -78,6 +84,9 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
   }
 
   async deleteUser(userId: string): Promise<DeleteResult> {
+    (await this.AssessmentService.getAssessResult(userId)).map(async (res) => {
+      if (res.id) await this.AssessmentService.deleteAssessResult(res.id);
+    });
     return await this.deleteOne({ _id: new ObjectId(userId) });
   }
 }

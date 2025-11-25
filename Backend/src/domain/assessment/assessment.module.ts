@@ -45,6 +45,6 @@ import { UserModule } from '../user/user.module';
     SaveAssessResult,
     AssignQuizToUser,
   ],
-  exports: ['IAssessmentRepository'],
+  exports: [AssessmentService],
 })
 export class AssessmentModule {}

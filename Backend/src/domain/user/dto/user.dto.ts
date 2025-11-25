@@ -1,9 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class UserDto {
   @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
   @IsString()
+  @IsMongoId()
   id?: string;
 
   @ApiProperty({
@@ -59,6 +66,7 @@ export class UserDto {
 export class UpdateUserDto {
   @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
   @IsString()
+  @IsMongoId()
   id?: string;
 
   @ApiProperty({
@@ -102,6 +110,7 @@ export class ChangePasswordDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsMongoId()
   userId: string;
 
   @ApiProperty({

@@ -78,7 +78,7 @@ export class AssessmentController {
   @Put('quiz/update')
   @ApiOperation({ summary: 'Update quiz' })
   @ApiResponse({
-    status: 201,
+    status: 200,
     schema: {
       type: 'object',
       properties: { message: { type: 'string', example: 'Quiz updated' } },
@@ -91,7 +91,7 @@ export class AssessmentController {
   @Delete('quiz/delete/:quizId')
   @ApiOperation({ summary: 'Delete quiz' })
   @ApiResponse({
-    status: 201,
+    status: 200,
     schema: {
       type: 'object',
       properties: { message: { type: 'string', example: 'Quiz deleted' } },
@@ -105,7 +105,7 @@ export class AssessmentController {
   @Put('quiz/assign')
   @ApiOperation({ summary: 'Assign quiz to user' })
   @ApiResponse({
-    status: 201,
+    status: 200,
     schema: {
       type: 'object',
       properties: {
@@ -172,7 +172,7 @@ export class AssessmentController {
   @Delete('result/:assessResId')
   @ApiOperation({ summary: 'Delete assessment result' })
   @ApiResponse({
-    status: 201,
+    status: 200,
     schema: {
       type: 'object',
       properties: {

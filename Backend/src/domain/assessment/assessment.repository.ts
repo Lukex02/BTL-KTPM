@@ -7,6 +7,7 @@ import {
 } from 'mongodb';
 import {
   BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
@@ -32,7 +33,8 @@ export class MongoAssessmentRepo
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
     @Inject('AI_SERVICE') private readonly AIService: AIRepository,
-    @Inject('UserService') private readonly UserService: UserService,
+    @Inject(forwardRef(() => UserService))
+    private readonly UserService: UserService,
   ) {
     super(db, 'assessment'); // collectionName
   }

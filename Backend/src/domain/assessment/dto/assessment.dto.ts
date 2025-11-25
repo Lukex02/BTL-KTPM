@@ -1,16 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Answer, Question } from '../models/assessment.models';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsMongoId,
+  isMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class StudentAnswerDto {
   @ApiProperty({ description: 'Quiz id', example: '0000', required: true })
   @IsNotEmpty()
   @IsString()
+  @IsMongoId()
   quizId: string;
 
   @ApiProperty({ description: 'Student id', example: 'abcdef', required: true })
   @IsNotEmpty()
   @IsString()
+  @IsMongoId()
   studentId: string;
 
   @ApiProperty({

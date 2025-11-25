@@ -15,9 +15,14 @@ import {
 } from './user.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { RolesGuard } from 'src/auth/guards/role.guard';
+import { AssessmentModule } from '../assessment/assessment.module';
 
 @Module({
-  imports: [MongoModule, forwardRef(() => AuthModule)],
+  imports: [
+    MongoModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => AssessmentModule),
+  ],
   controllers: [UserController],
   providers: [
     MongoUserRepo,
@@ -25,10 +30,6 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
     {
       provide: 'IUserRepository',
       useClass: MongoUserRepo,
-    },
-    {
-      provide: 'UserService',
-      useClass: UserService,
     },
     RolesGuard,
     UserService,
@@ -40,6 +41,6 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
     UpdateUser,
     DeleteUser,
   ],
-  exports: ['UserService'],
+  exports: [UserService],
 })
 export class UserModule {}

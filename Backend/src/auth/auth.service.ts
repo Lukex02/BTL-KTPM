@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -15,7 +16,7 @@ import { UserService } from 'src/domain/user/user.service';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    @Inject('UserService') private userService: UserService,
+    @Inject(UserService) private userService: UserService,
   ) {}
 
   // ===== Validate username/password =====
@@ -54,17 +55,20 @@ export class AuthService {
 
   // ===== Register =====
   async register(username: string, password: string, role: string) {
-    const user = await this.userService.findUserByUsername(username);
-    if (user) throw new BadRequestException('Username already exists');
+    try {
+      const user = await this.userService.findUserByUsername(username);
+      if (user) throw new BadRequestException('Username already exists');
+    } catch (error) {
+      if (!(error instanceof NotFoundException)) throw error;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.userService.createUser({
+        username,
+        password: hashedPassword,
+        role,
+      });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await this.userService.createUser({
-      username,
-      password: hashedPassword,
-      role,
-    });
-
-    return { message: 'User created' };
+      return { message: 'User created' };
+    }
   }
 
   // ===== Login =====
