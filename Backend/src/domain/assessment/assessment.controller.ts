@@ -31,9 +31,9 @@ import type { Response } from 'express';
 import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
 import { ObjectIdPipe } from 'src/common/pipe/objectid.pipe';
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
-import { Roles } from 'src/auth/guards/role.guard';
+import { Roles, RolesGuard } from 'src/auth/guards/role.guard';
 
-@UseGuards(JwtAccessGuard)
+@UseGuards(JwtAccessGuard, RolesGuard)
 @ApiBearerAuth()
 @ApiTags('Assessment')
 @Controller('assessment')
@@ -51,7 +51,7 @@ export class AssessmentController {
   })
   @Roles('Admin', 'Teacher')
   async createQuiz(@Body() request: CreateQuizRequestDto) {
-    return await this.assessmentService.createQuiz(request);
+    return { message: await this.assessmentService.createQuiz(request) };
   }
 
   @Get('quiz/ai/gen')
@@ -85,7 +85,7 @@ export class AssessmentController {
     },
   })
   async updateQuiz(@Body() update: UpdateQuizDto) {
-    return await this.assessmentService.updateQuiz(update);
+    return { message: await this.assessmentService.updateQuiz(update) };
   }
 
   @Delete('quiz/delete/:quizId')
@@ -99,7 +99,7 @@ export class AssessmentController {
   })
   @Roles('Teacher', 'Admin')
   async deleteQuiz(@Param('quizId', new ObjectIdPipe()) quizId: string) {
-    return await this.assessmentService.deleteQuiz(quizId);
+    return { message: await this.assessmentService.deleteQuiz(quizId) };
   }
 
   @Put('quiz/assign')
@@ -115,7 +115,7 @@ export class AssessmentController {
   })
   @Roles('Admin', 'Teacher')
   async assignQuizToUser(@Body() request: AssignQuizToUserRequestDto) {
-    return await this.assessmentService.assignQuizToUser(request);
+    return { message: await this.assessmentService.assignQuizToUser(request) };
   }
 
   @Post('result/ai/grade')
@@ -184,6 +184,8 @@ export class AssessmentController {
   async deleteAssessResult(
     @Param('assessResId', new ObjectIdPipe()) assessResId: string,
   ) {
-    return await this.assessmentService.deleteAssessResult(assessResId);
+    return {
+      message: await this.assessmentService.deleteAssessResult(assessResId),
+    };
   }
 }

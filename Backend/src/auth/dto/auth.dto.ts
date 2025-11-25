@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty({
@@ -6,6 +7,7 @@ export class LoginDto {
     example: 'NgVanA',
     required: true,
   })
+  @IsString()
   username: string;
 
   @ApiProperty({
@@ -13,6 +15,7 @@ export class LoginDto {
     example: '123456',
     required: true,
   })
+  @IsString()
   password: string;
 }
 
@@ -22,5 +25,6 @@ export class RegisterDto extends LoginDto {
     example: 'Student',
     required: true,
   })
+  @IsString()
   role: string;
 }

@@ -143,21 +143,19 @@ export class UserService {
     return await this.FindUserByUsername.execute(username);
   }
 
-  async changeUserPassword(
-    update: ChangePasswordDto,
-  ): Promise<{ message: string }> {
-    return { message: await this.ChangeUserPassword.execute(update) };
+  async changeUserPassword(update: ChangePasswordDto): Promise<string> {
+    return await this.ChangeUserPassword.execute(update);
   }
 
-  async createUser(user: User): Promise<{ message: string }> {
-    return { message: await this.CreateUser.execute(user) };
+  async createUser(user: User): Promise<string> {
+    return await this.CreateUser.execute(user);
   }
 
-  async updateUser(update: UpdateUserDto): Promise<{ message: string }> {
-    return { message: await this.UpdateUser.execute(update) };
+  async updateUser(update: UpdateUserDto): Promise<string> {
+    return await this.UpdateUser.execute(update);
   }
 
-  async deleteUser(userId: string): Promise<{ message: string }> {
-    return { message: await this.DeleteUser.execute(userId) };
+  async deleteUser(userId: string): Promise<string> {
+    return await this.DeleteUser.execute(userId);
   }
 }

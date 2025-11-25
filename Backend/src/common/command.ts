@@ -1,3 +1,3 @@
 export abstract class Command {
-  abstract execute(request: any): Promise<any>;
+  abstract execute(...request: any): Promise<any>;
 }

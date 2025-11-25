@@ -19,7 +19,6 @@ import {
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { AssessmentService } from '../assessment/assessment.service';
-import { AssessmentModule } from '../assessment/assessment.module';
 
 describe('UserController (integration with mongodb-memory-server)', () => {
   let app: INestApplication;
@@ -131,11 +130,24 @@ describe('UserController (integration with mongodb-memory-server)', () => {
       .send(payload);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('message');
+    // verify update persisted by fetching the user
+    const getRes = await request(app.getHttpServer()).get(
+      `/user/findById/${payload.id}`,
+    );
+    expect(getRes.status).toBe(200);
+    expect(getRes.body).toHaveProperty('email', 'johnny@example.com');
   });
 
-  it('DELETE /user/delete -> deletes current user and returns message', async () => {
-    const res = await request(app.getHttpServer()).delete('/user/delete');
+  it('DELETE /user/delete/:userId -> deletes current user and returns message', async () => {
+    const res = await request(app.getHttpServer()).delete(
+      `/user/delete/${seededId}`,
+    );
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('message');
+    // verify the user was removed
+    const getRes = await request(app.getHttpServer()).get(
+      `/user/findById/${seededId}`,
+    );
+    expect(getRes.status).toBe(404);
   });
 });

@@ -5,6 +5,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db } from 'mongodb';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
+import { NotFoundException } from '@nestjs/common';
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 
@@ -16,19 +17,40 @@ describe('AssessmentController (e2e)', () => {
 
   const validId = '507f1f77bcf86cd799439011';
 
-  const mockQuiz = { id: validId, title: 'Sample Quiz', questions: [] };
-  const mockAssessResult = { id: validId, rating: 10, comment: 'Good' };
+  let currentQuiz: any = { id: validId, title: 'Sample Quiz', questions: [] };
+  let assessResults: any[] = [{ id: validId, rating: 10, comment: 'Good' }];
 
   const mockAssessmentService = {
-    createQuiz: jest.fn().mockResolvedValue({ message: 'Quiz created' }),
-    generateQuizAI: jest.fn().mockResolvedValue(mockQuiz),
-    findQuizById: jest.fn().mockResolvedValue(mockQuiz),
-    findQuizByUserId: jest.fn().mockResolvedValue([mockQuiz]),
-    updateQuiz: jest.fn().mockResolvedValue({ message: 'Quiz updated' }),
-    deleteQuiz: jest.fn().mockResolvedValue({ message: 'Quiz deleted' }),
-    assignQuizToUser: jest
+    createQuiz: jest.fn().mockImplementation(async (payload: any) => {
+      currentQuiz = { id: validId, ...payload };
+      return 'Quiz created';
+    }),
+    generateQuizAI: jest
       .fn()
-      .mockResolvedValue({ message: 'Quiz assigned to user' }),
+      .mockImplementation(async (req: any) => currentQuiz),
+    findQuizById: jest.fn().mockImplementation(async (id: string) => {
+      if (!currentQuiz || currentQuiz.id !== id)
+        throw new NotFoundException('Quiz not found');
+      return currentQuiz;
+    }),
+    findQuizByUserId: jest
+      .fn()
+      .mockImplementation(async (userId: string) =>
+        currentQuiz ? [currentQuiz] : [],
+      ),
+    updateQuiz: jest.fn().mockImplementation(async (update: any) => {
+      if (!currentQuiz || currentQuiz.id !== update.id)
+        throw new NotFoundException("Couldn't update quiz");
+      currentQuiz = { ...currentQuiz, ...update };
+      return 'Quiz updated';
+    }),
+    deleteQuiz: jest.fn().mockImplementation(async (id: string) => {
+      if (!currentQuiz || currentQuiz.id !== id)
+        throw new NotFoundException("Couldn't delete quiz");
+      currentQuiz = null;
+      return 'Quiz deleted';
+    }),
+    assignQuizToUser: jest.fn().mockResolvedValue('Quiz assigned to user'),
     gradeQuizAI: jest
       .fn()
       .mockResolvedValue({ rating: 10, comment: 'Excellent' }),
@@ -36,11 +58,14 @@ describe('AssessmentController (e2e)', () => {
       yield 'chunk1';
       yield 'chunk2';
     }),
-    getAssessResult: jest.fn().mockResolvedValue([mockAssessResult]),
-    deleteAssessResult: jest
+    getAssessResult: jest
       .fn()
-      .mockResolvedValue({ message: 'Assessment result deleted' }),
-  };
+      .mockImplementation(async (studentId: string) => assessResults),
+    deleteAssessResult: jest.fn().mockImplementation(async (id: string) => {
+      assessResults = assessResults.filter((r) => r.id !== id);
+      return 'Assessment result deleted';
+    }),
+  } as Partial<AssessmentService>;
 
   const mockJwtGuard = {
     canActivate: (context: ExecutionContext) => {
@@ -97,7 +122,7 @@ describe('AssessmentController (e2e)', () => {
       '/assessment/quiz/ai/gen?topic=math',
     );
     expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockQuiz);
+    expect(res.body).toEqual(currentQuiz);
     expect(mockAssessmentService.generateQuizAI).toHaveBeenCalled();
   });
 
@@ -106,7 +131,7 @@ describe('AssessmentController (e2e)', () => {
       `/assessment/quiz/findById/${validId}`,
     );
     expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockQuiz);
+    expect(res.body).toEqual(currentQuiz);
     expect(mockAssessmentService.findQuizById).toHaveBeenCalledWith(validId);
   });
 
@@ -115,7 +140,7 @@ describe('AssessmentController (e2e)', () => {
       `/assessment/quiz/findByUserId/${validId}`,
     );
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([mockQuiz]);
+    expect(res.body).toEqual([currentQuiz]);
     expect(mockAssessmentService.findQuizByUserId).toHaveBeenCalledWith(
       validId,
     );
@@ -129,6 +154,12 @@ describe('AssessmentController (e2e)', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ message: 'Quiz updated' });
     expect(mockAssessmentService.updateQuiz).toHaveBeenCalledWith(payload);
+    // verify update by fetching quiz
+    const getRes = await request(app.getHttpServer()).get(
+      `/assessment/quiz/findById/${validId}`,
+    );
+    expect(getRes.status).toBe(200);
+    expect(getRes.body).toHaveProperty('title', 'Updated');
   });
 
   it('DELETE /assessment/quiz/delete/:quizId -> deletes quiz', async () => {
@@ -138,6 +169,11 @@ describe('AssessmentController (e2e)', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ message: 'Quiz deleted' });
     expect(mockAssessmentService.deleteQuiz).toHaveBeenCalledWith(validId);
+    // verify deletion by attempting to fetch and expecting 404
+    const getRes = await request(app.getHttpServer()).get(
+      `/assessment/quiz/findById/${validId}`,
+    );
+    expect(getRes.status).toBe(404);
   });
 
   it('PUT /assessment/quiz/assign -> assigns quiz', async () => {
@@ -181,7 +217,7 @@ describe('AssessmentController (e2e)', () => {
       `/assessment/result/user/${validId}`,
     );
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([mockAssessResult]);
+    expect(res.body).toEqual(assessResults);
     expect(mockAssessmentService.getAssessResult).toHaveBeenCalledWith(validId);
   });
 
@@ -194,5 +230,11 @@ describe('AssessmentController (e2e)', () => {
     expect(mockAssessmentService.deleteAssessResult).toHaveBeenCalledWith(
       validId,
     );
+    // verify deletion by fetching results for the user
+    const getRes = await request(app.getHttpServer()).get(
+      `/assessment/result/user/${validId}`,
+    );
+    expect(getRes.status).toBe(200);
+    expect(getRes.body).toEqual([]);
   });
 });

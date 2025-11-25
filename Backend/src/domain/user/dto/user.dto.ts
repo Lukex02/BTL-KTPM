@@ -61,6 +61,15 @@ export class UserDto {
   })
   @IsArray()
   assignedQuizIds?: string[];
+
+  @ApiProperty({
+    description:
+      '(For student) Assigned content ids - (For teacher) Created content ids',
+    example: ['123456', 'abcdef'],
+    required: false,
+  })
+  @IsArray()
+  assignedContentIds?: string[];
 }
 
 export class UpdateUserDto {

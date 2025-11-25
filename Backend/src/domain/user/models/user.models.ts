@@ -1,4 +1,4 @@
-export class User {
+export abstract class User {
   constructor(
     public id?: string,
     public username?: string,
@@ -11,8 +11,10 @@ export class User {
 
 export class Student extends User {
   assignedQuizIds: string[];
+  assignedContentIds: string[];
 }
 export class Teacher extends User {
   assignedQuizIds: string[];
+  assignedContentIds: string[];
 }
 export class Admin extends User {}

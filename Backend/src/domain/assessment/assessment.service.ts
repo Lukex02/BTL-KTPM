@@ -205,10 +205,8 @@ export class AssessmentService {
     private readonly AssignQuizToUser: AssignQuizToUser,
   ) {}
 
-  async createQuiz(
-    request: CreateQuizRequestDto,
-  ): Promise<{ message: string }> {
-    return { message: await this.CreateQuiz.execute(request) };
+  async createQuiz(request: CreateQuizRequestDto): Promise<string> {
+    return await this.CreateQuiz.execute(request);
   }
 
   async generateQuizAI(request: GenQuizRequestDto): Promise<Quiz> {
@@ -235,31 +233,27 @@ export class AssessmentService {
     return await this.FindQuizByUserId.execute(userId);
   }
 
-  async updateQuiz(update: UpdateQuizDto): Promise<{ message: string }> {
-    return { message: await this.UpdateQuiz.execute(update) };
+  async updateQuiz(update: UpdateQuizDto): Promise<string> {
+    return await this.UpdateQuiz.execute(update);
   }
 
-  async deleteQuiz(quizId: string): Promise<{ message: string }> {
-    return { message: await this.DeleteQuiz.execute(quizId) };
+  async deleteQuiz(quizId: string): Promise<string> {
+    return await this.DeleteQuiz.execute(quizId);
   }
 
   async getAssessResult(studentId: string): Promise<AssessmentResult[]> {
     return await this.GetAssessResult.execute(studentId);
   }
 
-  async deleteAssessResult(assessResId: string): Promise<{ message: string }> {
-    return { message: await this.DeleteAssessResult.execute(assessResId) };
+  async deleteAssessResult(assessResId: string): Promise<string> {
+    return await this.DeleteAssessResult.execute(assessResId);
   }
 
-  async saveAssessResult(
-    assessRes: AssessmentResult,
-  ): Promise<{ message: string }> {
-    return { message: await this.SaveAssessResult.execute(assessRes) };
+  async saveAssessResult(assessRes: AssessmentResult): Promise<string> {
+    return await this.SaveAssessResult.execute(assessRes);
   }
 
-  async assignQuizToUser(
-    request: AssignQuizToUserRequestDto,
-  ): Promise<{ message: string }> {
-    return { message: await this.AssignQuizToUser.execute(request) };
+  async assignQuizToUser(request: AssignQuizToUserRequestDto): Promise<string> {
+    return await this.AssignQuizToUser.execute(request);
   }
 }

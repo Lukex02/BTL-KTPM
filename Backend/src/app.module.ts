@@ -4,6 +4,7 @@ import { AssessmentModule } from 'src/domain/assessment/assessment.module';
 import mongoDbConfig from 'src/database/mongodb/mongodb.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './domain/user/user.module';
+import { ContentModule } from './domain/content/content.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './domain/user/user.module';
     }),
     AssessmentModule,
     UserModule,
+    ContentModule,
     AuthModule,
   ],
 })

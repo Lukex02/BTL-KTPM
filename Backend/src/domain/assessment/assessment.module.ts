@@ -20,9 +20,15 @@ import { Db } from 'mongodb';
 import { MongoModule } from 'src/database/mongodb/mongodb.module';
 import { AIModule } from 'src/common/AI/ai.module';
 import { UserModule } from '../user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [MongoModule, AIModule, forwardRef(() => UserModule)],
+  imports: [
+    MongoModule,
+    AIModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => UserModule),
+  ],
   controllers: [AssessmentController],
   providers: [
     MongoAssessmentRepo,

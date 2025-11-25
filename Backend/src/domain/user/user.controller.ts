@@ -7,6 +7,7 @@ import {
   Put,
   UseGuards,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -72,8 +73,11 @@ export class UserController {
       },
     },
   })
-  async changePassword(@Body() update: ChangePasswordDto) {
-    return await this.userService.changeUserPassword(update);
+  async changePassword(@Req() req: any, @Body() update: ChangePasswordDto) {
+    const userId = req.user.userId;
+    if (userId !== update.userId || req.use.role !== 'Admin')
+      throw new UnauthorizedException('Unauthorized');
+    return { message: await this.userService.changeUserPassword(update) };
   }
 
   @Put('update')
@@ -86,24 +90,11 @@ export class UserController {
       },
     },
   })
-  async update(@Body() update: UpdateUserDto) {
-    return await this.userService.updateUser(update);
-  }
-
-  @Delete('delete')
-  @ApiOperation({ summary: 'Delete current used user' })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      properties: {
-        message: { type: 'string', example: 'User deleted' },
-      },
-    },
-  })
-  async delete(@Req() req: any) {
+  async update(@Req() req: any, @Body() update: UpdateUserDto) {
     const userId = req.user.userId;
-    return await this.userService.deleteUser(userId);
+    if (userId !== update.id && req.user.role !== 'Admin')
+      throw new UnauthorizedException('Unauthorized');
+    return { message: await this.userService.updateUser(update) };
   }
 
   @Delete('delete/:userId')
@@ -117,8 +108,13 @@ export class UserController {
       },
     },
   })
-  @Roles('Admin')
-  async deleteById(@Param('userId', new ObjectIdPipe()) userId: string) {
-    return await this.userService.deleteUser(userId);
+  async deleteById(
+    @Req() req: any,
+    @Param('userId', new ObjectIdPipe()) userId: string,
+  ) {
+    const tokenUserId = req.user.userId;
+    if (tokenUserId !== userId && req.user.role !== 'Admin')
+      throw new UnauthorizedException('Unauthorized');
+    return { message: await this.userService.deleteUser(userId) };
   }
 }

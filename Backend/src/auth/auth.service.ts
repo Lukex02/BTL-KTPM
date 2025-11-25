@@ -67,7 +67,7 @@ export class AuthService {
         role,
       });
 
-      return { message: 'User created' };
+      return 'User created';
     }
   }
 

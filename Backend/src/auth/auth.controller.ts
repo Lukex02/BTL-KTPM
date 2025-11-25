@@ -33,7 +33,13 @@ export class AuthController {
     },
   })
   async register(@Body() body: RegisterDto) {
-    return this.authService.register(body.username, body.password, body.role);
+    return {
+      message: await this.authService.register(
+        body.username,
+        body.password,
+        body.role,
+      ),
+    };
   }
 
   @Post('login')
