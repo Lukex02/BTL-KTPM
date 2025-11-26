@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
-import { IContentRepository } from './content.interface';
+import { IContentRepository } from './interface/content.interface';
 import {
   Db,
   DeleteResult,

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { IContentRepository } from './content.interface';
+import type { IContentRepository } from './interface/content.interface';
 import { Command } from 'src/common/command';
 import { Article, ContentItem, Lesson, Video } from './models/content.model';
 import { FilterDto } from './dto/filter.dto';

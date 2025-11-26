@@ -1,6 +1,10 @@
 import { RefreshDto } from 'src/auth/dto/token.dto';
-import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
-import { User } from './models/user.models';
+import {
+  ChangePasswordDto,
+  UpdateUserDto,
+  UserDto,
+} from 'src/domain/user/dto/user.dto';
+import { User } from 'src/domain/user/models/user.models';
 
 export interface IUserRepository {
   getAll(): Promise<UserDto[]>;

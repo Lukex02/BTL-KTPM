@@ -4,10 +4,10 @@ import {
   GenQuizRequestDto,
   StudentAnswerDto,
   UpdateQuizDto,
-} from './dto/assessment.dto';
-import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
+} from '../dto/assessment.dto';
+import { Answer, AssessmentResult, Quiz } from '../models/assessment.models';
 
-export interface IAssessmentRepository {
+export interface IQuizRepository {
   createQuiz(quiz: CreateQuizRequestDto): Promise<any>;
   generateQuizAI(request: GenQuizRequestDto): Promise<Quiz>;
   gradeQuizAI(request: StudentAnswerDto): Promise<AssessmentResult>;
@@ -16,8 +16,5 @@ export interface IAssessmentRepository {
   findQuizByUserId(userId: string): Promise<Quiz[]>;
   updateQuiz(update: UpdateQuizDto): Promise<any>;
   deleteQuiz(quizId: string): Promise<any>;
-  getAssessResult(studentId: string): Promise<AssessmentResult[]>;
-  deleteAssessResult(assessResId: string): Promise<any>;
-  saveAssessResult(assessRes: AssessmentResult): Promise<any>;
   assignQuizToUser(request: AssignQuizToUserRequestDto): Promise<any>;
 }

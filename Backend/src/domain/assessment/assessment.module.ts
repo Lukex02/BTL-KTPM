@@ -15,7 +15,7 @@ import {
   SaveAssessResult,
   UpdateQuiz,
 } from './assessment.service';
-import { MongoAssessmentRepo } from './assessment.repository';
+import { MongoQuizRepo, MongoAssessResultRepo } from './assessment.repository';
 import { Db } from 'mongodb';
 import { MongoModule } from 'src/database/mongodb/mongodb.module';
 import { AIModule } from 'src/common/AI/ai.module';
@@ -31,11 +31,16 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   controllers: [AssessmentController],
   providers: [
-    MongoAssessmentRepo,
+    MongoQuizRepo,
+    MongoAssessResultRepo,
     Db,
     {
-      provide: 'IAssessmentRepository',
-      useClass: MongoAssessmentRepo,
+      provide: 'IQuizRepository',
+      useClass: MongoQuizRepo,
+    },
+    {
+      provide: 'IAssessResultRepository',
+      useClass: MongoAssessResultRepo,
     },
     AssessmentService,
     CreateQuiz,

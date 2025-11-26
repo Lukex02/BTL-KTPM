@@ -12,7 +12,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { IAssessmentRepository } from '../assessment/assessment.interface';
+import { IQuizRepository } from './interface/quiz.interface';
+import { IAssessResultRepository } from './interface/result.interface';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import {
   GenQuizRequestDto,
@@ -26,10 +27,7 @@ import { AIRepository } from 'src/common/AI/ai.repository';
 import { UserService } from 'src/domain/user/user.service';
 
 @Injectable()
-export class MongoAssessmentRepo
-  extends MongoDBRepo
-  implements IAssessmentRepository
-{
+export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
     @Inject('AI_SERVICE') private readonly AIService: AIRepository,
@@ -140,25 +138,6 @@ export class MongoAssessmentRepo
     return await this.deleteOne({ _id: new ObjectId(quizId) }, 'quiz');
   }
 
-  async getAssessResult(studentId: string): Promise<AssessmentResult[]> {
-    const assessRes = await this.findMany({ studentId });
-    if (!assessRes) return [];
-    return assessRes.map((res) => {
-      const { _id, ...rest } = res;
-      return { id: _id.toString(), ...rest } as AssessmentResult;
-    });
-  }
-
-  async deleteAssessResult(assessResId: string): Promise<DeleteResult> {
-    return await this.deleteOne({ _id: new ObjectId(assessResId) });
-  }
-
-  async saveAssessResult(
-    assessRes: AssessmentResult,
-  ): Promise<InsertOneResult> {
-    return await this.insertOne(assessRes);
-  }
-
   async assignQuizToUser(
     request: AssignQuizToUserRequestDto,
   ): Promise<UpdateResult> {
@@ -181,5 +160,37 @@ export class MongoAssessmentRepo
       { $addToSet: { assignedQuizIds: quizId } },
       'user',
     );
+  }
+}
+
+@Injectable()
+export class MongoAssessResultRepo
+  extends MongoDBRepo
+  implements IAssessResultRepository
+{
+  constructor(
+    @Inject('MONGO_DB_CONN') db: Db,
+    @Inject('AI_SERVICE') private readonly AIService: AIRepository,
+  ) {
+    super(db, 'assessment'); // collectionName for assessment results
+  }
+
+  async getAssessResult(studentId: string): Promise<AssessmentResult[]> {
+    const assessRes = await this.findMany({ studentId });
+    if (!assessRes) return [];
+    return assessRes.map((res) => {
+      const { _id, ...rest } = res;
+      return { id: _id.toString(), ...rest } as AssessmentResult;
+    });
+  }
+
+  async deleteAssessResult(assessResId: string): Promise<DeleteResult> {
+    return await this.deleteOne({ _id: new ObjectId(assessResId) });
+  }
+
+  async saveAssessResult(
+    assessRes: AssessmentResult,
+  ): Promise<InsertOneResult> {
+    return await this.insertOne(assessRes);
   }
 }

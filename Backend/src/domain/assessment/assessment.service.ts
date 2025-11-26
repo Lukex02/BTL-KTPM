@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { IAssessmentRepository } from './assessment.interface';
+import type { IQuizRepository } from './interface/quiz.interface';
+import type { IAssessResultRepository } from './interface/result.interface';
 import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
 import {
   AssignQuizToUserRequestDto,
@@ -13,12 +14,12 @@ import { Command } from 'src/common/command';
 @Injectable()
 export class CreateQuiz implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(request: CreateQuizRequestDto): Promise<string> {
-    const res = await this.assessmentRepo.createQuiz(request);
+    const res = await this.quizRepo.createQuiz(request);
     if (res.insertedId) {
       return 'Quiz created';
     } else {
@@ -30,48 +31,48 @@ export class CreateQuiz implements Command {
 @Injectable()
 export class GenerateQuizAI implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(request: GenQuizRequestDto): Promise<Quiz> {
-    return this.assessmentRepo.generateQuizAI(request);
+    return this.quizRepo.generateQuizAI(request);
   }
 }
 
 @Injectable()
 export class GradeQuizAI implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(request: StudentAnswerDto): Promise<AssessmentResult> {
-    return this.assessmentRepo.gradeQuizAI(request);
+    return this.quizRepo.gradeQuizAI(request);
   }
 }
 
 @Injectable()
 export class GradeQuizAIRealtime implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(request: Answer): Promise<AsyncGenerator | string> {
-    return this.assessmentRepo.gradeQuizAIRealtime(request);
+    return this.quizRepo.gradeQuizAIRealtime(request);
   }
 }
 
 @Injectable()
 export class FindQuizById implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(quizId: string): Promise<Quiz> {
-    const quiz = await this.assessmentRepo.findQuizById(quizId);
+    const quiz = await this.quizRepo.findQuizById(quizId);
     if (!quiz) throw new NotFoundException('Quiz not found');
     return quiz;
   }
@@ -80,12 +81,12 @@ export class FindQuizById implements Command {
 @Injectable()
 export class FindQuizByUserId implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(userId: string): Promise<Quiz[]> {
-    const quiz = await this.assessmentRepo.findQuizByUserId(userId);
+    const quiz = await this.quizRepo.findQuizByUserId(userId);
     if (!quiz) throw new NotFoundException('Quiz not found');
     return quiz;
   }
@@ -94,12 +95,12 @@ export class FindQuizByUserId implements Command {
 @Injectable()
 export class UpdateQuiz implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(update: UpdateQuizDto): Promise<string> {
-    const res = await this.assessmentRepo.updateQuiz(update);
+    const res = await this.quizRepo.updateQuiz(update);
     if (res.modifiedCount || res.matchedCount) {
       return 'Quiz updated';
     } else {
@@ -111,12 +112,12 @@ export class UpdateQuiz implements Command {
 @Injectable()
 export class DeleteQuiz implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(quizId: string): Promise<string> {
-    const res = await this.assessmentRepo.deleteQuiz(quizId);
+    const res = await this.quizRepo.deleteQuiz(quizId);
     if (res.deletedCount) {
       return 'Quiz deleted';
     } else {
@@ -128,12 +129,12 @@ export class DeleteQuiz implements Command {
 @Injectable()
 export class GetAssessResult implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IAssessResultRepository')
+    private readonly assessResultRepo: IAssessResultRepository,
   ) {}
 
   async execute(studentId: string): Promise<AssessmentResult[]> {
-    const res = await this.assessmentRepo.getAssessResult(studentId);
+    const res = await this.assessResultRepo.getAssessResult(studentId);
     if (!res) throw new NotFoundException('Assessment result not found');
     return res;
   }
@@ -142,12 +143,12 @@ export class GetAssessResult implements Command {
 @Injectable()
 export class DeleteAssessResult implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IAssessResultRepository')
+    private readonly assessResultRepo: IAssessResultRepository,
   ) {}
 
   async execute(assessResId: string): Promise<string> {
-    const res = await this.assessmentRepo.deleteAssessResult(assessResId);
+    const res = await this.assessResultRepo.deleteAssessResult(assessResId);
     if (res.deletedCount) {
       return 'Assessment result deleted';
     } else {
@@ -159,24 +160,24 @@ export class DeleteAssessResult implements Command {
 @Injectable()
 export class SaveAssessResult implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IAssessResultRepository')
+    private readonly assessResultRepo: IAssessResultRepository,
   ) {}
 
   async execute(assessRes: AssessmentResult): Promise<string> {
-    return this.assessmentRepo.saveAssessResult(assessRes);
+    return this.assessResultRepo.saveAssessResult(assessRes);
   }
 }
 
 @Injectable()
 export class AssignQuizToUser implements Command {
   constructor(
-    @Inject('IAssessmentRepository')
-    private readonly assessmentRepo: IAssessmentRepository,
+    @Inject('IQuizRepository')
+    private readonly quizRepo: IQuizRepository,
   ) {}
 
   async execute(request: AssignQuizToUserRequestDto): Promise<string> {
-    const res = await this.assessmentRepo.assignQuizToUser(request);
+    const res = await this.quizRepo.assignQuizToUser(request);
     if (res.modifiedCount || res.matchedCount) {
       return 'Quiz assigned to user';
     } else {

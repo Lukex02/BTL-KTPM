@@ -13,7 +13,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { IUserRepository } from '../user/user.interface';
+import { IUserRepository } from './interface/user.interface';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import { User } from './models/user.models';
 import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
