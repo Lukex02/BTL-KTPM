@@ -1,5 +1,5 @@
 // @ts-nocheck
-const API_BASE_URL = "https://localhost:3000";
+const API_BASE_URL = "http://localhost:3000";
 
 /**
  * Hàm gọi API tạo Quiz mới
@@ -7,16 +7,27 @@ const API_BASE_URL = "https://localhost:3000";
  * @returns {Promise} - Trả về kết quả từ server
  */
 async function createQuizAPI(quizData) {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        throw new Error('No access token. Please login.');
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/assessment/quiz/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // Nếu server cần token xác thực, hãy bỏ comment dòng dưới và điền token
-                // 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                'Authorization': `Bearer ${token}`  // Thêm header auth
             },
             body: JSON.stringify(quizData)
         });
+
+        if (response.status === 401) {
+            // Token expire - Bạn có thể add refresh logic ở đây nếu có
+            localStorage.removeItem('accessToken');
+            window.location.href = 'login.html';
+            throw new Error('Session expired. Please login again.');
+        }
 
         const data = await response.json();
 

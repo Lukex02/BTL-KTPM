@@ -155,7 +155,7 @@ if (loginForm) {
 
             setTimeout(() => {
                 if (selectedRole.toLowerCase() === 'instructor') {
-                    window.location.href = "Instructor.html";
+                    window.location.href = "teacher.html";
                 } else {
                     window.location.href = "Index.html";
                 }
