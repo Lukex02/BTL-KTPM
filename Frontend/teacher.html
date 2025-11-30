@@ -111,17 +111,8 @@
                         <button class="btn-primary" onclick="showCreateQuizForm()"><i class="fas fa-plus"></i> Create New Quiz</button>
                     </div>
                     
-                    <div class="quiz-manager-grid">
-                        <div class="quiz-manage-card">
-                            <div class="q-img"><img src="https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=500"></div>
-                            <div class="q-info"><h4>Python for Beginners</h4><p>Draft • Last edited 2 days ago</p></div>
-                            <button class="btn-outline">Edit</button>
-                        </div>
-                        <div class="quiz-manage-card">
-                            <div class="q-img"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500"></div>
-                            <div class="q-info"><h4>Mastering Figma</h4><p class="status-published">Published</p></div>
-                            <button class="btn-outline">Analytics</button>
-                        </div>
+                    <div class="quiz-manager-grid" id="quiz-manager-grid">
+                        <!-- Các quiz sẽ được render động ở đây -->
                     </div>
                 </div>
 
@@ -134,24 +125,25 @@
                             <button class="btn-primary">Save & Preview</button>
                         </div>
                     </div>
-
-                    <div class="quiz-steps">
+                    <form id="create-quiz-form">
+                        <div id="quiz-message" style="display: none;"></div>
+                        <div class="quiz-steps">
                         <button class="step-btn active" onclick="switchQuizStep('basic')">1. Basic Information</button>
                         <button class="step-btn" onclick="switchQuizStep('question')">2. Question Settings</button>
                         <button class="step-btn" onclick="switchQuizStep('publish')">3. Publish</button>
-                    </div>
+                        </div>
                     <div class="step-progress-bar"><div class="bar-fill" id="quiz-progress-fill" style="width: 33%;"></div></div>
 
                     <div id="step-basic" class="step-content active">
                         <div class="card-box">
                             <div class="form-group">
                                 <label>Title</label>
-                                <input type="text" class="form-control" placeholder="Your course title">
+                                <input type="text" id="quiz-title" class="form-control" placeholder="Your course title">
                                 <span class="char-count">0/80</span>
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea class="form-control"  placeholder="Course subtitle"></textarea>
+                                <textarea class="form-control" id="quiz-description" placeholder="Course subtitle"></textarea>
                                 <span class="char-count">0/120</span>
                             </div>
                             <!-- <div class="row-2-col">
@@ -176,44 +168,38 @@
                             </div> -->
                         </div>
                         <div class="step-footer">
-                            <button class="btn-primary" onclick="switchQuizStep('question')">Next Step <i class="fas fa-arrow-right"></i></button>
+                            <button type="button" class="btn-primary" onclick="switchQuizStep('question')">Next Step <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </div>
 
                     <div id="step-question" class="step-content">
-                        <div class="card-box">
-                            <div class="form-group">
-                                <label>Question Text</label>
-                                <div class="rich-editor" contenteditable="true">Enter your question here...</div>
-                                <div class="editor-toolbar">
-                                    <button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><i class="fas fa-list-ul"></i></button>
+                        <div id="questions-container">
+                        <!-- Dynamic questions sẽ add ở đây -->
+                        <div class="question-group">
+                            <h3>Question 1</h3>
+                            <input type="text" class="question-text" placeholder="Question" required>
+                            <select class="question-type" onchange="toggleOptions(this)">
+                                <option value="">Select Type</option>
+                                <option value="text">Text</option>
+                                <option value="number">Number</option>
+                                <option value="multiple-choice">Multiple Choice</option>
+                            </select>
+                            <div class="options-container" style="display: none;">
+                                <h4>Options</h4>
+                                <div class="option-group">
+                                    <input type="text" class="option-text" placeholder="Option 1">
                                 </div>
+                                <button type="button" class="add-option" onclick="addOption(this)">Add Option</button>
                             </div>
-                            <div class="form-group"><label>Points</label><input type="number" class="form-control" value="5"></div>
-                            
-                            <label>Answers (Check correct option)</label>
-                            <div class="answer-option">
-                                <input type="radio" name="correct_ans">
-                                <input type="text" class="form-control" placeholder="Option A">
-                            </div>
-                            <div class="answer-option">
-                                <input type="radio" name="correct_ans">
-                                <input type="text" class="form-control" placeholder="Option B">
-                            </div>
-                            <div class="answer-option">
-                                <input type="radio" name="correct_ans">
-                                <input type="text" class="form-control" placeholder="Option C">
-                            </div>
-                            <div class="answer-option">
-                                <input type="radio" name="correct_ans">
-                                <input type="text" class="form-control" placeholder="Option D">
-                            </div>
-                            
-                            <button class="btn-outline w-full" style="margin-top: 15px;"><i class="fas fa-plus"></i> Add Another Question</button>
+                            <textarea class="question-explanation" placeholder="Question Explanation (optional)"></textarea>
+                            <textarea class="answer-explanation" placeholder="Answer Explanation (optional)"></textarea>
+                            <input type="text" class="correct-answer" placeholder="Correct Answer (optional)">
                         </div>
+                    </div>
+                    <button type="button" onclick="addQuestion()">Add Question</button>
                         <div class="step-footer">
-                            <button class="btn-outline" onclick="switchQuizStep('basic')">Previous</button>
-                            <button class="btn-primary" onclick="switchQuizStep('publish')">Next Step <i class="fas fa-arrow-right"></i></button>
+                            <button type="button" class="btn-outline" onclick="switchQuizStep('basic')">Previous</button>
+                            <button type="button" class="btn-primary" onclick="switchQuizStep('publish')">Next Step <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </div>
 
@@ -242,9 +228,11 @@
                         </div>
                         <div class="step-footer">
                             <button class="btn-outline" onclick="switchQuizStep('question')">Previous</button>
-                            <button class="btn-primary" onclick="alert('Quiz Published!')">Publish Quiz</button>
+                            <button type="submit" class="btn-primary" >Publish Quiz</button>
                         </div>
                     </div>
+                    </form>
+                    
 
                 </div> 
             
@@ -350,6 +338,7 @@
     </div>
     <script src="script.js"></script>
     <script src="API-Fetch/User/Get.js"></script>
+    <script src="API-Fetch/Assessment/Post.js"></script>
     <script>
         function switchTab(btn, id) {
             // Active button
@@ -359,6 +348,11 @@
             // Show content
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.getElementById(id + '-content').classList.add('active');
+
+            // Nếu là tab Quiz Manager, fetch quizzes
+            if (id === 'create-quiz') {
+                fetchAndRenderQuizzes();
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -411,6 +405,170 @@
                 // Kích hoạt sự kiện click vào nút đó -> Nó sẽ tự gọi hàm switchTab
                 myStudentBtn.click();
             }
+        }
+        function hideCreateQuizForm() {
+            document.getElementById('quiz-form-view').style.display = 'none';
+            document.getElementById('quiz-list-view').style.display = 'block';
+            fetchAndRenderQuizzes();
+        }
+        // Hàm fetch và render quizzes động vào quiz-manager-grid
+        async function fetchAndRenderQuizzes() {
+            const grid = document.getElementById('quiz-manager-grid');
+            if (!grid) return;
+
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                console.error('User ID not found. Please login again.');
+                grid.innerHTML = '<p>Error: Please login to view quizzes.</p>';
+                return;
+            }
+
+            try {
+                const quizzes = await getQuizzesByUserIdAPI(userId); // Gọi hàm từ Post.js
+                if (quizzes && quizzes.length > 0) {
+                    grid.innerHTML = quizzes.map(quiz => `
+                        <div class="quiz-manage-card">
+                            <div class="q-info">
+                                <h4>${quiz.title}</h4>
+                                <p>${quiz.description}</p> <!-- Thay thế bằng description từ DB -->
+                            </div>
+                            <button class="btn-outline">Edit</button> <!-- Có thể thêm onclick để edit quiz cụ thể -->
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = '<p>No quizzes found.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+                grid.innerHTML = '<p>Error loading quizzes. Please try again later.</p>';
+            }
+        }
+
+let questionId = 1;
+        function addQuestion() {
+            questionId++;
+            const container = document.getElementById('questions-container');
+            const newQuestion = document.createElement('div');
+            newQuestion.className = 'question-group';
+            newQuestion.innerHTML = `
+                <h3>Question ${questionId}</h3>
+                <input type="text" class="question-text" placeholder="Question" required>
+                <select class="question-type" required onchange="toggleOptions(this)">
+                    <option value="">Select Type</option>
+                    <option value="text">Text</option>
+                    <option value="number">Number</option>
+                    <option value="multiple-choice">Multiple Choice</option>
+                </select>
+                <div class="options-container" style="display: none;">
+                    <h4>Options</h4>
+                    <div class="option-group">
+                        <input type="text" class="option-text" placeholder="Option 1" >
+                    </div>
+                    <button type="button" class="add-option" onclick="addOption(this)">Add Option</button>
+                </div>
+                <textarea class="question-explanation" placeholder="Question Explanation (optional)"></textarea>
+                <textarea class="answer-explanation" placeholder="Answer Explanation (optional)"></textarea>
+                <input type="text" class="correct-answer" placeholder="Correct Answer (optional)">
+            `;
+            container.appendChild(newQuestion);
+        }
+
+        // Hàm toggle options dựa trên type
+        function toggleOptions(select) {
+            const optionsContainer = select.parentElement.querySelector('.options-container');
+            if (select.value === 'multiple-choice') {
+                optionsContainer.style.display = 'block';
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        // Hàm add dynamic option cho multiple-choice
+        function addOption(button) {
+            const optionsContainer = button.parentElement;
+            const optionGroups = optionsContainer.querySelectorAll('.option-group');
+            const newOption = document.createElement('div');
+            newOption.className = 'option-group';
+            newOption.innerHTML = `
+                <input type="text" class="option-text" placeholder="Option ${optionGroups.length + 1}" >
+            `;
+            button.before(newOption);
+        }
+
+        // Handle submit form create quiz
+        const createQuizForm = document.getElementById('create-quiz-form');
+        if (createQuizForm) {
+            createQuizForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log('Submit event triggered!');
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    showMessage('quiz-message', 'User ID not found. Please login again.', 'error');
+                    return;
+                }
+
+                // Thu thập data
+                const title = document.getElementById('quiz-title').value;
+                const description = document.getElementById('quiz-description').value;
+                const questions = [];
+                const questionGroups = document.querySelectorAll('.question-group');
+                questionGroups.forEach((group, index) => {
+                        const type = group.querySelector('.question-type').value;
+                        let questionText = group.querySelector('.question-text').value;  // Start with base question
+                        const questionObj = {
+                            id: index + 1,
+                            question: questionText,  // Will update if multiple-choice
+                            type: type,
+                            questionExplanation: group.querySelector('.question-explanation').value || '',
+                            answerExplanation: group.querySelector('.answer-explanation').value || '',
+                            correctAnswer: group.querySelector('.correct-answer').value || ''
+                        };
+
+                        if (type === 'multiple-choice') {
+                            const options = [];
+                            group.querySelectorAll('.option-text').forEach(opt => {
+                                if (opt.value) options.push(opt.value);
+                            });
+                            // Embed options into question string (e.g., "What is...? A. Opt1 B. Opt2")
+                            questionObj.question += '\n' + options.map((o, i) => `${String.fromCharCode(65 + i)}. ${o}`).join('\n');
+                            // Assume correctAnswer is a letter like "A" or index like "1"
+                        }
+
+                        questions.push(questionObj);
+                    });
+
+                const quizData = {
+                    userId,
+                    title,
+                    description,
+                    questions
+                };
+                console.log('Quiz Data to Send:', JSON.stringify(quizData, null, 2));  // Pretty-print JSON
+                    const result = await createQuizAPI(quizData);
+                    console.log(result);
+                    showMessage('quiz-message', 'Quiz created successfully!', 'success');
+                    createQuizForm.reset();  // Reset form
+                    // Refresh quizzes list after create
+                    fetchAndRenderQuizzes();
+                    setTimeout(() => {
+                        hideCreateQuizForm();
+                    }, 2000);
+            });
+        }
+
+        // Function showMessage (copy từ AuthPost.js nếu cần, hoặc define here)
+        function showMessage(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.textContent = message;
+            el.className = `message-box ${type}`;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 3000);
+        }
+
+        // Gọi fetch quizzes khi load page nếu tab Quiz đang active (optional)
+        if (document.querySelector('#create-quiz-content').classList.contains('active')) {
+            fetchAndRenderQuizzes();
         }
     </script>
 </body>
