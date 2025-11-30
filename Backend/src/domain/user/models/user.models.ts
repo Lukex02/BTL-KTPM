@@ -12,9 +12,11 @@ export abstract class User {
 export class Student extends User {
   assignedQuizIds: string[];
   assignedContentIds: string[];
+  teachersInCharge: string[];
 }
 export class Teacher extends User {
   assignedQuizIds: string[];
   assignedContentIds: string[];
+  studentsInCharge: string[];
 }
 export class Admin extends User {}

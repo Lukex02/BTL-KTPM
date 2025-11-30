@@ -98,7 +98,14 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
   }
 
   async createQuiz(quiz: CreateQuizRequestDto): Promise<InsertOneResult> {
-    return await this.insertOne(quiz, 'quiz');
+    const res = await this.insertOne(quiz, 'quiz');
+    if (res.insertedId) {
+      this.assignQuizToUser({
+        quizId: res.insertedId.toString(),
+        userId: quiz.userId,
+      });
+    }
+    return res;
   }
 
   async findQuizById(quizId: string): Promise<Quiz | null> {
@@ -112,6 +119,7 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
     const quizIdList = await this.UserService.findUserById(userId).then(
       (user) => user.assignedQuizIds?.map((id) => new ObjectId(id)),
     );
+    if (!quizIdList || quizIdList.length === 0) return [];
     const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
     if (!quizzes) return [];
     return quizzes.map((q) => {

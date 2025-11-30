@@ -75,7 +75,7 @@ export class UserController {
   })
   async changePassword(@Req() req: any, @Body() update: ChangePasswordDto) {
     const userId = req.user.userId;
-    if (userId !== update.userId || req.use.role !== 'Admin')
+    if (userId !== update.userId && req.user.role !== 'Admin')
       throw new UnauthorizedException('Unauthorized');
     return { message: await this.userService.changeUserPassword(update) };
   }

@@ -38,7 +38,7 @@ export class AuthService {
     const payload: UserPayload = { ...user, jti: crypto.randomUUID() };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_SECRET || 'jwtAccessSecret',
-      expiresIn: '15m', // Access token expire after 1 hour
+      expiresIn: '15m', // Access token expire after 15 minutes
     });
   }
 
