@@ -98,7 +98,14 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
   }
 
   async createQuiz(quiz: CreateQuizRequestDto): Promise<InsertOneResult> {
-    return await this.insertOne(quiz, 'quiz');
+    const res = await this.insertOne(quiz, 'quiz');
+    if (res.insertedId) {
+      this.assignQuizToUser({
+        quizId: res.insertedId.toString(),
+        userId: quiz.userId,
+      });
+    }
+    return res;
   }
 
   async findQuizById(quizId: string): Promise<Quiz | null> {
