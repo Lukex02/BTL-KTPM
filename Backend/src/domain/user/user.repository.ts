@@ -18,6 +18,7 @@ import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import { User } from './models/user.models';
 import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
 import { AssessmentService } from 'src/domain/assessment/assessment.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
@@ -62,12 +63,12 @@ export class MongoUserRepo extends MongoDBRepo implements IUserRepository {
     const user = await this.findOne({ _id: new ObjectId(userId) });
     if (!user) throw new NotFoundException('User not found');
 
-    if (user.password !== oldPassword) {
+    if (!(await bcrypt.compare(oldPassword, user.password))) {
       throw new UnauthorizedException('Old password is incorrect');
     }
     return await this.updateOne(
       { _id: new ObjectId(userId) },
-      { $set: { password: newPassword } },
+      { $set: { password: await bcrypt.hash(newPassword, 10) } },
     );
   }
 

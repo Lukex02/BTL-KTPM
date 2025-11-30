@@ -3,6 +3,7 @@ import { INestApplication, ExecutionContext, forwardRef } from '@nestjs/common';
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db } from 'mongodb';
+import * as bcrypt from 'bcrypt';
 
 import { UserController } from './user.controller';
 import { MongoUserRepo } from './user.repository';
@@ -57,7 +58,7 @@ describe('UserController (integration with mongodb-memory-server)', () => {
     const insertRes = await usersCol.insertOne({
       username: 'john',
       email: 'john@example.com',
-      password: 'hashedpass',
+      password: await bcrypt.hash('hashedpass', 10),
       role: 'User',
     });
     seededId = insertRes.insertedId.toString();
@@ -113,6 +114,29 @@ describe('UserController (integration with mongodb-memory-server)', () => {
     const res = await request(app.getHttpServer()).get('/user/self');
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('username', 'john');
+  });
+
+  it('PUT /user/changePassword -> changes user password and returns message', async () => {
+    const payload = {
+      userId: seededId,
+      oldPassword: 'hashedpass',
+      confirmNewPassword: 'newhashedpass',
+      newPassword: 'newhashedpass',
+    };
+
+    const res = await request(app.getHttpServer())
+      .put('/user/changePassword')
+      .send(payload);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('message');
+    // verify the password was changed
+    const getRes = await request(app.getHttpServer()).get(
+      `/user/findById/${seededId}`,
+    );
+    expect(getRes.status).toBe(200);
+    expect(
+      await bcrypt.compare(payload.newPassword, getRes.body.password),
+    ).toBe(true);
   });
 
   it('PUT /user/update -> updates user and returns message', async () => {
