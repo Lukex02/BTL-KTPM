@@ -127,7 +127,6 @@ describe('UserController (integration with mongodb-memory-server)', () => {
     const res = await request(app.getHttpServer())
       .put('/user/changePassword')
       .send(payload);
-    console.log(res.body);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('message');
     // verify the password was changed
