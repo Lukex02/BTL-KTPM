@@ -18,6 +18,22 @@ function showMessage(elementId, message, type) {
 }
 
 /* ===========================
+   HELPER: GIẢI MÃ TOKEN (ĐỂ LẤY USER ID)
+   =========================== */
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
+/* ===========================
    1. XỬ LÝ ĐĂNG KÝ (REGISTER)
    =========================== */
 const signupForm = document.getElementById('form-signup');
@@ -87,13 +103,11 @@ const loginForm = document.getElementById('form-login');
 
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Ngăn reload trang
+        e.preventDefault();
 
-        // Lấy dữ liệu
         const username = document.getElementById('login-username').value;
         const password = document.getElementById('login-password').value;
-        // Lấy role người dùng chọn từ Radio button
-        const selectedRoleElement = document.querySelector('input[name="login_role"]:checked');
+        const selectedRoleElement = document.querySelector('input[name="user_role"]:checked');
         const selectedRole = selectedRoleElement ? selectedRoleElement.value : "Student";
         
         const btn = loginForm.querySelector('.btn-submit');
@@ -102,7 +116,6 @@ if (loginForm) {
         btn.disabled = true;
 
         try {
-            // 1. Gọi API Login
             const response = await fetch(`${AUTH_API_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -115,22 +128,36 @@ if (loginForm) {
                 throw new Error(data.message || "Sai tài khoản hoặc mật khẩu");
             }
 
-            // 2. Lưu Token và Thông tin User
+            // --- LƯU THÔNG TIN 
             if (data.access_token) {
                 localStorage.setItem('accessToken', data.access_token);
-            }
-            localStorage.setItem('username', username);
-            localStorage.setItem('role', selectedRole); // Lưu role để sau này dùng
-
-            showMessage('login-msg', "Đăng nhập thành công!", 'success');
-
-            // 3. Chuyển hướng dựa trên Role đã chọn
-            setTimeout(() => {
-                if (selectedRole === 'Instructor') {
-                    window.location.href = "instructor.html";
+                
+                // 1. Giải mã Token để lấy User ID thật
+                const decoded = parseJwt(data.access_token);
+                
+                // 2. Tìm ID trong payload (thường là 'sub', 'id', 'userId' hoặc 'user_id')
+                // Bạn hãy kiểm tra log này để xem chính xác ID tên là gì
+                console.log("Decoded Token:", decoded); 
+                
+                const userId = decoded.id || decoded.userId || decoded.sub || decoded.user_id;
+                
+                if (userId) {
+                    localStorage.setItem('userId', userId);
                 } else {
-                    // Student hoặc Admin về trang chính
-                    window.location.href = "index.html";
+                    console.error("Không tìm thấy User ID trong Token!");
+                }
+            }
+
+            localStorage.setItem('username', username);
+            localStorage.setItem('role', selectedRole);
+
+            showMessage('login-msg', "Đăng nhập thành công! Đang chuyển hướng...", 'success');
+
+            setTimeout(() => {
+                if (selectedRole.toLowerCase() === 'instructor') {
+                    window.location.href = "Instructor.html";
+                } else {
+                    window.location.href = "Index.html";
                 }
             }, 1000);
 
@@ -141,4 +168,36 @@ if (loginForm) {
             btn.disabled = false;
         }
     });
+}
+
+/**
+ * HÀM TẠO HEADER XÁC THỰC
+ * Dùng hàm này trong mọi lệnh fetch cần bảo mật
+ */
+function getAuthHeaders() {
+    const token = localStorage.getItem('accessToken');
+    
+    // Nếu không có token -> Chưa đăng nhập -> Đá về Login
+    if (!token) {
+        window.location.href = 'login.html';
+        return null;
+    }
+
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Quan trọng nhất
+    };
+}
+
+/**
+ * HÀM KIỂM TRA LỖI 401 (Hết hạn phiên)
+ */
+function handleAuthError(response) {
+    if (response.status === 401 || response.status === 403) {
+        alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!");
+        localStorage.removeItem('accessToken');
+        window.location.href = 'login.html';
+        return true; // Có lỗi
+    }
+    return false; // Không lỗi
 }
