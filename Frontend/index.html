@@ -223,29 +223,55 @@
 
             <div id="settings-content" class="tab-pane">
                 <h3 class="section-title">Account settings</h3>
-                <div class="settings-layout">
-                    <div class="photo-col">
-                        <div class="photo-box">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" id="preview-img">
-                            <label for="upload-input" class="upload-overlay"><i class="fas fa-upload"></i> Upload</label>
-                            <input type="file" id="upload-input" hidden onchange="previewImage(event)">
-                        </div>
-                        <p class="small-note">Image size under 1MB. Ratio 1:1</p>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Full name</label>
-                            <div class="form-row">
-                                <input type="text" class="form-control" value="Lê Nguyễn" placeholder="First name">
-                                <input type="text" class="form-control" value="Nam Khánh" placeholder="Last name">
+
+                <div id="update-msg" class="message-box" style="display:none; margin-bottom: 20px;"></div>
+
+                <form id="form-update-user" style="width: 100%;">
+                    <div class="settings-layout">
+                        <div class="photo-col">
+                            <div class="photo-box">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" id="preview-img">
+                                <label for="upload-input" class="upload-overlay"><i class="fas fa-upload"></i> Upload</label>
+                                <input type="file" id="upload-input" hidden onchange="previewImage(event)">
                             </div>
+                            <p class="small-note">Image size under 1MB. Ratio 1:1</p>
                         </div>
-                        <div class="form-group"><label>Username</label><input type="text" class="form-control" value="namkhanh"></div>
-                        <div class="form-group"><label>Email</label><input type="email" class="form-control" value="namkhanh@example.com"></div>
-                        <div class="form-group"><label>Title</label><input type="text" class="form-control" placeholder="Your title..."></div>
-                        <button class="btn-save">Save Changes</button>
+                        
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" id="user-id" class="form-control" disabled style="background-color: #eee; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Role</label>
+                                <input type="text" id="user-role" class="form-control" disabled style="background-color: #eee; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Full name</label>
+                                <input type="text" id="user-name" class="form-control" placeholder="Enter full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="user-username" class="form-control" placeholder="Enter new username">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="user-email" class="form-control" placeholder="namkhanh@example.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" class="form-control" placeholder="Your title...">
+                            </div>
+
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
                     </div>
-                </div>
+                </form>
 
                 <h3 class="section-title mt-40">Change password</h3>
                 <div class="password-box">
@@ -338,9 +364,9 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="API-Fetch/Auth/auth.js"></script>
     <script src="API-Fetch/User/UserGet.js"></script>
+    <script src="API-Fetch/User/UserUpdate.js"></script>
     <script src="teacherRender.js"></script>
-    <script src="messageLogic.js"></script>
-    <script src="settingsLogic.js"></script>
 </body>
 </html>

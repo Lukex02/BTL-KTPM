@@ -1,26 +1,36 @@
 // @ts-nocheck
-const USER_API_URL = "http://localhost:3000"; // Cập nhật port server của bạn (3000 hoặc 8080)
+/* =========================================
+   USER GET: Chỉ chịu trách nhiệm hiển thị 
+   thông tin chung (Header, Banner, Welcome)
+   ========================================= */
+
+// Đổi tên biến để không trùng với file kia
+const DASHBOARD_API_URL = "http://localhost:3000"; 
 
 /**
- * Hàm cập nhật giao diện với dữ liệu User lấy được
+ * Hàm cập nhật giao diện Dashboard/Header
  */
-function updateUserUI(user) {
-    // 1. Cập nhật Tên và Role ở Profile Card
-    const nameElements = document.querySelectorAll('.profile-text h2, .greeting h2');
-    const roleElements = document.querySelectorAll('.profile-text p');
+function updateDashboardUI(user) {
+    // 1. Cập nhật Tên hiển thị
+    // Tìm tất cả chỗ nào cần hiện tên (Header, Banner chào mừng)
+    const nameElements = document.querySelectorAll('#display-name, .greeting h2, .profile-text h2');
     
-    // 2. Cập nhật Avatar (Tất cả ảnh avatar trên trang)
-    const avatarElements = document.querySelectorAll('.user-avatar, .profile-info img');
+    // 2. Cập nhật Role
+    const roleElements = document.querySelectorAll('#display-role, .profile-text p');
     
-    // Xử lý dữ liệu hiển thị
-    const displayName = user.name || user.username || "User";
+    // 3. Cập nhật Avatar (Header & Profile Card)
+    const avatarElements = document.querySelectorAll('.user-avatar, #header-avatar, #profile-card-avatar'); 
+    
+    // Xử lý dữ liệu
+    const displayName = user.name || user.username || "Student";
     const displayRole = user.role || "Student";
-    // Nếu không có ảnh, tạo ảnh giả theo tên
-    const displayAvatar = user.img || user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D8ABC&color=fff`;
+    // Avatar: Nếu không có ảnh thật thì tạo ảnh placeholder theo tên
+    const displayAvatar = user.img || user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4e65ff&color=fff`;
 
-    // Gán dữ liệu vào DOM
+    // --- GÁN DỮ LIỆU VÀO HTML ---
+    
+    // Gán Tên
     nameElements.forEach(el => {
-        // Giữ lại phần chào "Good Morning" nếu có
         if (el.innerText.includes("Good Morning")) {
             el.innerText = `Good Morning, ${displayName}!`;
         } else {
@@ -28,56 +38,49 @@ function updateUserUI(user) {
         }
     });
 
+    // Gán Role
     roleElements.forEach(el => el.innerText = displayRole);
-    avatarElements.forEach(img => img.src = displayAvatar);
+    
+    // Gán Avatar
+    avatarElements.forEach(img => {
+        if(img.tagName === 'IMG') img.src = displayAvatar;
+    });
 
-    // 3. Điền sẵn thông tin vào Form Settings (nếu đang ở tab Settings)
-    const inputName = document.querySelector('input[placeholder="First name"]');
-    const inputEmail = document.querySelector('input[type="email"]');
-    if (inputName) inputName.value = displayName;
-    if (inputEmail) inputEmail.value = user.email || "";
+    // LƯU Ý: Đã xóa phần điền Form Settings ở đây để tránh xung đột với UserUpdate.js
 }
 
 /**
- * Hàm Fetch API lấy thông tin User
+ * Hàm gọi API lấy thông tin (Dùng authFetch cho an toàn)
  */
-async function fetchUserProfile() {
+async function fetchDashboardProfile() {
     const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('accessToken');
-
-    // Chưa đăng nhập thì thôi
-    if (!userId || !token) {
-        console.log("Chưa đăng nhập hoặc thiếu thông tin User ID.");
-        return;
-    }
+    
+    if (!userId) return; // Chưa login thì thôi
 
     try {
-        const response = await fetch(`${USER_API_URL}/user/self`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
+        // Dùng authFetch thay vì fetch thường để tự động xử lý token hết hạn
+        // Giả sử API lấy info là /user/self hoặc /user/{id}
+        // Ở đây dùng endpoint giống UserUpdate cho đồng bộ
+        const response = await authFetch(`${DASHBOARD_API_URL}/user/self`, {
+            method: 'GET'
         });
 
-        if (!response.ok) {
-            throw new Error("Không thể lấy thông tin người dùng");
-        }
+        if (!response.ok) throw new Error("Không lấy được thông tin dashboard");
 
         const userData = await response.json();
         
-        // Gọi hàm cập nhật UI
-        updateUserUI(userData);
+        // Cập nhật UI
+        updateDashboardUI(userData);
 
     } catch (error) {
-        console.error("Lỗi fetch User Profile:", error);
-        // Fallback: Nếu API lỗi thì lấy tạm tên từ localStorage (lưu lúc login)
+        console.error("Dashboard Load Error:", error);
+        // Fallback: Lấy tạm tên từ localStorage nếu API lỗi
         const localName = localStorage.getItem('username');
         if (localName) {
-            document.querySelectorAll('.profile-text h2').forEach(el => el.innerText = localName);
+            document.querySelectorAll('#display-name').forEach(el => el.innerText = localName);
         }
     }
 }
 
-// Tự động chạy khi file được load
-document.addEventListener('DOMContentLoaded', fetchUserProfile);
+// Chạy ngay khi file được load
+document.addEventListener('DOMContentLoaded', fetchDashboardProfile);
