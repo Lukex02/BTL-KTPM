@@ -1,13 +1,345 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>btl-ktpm-fe</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Hub - Unified View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-cube"></i></div>
+                <span>ITS System</span>
+            </div>
+            <div class="browse-menu">
+                Browse <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="What do you want learn...">
+            </div>
+        </div>
+        
+        <div class="header-right" id="header-user-area">
+            <button class="icon-btn"><i class="far fa-bell"></i></button>
+            <button class="icon-btn"><i class="far fa-heart"></i></button>
+            <button class="icon-btn cart-btn"><i class="fas fa-shopping-cart"></i><span class="badge">0</span></button>
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" class="user-avatar" alt="User">
+        </div>
+    </div>
+
+    <div class="blue-banner"></div>
+
+    <div class="main-container">
+        
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-info">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" alt="Avatar">
+                    <div class="profile-text">
+                        <h2>Lê Nguyễn Nam Khánh</h2>
+                        <p>Khoa học máy tính - Tăng cường tiếng Nhật</p>
+                    </div>
+                </div>
+                <button class="btn-instructor">Become Instructor <i class="fas fa-arrow-right"></i></button>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="switchTab(this, 'dashboard')">Dashboard</button>
+                <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz')">Quizz</button>
+                <button class="tab-btn" onclick="switchTab(this, 'teachers')">Teachers</button>
+                <button class="tab-btn" onclick="switchTab(this, 'message')">Message</button>
+                <button class="tab-btn" onclick="switchTab(this, 'settings')">Settings</button>
+            </div>
+        </div>
+
+        <div class="tab-content-wrapper">
+
+            <div id="dashboard-content" class="tab-pane active">
+                <h3 class="section-title text-center">Dashboard</h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card bg-peach">
+                        <div class="icon-box text-orange"><i class="far fa-play-circle"></i></div>
+                        <div class="stat-info"><h3>957</h3><p>Active Quizz</p></div>
+                    </div>
+                    <div class="stat-card bg-purple">
+                        <div class="icon-box text-purple"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="stat-info"><h3>6</h3><p>Active Teachers</p></div>
+                    </div>
+                    <div class="stat-card bg-green">
+                        <div class="icon-box text-green"><i class="fas fa-trophy"></i></div>
+                        <div class="stat-info"><h3>951</h3><p>Completed Quizz</p></div>
+                    </div>
+                </div>
+
+                <div class="section-wrapper">
+                    <div class="section-header">
+                        <h3>Let's start learning, Khánh</h3>
+                        <div class="nav-arrows">
+                            <button class="arrow-btn prev"><i class="fas fa-arrow-left"></i></button>
+                            <button class="arrow-btn next"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-grid">
+                        <div class="course-card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=500');"></div>
+                            <div class="card-body">
+                                <span class="category">Basic Level</span>
+                                <h4>1. Introductions</h4>
+                                <div class="divider"></div>
+                            </div>
+                            <button class="btn-watch">Watch Lecture</button>
+                        </div>
+                        <div class="course-card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500');"></div>
+                            <div class="card-body">
+                                <span class="category">Web Development</span>
+                                <h4>167. Getting Started</h4>
+                                <div class="divider"></div>
+                            </div>
+                            <button class="btn-watch btn-secondary">Watch Lecture <span class="percent">61%</span></button>
+                        </div>
+                        <div class="course-card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500');"></div>
+                            <div class="card-body">
+                                <span class="category">Copywriting</span>
+                                <h4>1. How to get started</h4>
+                                <div class="divider"></div>
+                            </div>
+                            <button class="btn-watch">Watch Lecture</button>
+                        </div>
+                        <div class="course-card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500');"></div>
+                            <div class="card-body">
+                                <span class="category">Python Bootcamp</span>
+                                <h4>9. Advanced CSS</h4>
+                                <div class="divider"></div>
+                            </div>
+                            <button class="btn-watch btn-secondary">Watch Lecture <span class="percent success">12%</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quizz-content" class="tab-pane">
+                <h3 class="section-title text-center">Dashboard</h3>
+                <div class="stats-grid">
+                    <div class="stat-card bg-peach"><div class="icon-box text-orange"><i class="far fa-play-circle"></i></div><div class="stat-info"><h3>957</h3><p>Active Quizz</p></div></div>
+                    <div class="stat-card bg-purple"><div class="icon-box text-purple"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3>6</h3><p>Active Teachers</p></div></div>
+                    <div class="stat-card bg-green"><div class="icon-box text-green"><i class="fas fa-trophy"></i></div><div class="stat-info"><h3>951</h3><p>Completed Quizz</p></div></div>
+                </div>
+
+                <div class="section-wrapper">
+                    <div class="section-header">
+                        <h3>Newest Quizz</h3>
+                        <div class="nav-arrows"><button class="arrow-btn prev"><i class="fas fa-arrow-left"></i></button><button class="arrow-btn next"><i class="fas fa-arrow-right"></i></button></div>
+                    </div>
+                    <div class="course-grid" id="newest-quiz-grid"></div>
+                </div>
+
+                <div class="section-wrapper mt-40">
+                    <div class="section-header"><h3>Recent Quizz</h3></div>
+                    <div class="course-grid" id="recent-quiz-grid">
+                    </div>
+                    <div class="pagination-wrapper">
+                        <div class="pagination" id="quiz-pagination">
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div id="teachers-content" class="tab-pane">
+
+                <div class="section-wrapper">
+                    <div class="section-header">
+                        <h3>Best Vote Teacher</h3>
+                        <div class="nav-arrows"><button class="arrow-btn prev"><i class="fas fa-arrow-left"></i></button><button class="arrow-btn next"><i class="fas fa-arrow-right"></i></button></div>
+                    </div>
+                    <div class="teacher-grid" id="best-teacher-grid">
+                        
+                    </div>
+                </div>
+
+                <div class="section-wrapper mt-40">
+                    <div class="section-header"><h3>Teacher List</h3></div>
+                    <div class="teacher-grid" id="all-teacher-grid"></div>
+
+                    <div class="pagination-wrapper">
+                        <div class="pagination" id="teacher-pagination"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="message-content" class="tab-pane">
+                <div class="message-layout">
+                    <div class="msg-sidebar">
+                        <div class="msg-header">
+                            <h3>Message</h3>
+                            <button class="btn-compose"><i class="fas fa-plus"></i> Compose</button>
+                        </div>
+                        <div class="msg-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search">
+                        </div>
+                        <div class="contact-list" id="contact-list"></div>
+                    </div>
+                    
+                    <div class="chat-window">
+                        <div class="chat-header">
+                            <div class="chat-user">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64" alt="Jane">
+                                <div><h4>Jane Cooper</h4><p class="status-active">Active Now</p></div>
+                            </div>
+                            <button class="btn-icon"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                        <div class="chat-body" id="chat-body">
+                            <div class="date-divider"><span>Today</span></div>
+                            <div class="msg-row received">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64" class="avatar-small">
+                                <div class="msg-bubble">Hello! Feel free to ask any questions. 😃</div>
+                            </div>
+                            <div class="msg-row sent"><div class="msg-bubble">Hello, Good Evening!</div></div>
+                        </div>
+                        <div class="chat-footer">
+                            <div class="chat-input">
+                                <i class="fas fa-edit"></i>
+                                <input type="text" id="msg-input" placeholder="Type your message">
+                            </div>
+                            <button class="btn-send" onclick="sendMessage()">Send <i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settings-content" class="tab-pane">
+                <h3 class="section-title">Account settings</h3>
+                <div class="settings-layout">
+                    <div class="photo-col">
+                        <div class="photo-box">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" id="preview-img">
+                            <label for="upload-input" class="upload-overlay"><i class="fas fa-upload"></i> Upload</label>
+                            <input type="file" id="upload-input" hidden onchange="previewImage(event)">
+                        </div>
+                        <p class="small-note">Image size under 1MB. Ratio 1:1</p>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Full name</label>
+                            <div class="form-row">
+                                <input type="text" class="form-control" value="Lê Nguyễn" placeholder="First name">
+                                <input type="text" class="form-control" value="Nam Khánh" placeholder="Last name">
+                            </div>
+                        </div>
+                        <div class="form-group"><label>Username</label><input type="text" class="form-control" value="namkhanh"></div>
+                        <div class="form-group"><label>Email</label><input type="email" class="form-control" value="namkhanh@example.com"></div>
+                        <div class="form-group"><label>Title</label><input type="text" class="form-control" placeholder="Your title..."></div>
+                        <button class="btn-save">Save Changes</button>
+                    </div>
+                </div>
+
+                <h3 class="section-title mt-40">Change password</h3>
+                <div class="password-box">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
+                    </div>
+                    <button class="btn-save">Change Password</button>
+                </div>
+                
+                <h3 class="section-title mt-40" style="color: #dc2626;">Danger Zone</h3>
+                <div class="logout-box">
+                    <p class="small-note">Log out of your account on this device.</p>
+                    <button class="btn-logout" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Log Out
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-detail-content" class="tab-pane">
+                <div class="detail-card">
+                    <h2 class="text-blue">Calculus 1 - Quiz 1</h2>
+                    <p class="sub-text">Teacher: Wade Warren</p>
+                    <div class="detail-flex">
+                        <div class="video-box">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb">
+                            <div class="play-icon"><i class="fas fa-play"></i></div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-line"><span>Date:</span> <span>28/07/2021</span></div>
+                            <div class="info-line"><span>Time Limit:</span> <span>15 Mins</span></div>
+                            <div class="info-line"><span>Attempts:</span> <span>2</span></div>
+                            <div class="info-line"><span>Pass Points:</span> <span>80 Points</span></div>
+                            <div class="btn-row">
+                                <button class="btn-start" onclick="startQuizTaking()">Start Quiz</button>
+                                <button class="btn-back" onclick="backToQuizList()">Go Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-taking-content" class="tab-pane">
+                <div class="quiz-header">
+                    <div><h2 class="text-blue">Calculus 1 - Quiz 1</h2><p class="sub-text">Teacher: Wade Warren</p></div>
+                    <div class="timer-box">Time: <span id="timer">45:00</span></div>
+                </div>
+                <div class="quiz-flex">
+                    <div class="question-area" id="questions-container"></div>
+                    <div class="sidebar-nav">
+                        <h3>Questions</h3>
+                        <div class="nav-grid" id="question-nav-grid"></div>
+                        <button class="btn-submit" onclick="submitQuiz()">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="footer-columns">
+                <div class="col"><h4>TOP 4 CATEGORY</h4><ul><li>Physics</li><li>Data Structure</li></ul></div>
+                <div class="col"><h4>QUICK LINKS</h4><ul><li>About</li><li>Contact</li></ul></div>
+                <div class="col"><h4>SUPPORT</h4><ul><li>Help Center</li><li>Privacy Policy</li></ul></div>
+                <div class="col"><h4>DOWNLOAD APP</h4>
+                    <div class="app-btns">
+                        <button class="btn-app"><i class="fab fa-apple"></i> App Store</button>
+                        <button class="btn-app"><i class="fab fa-google-play"></i> Play Store</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>© 2025 Academic Hub. All rights reserved.</p></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="teacherRender.js"></script>
+    <script src="messageLogic.js"></script>
+    <script src="settingsLogic.js"></script>
+</body>
 </html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Hub - Unified View</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><div class="logo-icon">📚</div><span>Academic Hub</span></div>
+        <div class="search-bar"><span style="color: #9ca3af;">🔍</span><input type="text" placeholder="Tìm kiếm khóa học..."></div>
+        <div class="header-icons">
+            <button>🔔<span class="notification-badge">2</span></button>
+            <button>❤️</button>
+            <button>🛒<span class="notification-badge">3</span></button>
+            <div class="user-avatar">NK</div>
+        </div>
+    </div>
+
+    <div class="banner-section">
+        <div class="banner-content">
+            <div class="user-profile">
+                <div class="profile-avatar">👨‍🎓</div>
+                <div class="profile-info"><h2>Nguyễn Khoa Nam</h2><p>Khóa học lập trình - Nâng cao tiếng Anh</p></div>
+            </div>
+            <button class="become-instructor-btn">Trở thành Giảng viên →</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="active" onclick="switchTab(this, 'dashboard')">Bảng điều khiển</button>
+        <button id="quiz-tab-btn" onclick="switchTab(this, 'quizz')">Bài kiểm tra</button>
+        <button onclick="switchTab(this, 'teachers')">Giảng viên</button>
+        <button onclick="switchTab(this, 'message')">Tin nhắn</button>
+        <button onclick="switchTab(this, 'settings')">Cài đặt</button>
+    </div>
+
+    <div class="tab-content-container">
+
+        <div id="dashboard-content" class="tab-content active">
+            <div class="dashboard">
+                <h2 class="dashboard-title">Bảng điều khiển</h2>
+                <div class="stats-container">
+                    <div class="stat-card"><div class="stat-icon orange">📝</div><div class="stat-info"><h3>1,248</h3><p>Khóa học tích cực</p></div></div>
+                    <div class="stat-card"><div class="stat-icon blue">👨‍🏫</div><div class="stat-info"><h3>42</h3><p>Giảng viên</p></div></div>
+                    <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><h3>367</h3><p>Khóa học hoàn thành</p></div></div>
+                </div>
+
+                <div class="learning-section">
+                    <div class="learning-header"><h3>Bắt đầu học tập</h3><div class="arrow-buttons"><button onclick="scrollGrid('coursesContainer', -1)">←</button><button onclick="scrollGrid('coursesContainer', 1)">→</button></div></div>
+                </div>
+
+                <div class="grid-container" id="coursesContainer">
+                    <div class="card-item"><div class="card-image course-bg">🎯</div><div class="card-body"><h4>LẬP TRÌNH<br>Python Fundamentals</h4><h3>Học lập trình từ cơ bản</h3><button class="action-btn">Xem bài giảng</button><div class="progress-text">45% Hoàn thành</div></div></div>
+                    <div class="card-item"><div class="card-image course-bg">💻</div><div class="card-body"><h4>WEB DEVELOPMENT<br>Web Design Bootcamp</h4><h3>Thiết kế website chuyên nghiệp</h3><button class="action-btn">Xem bài giảng</button><div class="progress-text">62% Hoàn thành</div></div></div>
+                    <div class="card-item"><div class="card-image course-bg">📚</div><div class="card-body"><h4>TIẾNG ANH<br>English Communication</h4><h3>Nâng cao kỹ năng giao tiếp</h3><button class="action-btn">Xem bài giảng</button><div class="progress-text">78% Hoàn thành</div></div></div>
+                    <div class="card-item"><div class="card-image course-bg">🤖</div><div class="card-body"><h4>AI & MACHINE LEARNING<br>AI for Beginners</h4><h3>Giới thiệu về trí tuệ nhân tạo</h3><button class="action-btn secondary">Xem bài giảng</button><div class="progress-text">12% Hoàn thành</div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quizz-content" class="tab-content">
+            <div class="dashboard">
+                <h2 class="dashboard-title">Bài kiểm tra</h2>
+                <div class="stats-container">
+                    <div class="stat-card"><div class="stat-icon orange">📝</div><div class="stat-info"><h3>1,248</h3><p>Bài kiểm tra tích cực</p></div></div>
+                    <div class="stat-card"><div class="stat-icon blue">👨‍🏫</div><div class="stat-info"><h3>42</h3><p>Giảng viên</p></div></div>
+                    <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><h3>367</h3><p>Bài kiểm tra hoàn thành</p></div></div>
+                </div>
+
+                <div class="learning-section">
+                    <div class="learning-header">
+                        <h3>Bài kiểm tra mới nhất</h3>
+                        <div class="arrow-buttons"><button onclick="scrollGrid('newest-grid', -1)">←</button><button onclick="scrollGrid('newest-grid', 1)">→</button></div>
+                    </div>
+                </div>
+
+                <div class="grid-container" id="newest-grid">
+                    <div class="card-item">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=400&h=300&fit=crop')"></div>
+                        <div class="card-body"><h4>CƠ BẢN<br>Lập trình Python</h4><h3>I. Giới thiệu</h3><button class="action-btn" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button></div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1507842072343-583f20270319?w=400&h=300&fit=crop')"></div>
+                        <div class="card-body"><h4>CƠ BẢN<br>Thiết kế Figma</h4><h3>I. Bắt đầu với Figma</h3><button class="action-btn" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button><div class="progress-text">61% Hoàn thành</div></div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop')"></div>
+                        <div class="card-body"><h4>TRUNG CẤP<br>CSS Nâng cao</h4><h3>S4. Định vị tương đối</h3><button class="action-btn" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button></div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=300&fit=crop')"></div>
+                        <div class="card-body"><h4>NÂNG CAO<br>Lập trình</h4><h3>I. Giới thiệu</h3><button class="action-btn secondary" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button></div>
+                    </div>
+                </div>
+
+                <div class="learning-section"><div class="learning-header"><h3>Bài kiểm tra gần đây</h3></div></div>
+                <div class="grid-container" id="recent-grid">
+                    <div class="card-item"><div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=400&h=300&fit=crop')"></div><div class="card-body"><h4>CƠ BẢN<br>Lập trình Python</h4><h3>I. Giới thiệu</h3><button class="action-btn" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button></div></div>
+                    <div class="card-item"><div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1507842072343-583f20270319?w=400&h=300&fit=crop')"></div><div class="card-body"><h4>CƠ BẢN<br>Thiết kế Figma</h4><h3>I. Bắt đầu với Figma</h3><button class="action-btn" onclick="openQuizDetail()">Bắt đầu bài kiểm tra</button></div></div>
+                </div>
+
+                <div class="pagination"><button class="active">1</button><button>2</button><button>3</button><button>4</button><button>→</button></div>
+            </div>
+        </div>
+
+        <div id="quiz-detail-content" class="tab-content">
+            <div class="dashboard">
+                <div class="detail-card">
+                    <h2 style="font-size: 1.8rem; color: #0047ab; margin-bottom: 5px;">Calculus 1 - Quiz 1</h2>
+                    <p class="teacher-name">Teacher: Wade Warren</p>
+
+                    <div class="detail-grid">
+                        <div class="video-container">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" alt="Video Thumbnail" class="thumbnail">
+                            <div class="play-button"><i class="fas fa-play"></i></div>
+                            <div class="video-controls">
+                                <span><i class="fas fa-volume-up"></i></span>
+                                <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                                <span>00:01:55 / 00:08:00</span>
+                                <span style="margin-left: 10px;"><i class="fas fa-expand"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="info-container">
+                            <div class="info-row"><span>Date:</span> <span>28/07/2021</span></div>
+                            <div class="info-row"><span>Time Limit:</span> <span>15 Mins</span></div>
+                            <div class="info-row"><span>Attempts:</span> <span>2</span></div>
+                            <div class="info-row"><span>Pass Points:</span> <span>80 Points</span></div>
+
+                            <div class="btn-group">
+                                <button class="start-btn">Start Quiz</button>
+                                <button class="back-btn" onclick="backToQuizList()">Go Back</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="desc-section">
+                        <div class="desc-header">
+                            <h3>Protecting the Organisation from Cyber Attacks</h3>
+                            <div class="likes"><i class="fas fa-thumbs-up"></i> 145 <i class="fas fa-thumbs-down dislike"></i> 6</div>
+                        </div>
+                        <p>One of the most efficient ways to protect against cyber attacks and all types of data breaches is to train your employees on cyber attack prevention and</p>
+                        <p>The quiz consists of questions. To be successful with the quizzes, it's important to conversant with the topic by paying attention to the short video</p>
+                        <p>To start, click the "Start" button. When finished, click the "Submit" button.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="teachers-content" class="tab-content"><div class="dashboard"><h2 class="dashboard-title">Giảng viên</h2><p>Nội dung đang cập nhật...</p></div></div>
+        <div id="message-content" class="tab-content"><div class="dashboard"><h2 class="dashboard-title">Tin nhắn</h2><p>Nội dung đang cập nhật...</p></div></div>
+        <div id="settings-content" class="tab-content"><div class="dashboard"><h2 class="dashboard-title">Cài đặt</h2><p>Nội dung đang cập nhật...</p></div></div>
+
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section"><h4>Danh mục hàng đầu</h4><ul><li><a href="#">Lập trình</a></li><li><a href="#">Cấu trúc dữ liệu</a></li></ul></div>
+            <div class="footer-section"><h4>Liên kết nhanh</h4><ul><li><a href="#">Giới thiệu</a></li><li><a href="#">Liên hệ</a></li></ul></div>
+            <div class="footer-section">
+                <h4>Tải ứng dụng</h4>
+                <div class="app-download">
+                    <a href="#" class="download-btn">🍎 App Store</a>
+                    <a href="#" class="download-btn">🤖 Play Store</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2025 Academic Hub. All rights reserved.</p></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
