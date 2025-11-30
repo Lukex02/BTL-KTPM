@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard - Academic Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/teacher.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo"><div class="logo-icon"><i class="fas fa-cube"></i></div> ITS System</div>
+        
+        <a href="#" class="tab-btn active" onclick="switchTab(this, 'inst-dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'create-quiz')"><i class="fas fa-plus-circle"></i> Quiz Manager</a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'my-students')"><i class="fas fa-user-graduate"></i> My Students</a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'resources')"><i class="fas fa-folder-open"></i> Resources</a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-message')"><i class="fas fa-comment-dots"></i> Message <span class="badge-mini">3</span></a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-settings')"><i class="fas fa-cog"></i> Settings</a>
+        
+        <a href="login.html" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+    </div>
+
+    <div class="content">
+        
+        <div class="top-header">
+            <div class="greeting">
+                <h2>Good Morning, Khánh!</h2>
+                <p>Senior Instructor Dashboard</p>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-action">
+                    <button><i class="far fa-bell"></i></button>
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content-wrapper">
+
+            <div id="inst-dashboard-content" class="tab-pane active">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-orange"><i class="fas fa-file-alt"></i></div>
+                        <div class="stat-info"><h3>957</h3><p>Total Quiz</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-purple"><i class="fas fa-user-check"></i></div>
+                        <div class="stat-info"><h3>19</h3><p>Active Students</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-yellow"><i class="fas fa-users"></i></div>
+                        <div class="stat-info"><h3>241</h3><p>Total Students</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="stat-info"><h3>$7,443</h3><p>Total Revenue</p></div>
+                    </div>
+                </div>
+
+                <div class="middle-section">
+                    <div class="card-box">
+                        <div class="card-header"><h3>Recent Activity</h3><i class="fas fa-ellipsis-h"></i></div>
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="act-icon"><i class="fas fa-book"></i></div>
+                                <div class="act-text"><p>Kevin bought "UI/UX"</p><span>Just now</span></div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="act-icon"><i class="fas fa-star"></i></div>
+                                <div class="act-text"><p>John rated 5 stars</p><span>5 mins ago</span></div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="act-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="act-text"><p>New sale recorded</p><span>1 hour ago</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-box">
+                        <div class="card-header"><h3>Revenue</h3><select><option>This Month</option></select></div>
+                        <div class="chart-placeholder">
+                            <div style="display:flex; align-items:flex-end; gap:10px; height:100%; width:100%; padding:0 20px;">
+                                <div style="width:20%; height:40%; background:#EBEBFF; border-radius:4px;"></div>
+                                <div style="width:20%; height:70%; background:#1A64F0; border-radius:4px;"></div>
+                                <div style="width:20%; height:50%; background:#EBEBFF; border-radius:4px;"></div>
+                                <div style="width:20%; height:85%; background:#1A64F0; border-radius:4px;"></div>
+                                <div style="width:20%; height:60%; background:#EBEBFF; border-radius:4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Recent Students</h3>
+            
+                <div class="student-grid" id="recent-students-grid"></div>
+
+                <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
+            </div>
+
+            <div id="create-quiz-content" class="tab-pane">
+                
+                <div id="quiz-list-view">
+                    <div class="section-header">
+                        <h3>Quiz Management</h3>
+                        <button class="btn-primary" onclick="showCreateQuizForm()"><i class="fas fa-plus"></i> Create New Quiz</button>
+                    </div>
+                    
+                    <div class="quiz-manager-grid">
+                        <div class="quiz-manage-card">
+                            <div class="q-img"><img src="https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=500"></div>
+                            <div class="q-info"><h4>Python for Beginners</h4><p>Draft • Last edited 2 days ago</p></div>
+                            <button class="btn-outline">Edit</button>
+                        </div>
+                        <div class="quiz-manage-card">
+                            <div class="q-img"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500"></div>
+                            <div class="q-info"><h4>Mastering Figma</h4><p class="status-published">Published</p></div>
+                            <button class="btn-outline">Analytics</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-form-view" style="display: none;">
+                    
+                    <div class="section-header">
+                        <button class="btn-back-text" onclick="hideCreateQuizForm()"><i class="fas fa-arrow-left"></i> Back to List</button>
+                        <div class="form-actions">
+                            <button class="btn-outline">Save Draft</button>
+                            <button class="btn-primary">Save & Preview</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-steps">
+                        <button class="step-btn active" onclick="switchQuizStep('basic')">1. Basic Information</button>
+                        <button class="step-btn" onclick="switchQuizStep('question')">2. Question Settings</button>
+                        <button class="step-btn" onclick="switchQuizStep('publish')">3. Publish</button>
+                    </div>
+                    <div class="step-progress-bar"><div class="bar-fill" id="quiz-progress-fill" style="width: 33%;"></div></div>
+
+                    <div id="step-basic" class="step-content active">
+                        <div class="card-box">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" class="form-control" placeholder="Your course title">
+                                <span class="char-count">0/80</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Course subtitle"></textarea>
+                                <span class="char-count">0/120</span>
+                            </div>
+                            <div class="row-2-col">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select class="form-control"><option>Select...</option><option>Coding</option><option>Design</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Level</label>
+                                    <select class="form-control"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Quiz Timer (Minutes)</label>
+                                <input type="number" class="form-control" placeholder="Example: 45">
+                            </div>
+                            
+                            <div class="upload-area">
+                                <i class="fas fa-image"></i>
+                                <p>Upload Quiz Thumbnail (1200x800 pixels)</p>
+                                <button class="btn-outline">Choose Image</button>
+                            </div>
+                        </div>
+                        <div class="step-footer">
+                            <button class="btn-primary" onclick="switchQuizStep('question')">Next Step <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div id="step-question" class="step-content">
+                        <div class="card-box">
+                            <div class="form-group">
+                                <label>Question Text</label>
+                                <div class="rich-editor" contenteditable="true">Enter your question here...</div>
+                                <div class="editor-toolbar">
+                                    <button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><i class="fas fa-list-ul"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group"><label>Points</label><input type="number" class="form-control" value="5"></div>
+                            
+                            <label>Answers (Check correct option)</label>
+                            <div class="answer-option">
+                                <input type="radio" name="correct_ans">
+                                <input type="text" class="form-control" placeholder="Option A">
+                            </div>
+                            <div class="answer-option">
+                                <input type="radio" name="correct_ans">
+                                <input type="text" class="form-control" placeholder="Option B">
+                            </div>
+                            <div class="answer-option">
+                                <input type="radio" name="correct_ans">
+                                <input type="text" class="form-control" placeholder="Option C">
+                            </div>
+                            <div class="answer-option">
+                                <input type="radio" name="correct_ans">
+                                <input type="text" class="form-control" placeholder="Option D">
+                            </div>
+                            
+                            <button class="btn-outline w-full" style="margin-top: 15px;"><i class="fas fa-plus"></i> Add Another Question</button>
+                        </div>
+                        <div class="step-footer">
+                            <button class="btn-outline" onclick="switchQuizStep('basic')">Previous</button>
+                            <button class="btn-primary" onclick="switchQuizStep('publish')">Next Step <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div id="step-publish" class="step-content">
+                        <div class="card-box">
+                            <div class="row-2-col">
+                                <div class="form-group">
+                                    <label>Welcome Message</label>
+                                    <textarea class="form-control" rows="4" placeholder="Message before starting quiz..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Passing Message</label>
+                                    <textarea class="form-control" rows="4" placeholder="Message upon completion..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Add Students</label>
+                                <div class="search-box" style="width: 100%; margin-bottom: 15px;">
+                                    <i class="fas fa-search"></i><input type="text" placeholder="Search student by name...">
+                                </div>
+                                <div class="tags-container">
+                                    <div class="student-tag"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50"> <span>Wade Warren</span> <i class="fas fa-times"></i></div>
+                                    <div class="student-tag"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50"> <span>Bessie Cooper</span> <i class="fas fa-times"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-footer">
+                            <button class="btn-outline" onclick="switchQuizStep('question')">Previous</button>
+                            <button class="btn-primary" onclick="alert('Quiz Published!')">Publish Quiz</button>
+                        </div>
+                    </div>
+
+                </div> 
+            
+            
+            </div>
+
+            <div id="my-students-content" class="tab-pane">
+                <div class="section-header">
+                    <h3>All Students (100)</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Find student name...">
+                    </div>
+                </div>
+                <div class="student-grid">
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div><div class="student-content"><h4 class="st-name">Wade Warren</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200"></div><div class="student-content"><h4 class="st-name">Bessie Cooper</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200"></div><div class="student-content"><h4 class="st-name">Floyd Miles</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200"></div><div class="student-content"><h4 class="st-name">Ronald Richards</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200"></div><div class="student-content"><h4 class="st-name">Guy Hawkins</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1554151228-14d9def656ec?w=200"></div><div class="student-content"><h4 class="st-name">Kristin Watson</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200"></div><div class="student-content"><h4 class="st-name">Cody Fisher</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200"></div><div class="student-content"><h4 class="st-name">Esther Howard</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
+                </div>
+                <div class="pagination-wrapper">
+                    <div class="pagination">
+                        <button class="page-btn disabled"><i class="fas fa-arrow-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resources-content" class="tab-pane">
+                <div class="section-header"><h3>Course Resources</h3><button class="btn-primary"><i class="fas fa-upload"></i> Upload File</button></div>
+                <div class="resource-grid">
+                    <div class="res-card">
+                        <div class="res-icon pdf"><i class="fas fa-file-pdf"></i></div>
+                        <div class="res-info"><h4>Python Syllabus.pdf</h4><p>2.4 MB • 2 days ago</p></div>
+                        <button class="btn-icon-small"><i class="fas fa-download"></i></button>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-icon fig"><i class="fab fa-figma"></i></div>
+                        <div class="res-info"><h4>UI Design Assets.fig</h4><p>15 MB • 1 week ago</p></div>
+                        <button class="btn-icon-small"><i class="fas fa-download"></i></button>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-icon doc"><i class="fas fa-file-word"></i></div>
+                        <div class="res-info"><h4>Final Assignment.docx</h4><p>500 KB • 3 days ago</p></div>
+                        <button class="btn-icon-small"><i class="fas fa-download"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inst-message-content" class="tab-pane">
+                <div class="message-layout" style="height: 600px;">
+                    <div class="msg-sidebar" style="width: 300px;">
+                        <div class="msg-header"><h3>Chats</h3></div>
+                        <div class="contact-list">
+                            <div class="contact-item active">
+                                <div class="contact-avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=64"></div>
+                                <div class="contact-info"><div class="c-name">Wade Warren</div><p class="c-preview">Can you check my code?</p></div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64"></div>
+                                <div class="contact-info"><div class="c-name">Bessie</div><p class="c-preview">Thanks for the lecture!</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-window">
+                        <div class="chat-header"><h4>Wade Warren</h4></div>
+                        <div class="chat-body" style="background:#F5F7FA;">
+                            <div class="msg-row received"><div class="msg-bubble" style="background:#fff;">Hello Professor!</div></div>
+                            <div class="msg-row sent"><div class="msg-bubble" style="background:#1A64F0; color:#fff;">Hi Wade, how can I help?</div></div>
+                        </div>
+                        <div class="chat-footer">
+                            <input type="text" class="form-control" placeholder="Type a message...">
+                            <button class="btn-primary" style="margin-left:10px;">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inst-settings-content" class="tab-pane">
+                <h3 class="section-title">Instructor Profile</h3>
+                <div class="settings-layout">
+                    <div class="photo-col">
+                        <div class="photo-box"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div>
+                        <button class="btn-outline" style="margin-top:10px;">Change Avatar</button>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group"><label>Display Name</label><input type="text" class="form-control" value="Lê Nguyễn Nam Khánh"></div>
+                        <div class="form-group"><label>Title</label><input type="text" class="form-control" value="Senior Instructor"></div>
+                        <div class="form-group"><label>Bio</label><textarea class="form-control" rows="4" style="resize:none; padding:10px; border:1px solid #E9EAF0; border-radius:4px; width:100%;">Passionate about teaching Computer Science and Japanese culture.</textarea></div>
+                        <button class="btn-primary">Update Profile</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function switchTab(btn, id) {
+            // Active button
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            // Show content
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(id + '-content').classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. DỮ LIỆU: 8 Sinh viên cho phần Recent
+            const recentStudentsData = [
+                { name: "Wade Warren", role: "Product Designer", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" },
+                { name: "Bessie Cooper", role: "Developer", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" },
+                { name: "Floyd Miles", role: "UI/UX Designer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" },
+                { name: "Ronald Richards", role: "Software Eng.", img: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200" },
+                { name: "Guy Hawkins", role: "Web Designer", img: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200" },
+                { name: "Kristin Watson", role: "Marketing", img: "https://images.unsplash.com/photo-1554151228-14d9def656ec?w=200" },
+                { name: "Cody Fisher", role: "Project Manager", img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200" },
+                { name: "Esther Howard", role: "Sales", img: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200" }
+            ];
+
+            // 2. HÀM RENDER
+            function renderStudents(id, data) {
+                const el = document.getElementById(id);
+                if(!el) return;
+                
+                el.innerHTML = data.map(s => `
+                    <div class="student-card">  <div class="student-img-wrapper"> <img src="${s.img}" alt="${s.name}">
+                        </div>
+                        
+                        <div class="student-content"> <h4 class="st-name">${s.name}</h4> <p class="st-role">${s.role}</p>
+                            <button class="btn-message">Send Message</button> </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render vào Grid
+            renderStudents('recent-students-grid', recentStudentsData);
+            
+            // Render Tab My Students (Giả lập danh sách đầy đủ)
+            const allStudents = [...recentStudentsData, ...recentStudentsData]; 
+            renderStudents('all-students-grid', allStudents);
+            
+            // Vẽ phân trang (Nếu có container)
+            const pageDiv = document.getElementById('student-pagination');
+            if(pageDiv) pageDiv.innerHTML = `<button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">→</button>`;
+        });
+
+        // 3. HÀM CHUYỂN TAB KHI BẤM "SEE MORE"
+        function goToMyStudentsTab() {
+            // Tìm nút tab "My Students" trên sidebar
+            // (Selector tìm thẻ a có chứa onclick chứa chữ 'my-students')
+            const myStudentBtn = document.querySelector('.sidebar a[onclick*="my-students"]');
+            
+            if (myStudentBtn) {
+                // Kích hoạt sự kiện click vào nút đó -> Nó sẽ tự gọi hàm switchTab
+                myStudentBtn.click();
+            }
+        }
+    </script>
+</body>
+</html>
