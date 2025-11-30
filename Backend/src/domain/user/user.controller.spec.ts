@@ -134,7 +134,9 @@ describe('UserController (integration with mongodb-memory-server)', () => {
       `/user/findById/${seededId}`,
     );
     expect(getRes.status).toBe(200);
-    // expect(getRes.body).toHaveProperty('password', 'hashedpass');
+    expect(
+      await bcrypt.compare(payload.newPassword, getRes.body.password),
+    ).toBe(true);
   });
 
   it('PUT /user/update -> updates user and returns message', async () => {

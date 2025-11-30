@@ -112,6 +112,7 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
     const quizIdList = await this.UserService.findUserById(userId).then(
       (user) => user.assignedQuizIds?.map((id) => new ObjectId(id)),
     );
+    if (!quizIdList || quizIdList.length === 0) return [];
     const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
     if (!quizzes) return [];
     return quizzes.map((q) => {
