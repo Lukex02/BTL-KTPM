@@ -5,8 +5,7 @@ import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
+  const app = await NestFactory.create(AppModule, {cors: true});
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('ITS API')
