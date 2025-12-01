@@ -185,6 +185,102 @@ header h2 { font-size: 1.6rem; font-weight: 700; }
 .btn-toggle-q { background: #EFF8FF; color: var(--primary); border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
 .btn-toggle-q:hover { background: #D1E9FF; }
 
+/* =========================================
+   8. QUIZ REPOSITORY BEAUTIFY (NÂNG CẤP GIAO DIỆN QUIZ)
+   ========================================= */
+
+/* Container danh sách */
+#system-quiz-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
+
+/* Thẻ Quiz (Card) - Tạo điểm nhấn với viền trái màu xanh */
+.quiz-list-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #f1f5f9; border-left: 5px solid #1A64F0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+
+/* Hiệu ứng khi di chuột vào thẻ */
+.quiz-list-item:hover { transform: translateX(5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-color: #1A64F0; }
+
+/* Phần thông tin chữ */
+.q-info { flex: 1; padding-right: 20px; }
+.q-info h4 { font-size: 1.15rem; color: #1e293b; margin-bottom: 10px; font-weight: 700; letter-spacing: -0.5px; }
+
+/* Dòng meta info (Tác giả, số câu hỏi...) */
+.q-info p { font-size: 0.9rem; color: #64748b; display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+/* Làm đẹp tên Tác giả (Giáo viên) */
+.q-info strong { color: #1A64F0; background: #eff6ff; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; border: 1px solid #dbeafe; display: inline-flex; align-items: center; gap: 5px; }
+.q-info strong::before { content: '\f51c'; font-family: "Font Awesome 5 Free"; font-weight: 900; font-size: 0.75rem; }
+
+/* Badge hiển thị loại Quiz (Type) */
+.q-type-badge { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500; }
+
+/* Khu vực các nút bấm (Actions) */
+.q-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Style chung cho nút icon */
+.btn-icon { width: 42px; height: 42px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 1.1}
+
+/* =========================================
+   FIX UI: FILTER BAR & QUIZ CARD
+   ========================================= */
+
+/* 1. KHU VỰC FILTER (Làm đẹp 2 ô chọn) */
+.filter-bar { display: flex; align-items: center; gap: 15px; margin-top: 15px; margin-bottom: 25px; }
+
+.filter-bar select {
+    padding: 8px 16px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    /* Thêm icon mũi tên tùy chỉnh (optional) hoặc để mặc định */
+    min-width: 150px;
+}
+
+.filter-bar select:hover { border-color: #1A64F0; background-color: #F8FAFC; }
+.filter-bar select:focus { border-color: #1A64F0; box-shadow: 0 0 0 3px rgba(26, 100, 240, 0.1); }
+
+
+/* 2. QUIZ CARD (Sửa thanh màu xanh bên trái cho mượt) */
+.quiz-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 25px 25px 25px 30px; /* Tăng padding trái để tránh chữ dính vạch màu */
+    border-radius: 12px;
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden; /* Quan trọng để bo góc mượt */
+}
+
+/* Tạo vạch màu xanh bằng ::before thay vì border-left */
+.quiz-list-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px; /* Độ dày của vạch màu */
+    background: #1A64F0;
+    border-radius: 4px 0 0 4px; /* Bo nhẹ góc trái của vạch màu nếu muốn */
+}
+
+/* Hiệu ứng Hover card */
+.quiz-list-item:hover {
+    transform: translateY(-3px); /* Nổi lên nhẹ */
+    box-shadow: 0 10px 20px rgba(26, 100, 240, 0.08);
+    border-color: #E0E7FF;
+}
+
+/* Chỉnh lại khoảng cách tiêu đề cho thoáng */
+.q-info h4 { margin-bottom: 12px; font-size: 1.2rem; }
+
 /* Animations */
 @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }

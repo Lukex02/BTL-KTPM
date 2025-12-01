@@ -110,7 +110,7 @@ if (loginForm) {
             showMessage('login-msg', "Đăng nhập thành công!", 'success');
 
             setTimeout(() => {
-                if (selectedRole.toLowerCase() === 'instructor') window.location.href = "teacher.html";
+                if (selectedRole.toLowerCase() === 'teacher') window.location.href = "teacher.html";
                 else if (selectedRole.toLowerCase() === 'admin') window.location.href = "admin.html";
                 else window.location.href = "Index.html";
             }, 1000);

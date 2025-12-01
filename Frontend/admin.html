@@ -44,29 +44,32 @@
             <div class="stats-grid">
                 <div class="card stat-card">
                     <div class="icon-box blue"><i class="fas fa-users"></i></div>
-                    <div><h3>2,450</h3><p>Total Students</p></div>
+                    <div>
+                        <h3 id="stat-student">Loading...</h3>
+                        <p>Total Students</p>
+                    </div>
                 </div>
+                
                 <div class="card stat-card">
                     <div class="icon-box purple"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <div><h3>120</h3><p>Total Teachers</p></div>
+                    <div>
+                        <h3 id="stat-teacher">Loading...</h3>
+                        <p>Total Teachers</p>
+                    </div>
                 </div>
+                
                 <div class="card stat-card">
                     <div class="icon-box orange"><i class="fas fa-file-alt"></i></div>
-                    <div><h3>5,300</h3><p>Quizzes Created</p></div>
+                    <div>
+                        <h3 id="stat-quiz">Loading...</h3>
+                        <p>Quizzes Created</p>
+                    </div>
                 </div>
+                
                 <div class="card stat-card">
                     <div class="icon-box green"><i class="fas fa-check-circle"></i></div>
                     <div><h3>15</h3><p>Pending Approval</p></div>
                 </div>
-            </div>
-            
-            <div class="card recent-section">
-                <h3>System Activities</h3>
-                <ul class="activity-list">
-                    <li><span class="tag tag-blue">New</span> Student <strong>Nam Khanh</strong> registered via Facebook. <span class="time">2 mins ago</span></li>
-                    <li><span class="tag tag-green">Quiz</span> Teacher <strong>Mr. John</strong> updated "Advanced CSS". <span class="time">1 hour ago</span></li>
-                    <li><span class="tag tag-red">Alert</span> Server load high detected. <span class="time">3 hours ago</span></li>
-                </ul>
             </div>
         </div>
 
@@ -117,27 +120,9 @@
                     <select><option>All Categories</option><option>IT</option><option>Language</option></select>
                     <select><option>Sort by Date</option><option>Sort by Popularity</option></select>
                 </div>
-                <div class="quiz-list-item">
-                    <div class="q-info">
-                        <h4>Intro to ReactJS Hooks</h4>
-                        <p>Created by: <strong>Robert Fox</strong> | Questions: 20 | Time: 45m</p>
-                    </div>
-                    <div class="q-actions">
-                        <button class="btn-icon"><i class="fas fa-eye"></i></button>
-                        <button class="btn-icon edit" onclick="openModal('quizModal')"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-                <div class="quiz-list-item">
-                    <div class="q-info">
-                        <h4>Japanese N3 Mock Test</h4>
-                        <p>Created by: <strong>Admin</strong> | Questions: 50 | Time: 90m</p>
-                    </div>
-                    <div class="q-actions">
-                        <button class="btn-icon"><i class="fas fa-eye"></i></button>
-                        <button class="btn-icon edit" onclick="openModal('quizModal')"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
-                    </div>
+
+                <div id="system-quiz-list">
+                    <p style="text-align:center; padding: 20px;">Loading quizzes system...</p>
                 </div>
             </div>
         </div>
