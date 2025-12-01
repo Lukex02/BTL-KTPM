@@ -7,7 +7,7 @@ import { AssessmentModule } from './assessment.module';
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { UserService } from '../user/user.service';
-import { AIRepository } from 'src/common/AI/ai.repository';
+import { AIService } from 'src/common/AI/ai.service';
 
 describe('AssessmentController (integration with mongodb-memory-server)', () => {
   let app: INestApplication;
@@ -37,7 +37,7 @@ describe('AssessmentController (integration with mongodb-memory-server)', () => 
 
   const mockAIService = {
     checkServiceOnline: jest.fn().mockResolvedValue(false), // Use dummy responses
-  } as Partial<AIRepository>;
+  } as Partial<AIService>;
 
   beforeAll(async () => {
     mongod = await MongoMemoryServer.create();

@@ -4,7 +4,7 @@ import {
 } from 'src/domain/assessment/dto/assessment.dto';
 import { Answer, Quiz } from 'src/domain/assessment/models/assessment.models';
 
-export interface IAIRepository {
+export interface IAIService {
   MODEL: string;
   LANGUAGE: string;
   checkServiceOnline(): Promise<boolean>;
