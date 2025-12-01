@@ -51,7 +51,7 @@
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab(this, 'dashboard')">Dashboard</button>
                 <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz')">Quizz</button>
-                <button class="tab-btn" onclick="switchTab(this, 'teachers')">Teachers</button>
+               <button class="tab-btn" onclick="switchTab(this, 'teachers'); loadAllTeachers()">Teachers</button>
                 <button class="tab-btn" onclick="switchTab(this, 'message')">Message</button>
                 <button class="tab-btn" onclick="switchTab(this, 'settings')">Settings</button>
             </div>
@@ -377,10 +377,24 @@
         <div class="footer-bottom"><p>© 2025 Academic Hub. All rights reserved.</p></div>
     </div>
 
+    
+
     <script src="script.js"></script>
     <script src="API-Fetch/Auth/auth.js"></script>
     <script src="API-Fetch/User/UserGet.js"></script>
     <script src="API-Fetch/User/UserUpdate.js"></script>
-    <script src="teacherRender.js"></script>
+    <script src="API-Fetch/User/TeacherGet.js"></script>
+    <!-- <script src="teacherRender.js"></script> -->
+
+    <div id="action-confirm-bar" class="confirm-bar">
+        <div class="confirm-content">
+            <i class="fas fa-question-circle"></i>
+            <span id="confirm-text">Bạn có chắc chắn muốn thực hiện hành động này?</span>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn-cancel" onclick="closeConfirmBar()">Hủy bỏ</button>
+            <button id="btn-confirm-yes" class="btn-confirm" onclick="executeTeacherAction()">Xác nhận</button>
+        </div>
+    </div>
 </body>
 </html>

@@ -241,6 +241,206 @@ body { background: var(--bg-light); color: var(--text-dark); }
 .btn-login-header { background: var(--primary-blue); color: #fff; text-decoration: none; padding: 10px 25px; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; display: inline-block; }
 .btn-login-header:hover { background: var(--primary-dark-blue); }
 
+/* Container Grid */
+.teacher-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; margin-top: 20px; }
+
+/* Teacher Card Styles */
+.teacher-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease; border: 1px solid #f0f0f0; display: flex; flex-direction: column; }
+.teacher-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+.teacher-img-wrapper { width: 100%; height: 220px; overflow: hidden; position: relative; }
+.teacher-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.teacher-card:hover .teacher-img-wrapper img { transform: scale(1.1); }
+
+.teacher-content { padding: 20px; text-align: center; }
+.teacher-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.teacher-role { font-size: 0.85rem; color: #64748b; margin-bottom: 15px; font-weight: 500; }
+
+.teacher-stats { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 0.85rem; color: #475569; }
+.teacher-stats i { margin-right: 5px; }
+
+.btn-msg { width: 100%; padding: 10px; border: none; background: #e0e7ff; color: #4338ca; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-msg:hover { background: #4338ca; color: #fff; }
+
+/* Pagination Buttons Customization */
+.page-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* =========================================
+   PREMIUM TEACHER CARD STYLES
+   ========================================= */
+
+/* Grid Container */
+.teacher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Cột tự động điều chỉnh */
+    gap: 30px;
+    margin-top: 25px;
+}
+
+/* Card chính - Sang xịn mịn */
+.teacher-card-premium {
+    background: #fff;
+    border-radius: 20px; /* Bo góc nhiều hơn */
+    overflow: hidden;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06); /* Đổ bóng mềm mại */
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Canh giữa nội dung */
+    padding: 30px 20px 25px; /* Padding rộng rãi */
+    position: relative;
+}
+
+.teacher-card-premium:hover {
+    transform: translateY(-8px); /* Bay lên nhẹ khi hover */
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12);
+}
+
+/* Header của card chứa Avatar */
+.teacher-card-header {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Ảnh Avatar thật */
+.teacher-avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff; /* Viền trắng làm nổi bật */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* --- QUAN TRỌNG: Avatar chữ cái (Logo tròn LK) --- */
+.avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px; /* Chữ to rõ */
+    font-weight: 700;
+    color: white;
+    border: 4px solid #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Các bộ màu Gradient cho avatar chữ cái thêm sinh động */
+.gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); } /* Tím xanh */
+.gradient-2 { background: linear-gradient(135deg, #ff9a44 0%, #fc6076 100%); } /* Cam hồng */
+.gradient-3 { background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%); } /* Xanh dương */
+.gradient-4 { background: linear-gradient(135deg, #43cbff 0%, #9708cc 100%); } /* Xanh tím */
+.gradient-5 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); } /* Hồng phấn */
+
+
+/* Badge "Giảng viên" */
+.teacher-badge {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e0e7ff;
+    color: #4338ca;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Phần nội dung text */
+.teacher-card-body {
+    text-align: center;
+    width: 100%;
+}
+
+.teacher-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 5px;
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Thêm dấu ... nếu tên dài */
+}
+
+.teacher-email {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hàng thống kê (Rating, Students) */
+.teacher-stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+}
+.stat-item i { margin-right: 6px; }
+.text-yellow { color: #f59e0b; }
+.text-blue { color: #3b82f6; }
+
+/* --- Nút bấm hành động --- */
+.btn-teacher-action {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+}
+
+/* Nút "Đăng ký" - Màu gradient nổi bật */
+.btn-teacher-action.not-linked {
+    background: linear-gradient(to right, #4f46e5, #7c3aed); /* Gradient tím xanh */
+    color: white;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-teacher-action.not-linked:hover {
+    background: linear-gradient(to right, #4338ca, #6d28d9);
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Nút "Đã liên kết" - Màu xanh nhẹ nhàng */
+.btn-teacher-action.linked {
+    background-color: #dcfce7;
+    color: #166534;
+    cursor: default; /* Không cho click */
+    box-shadow: none;
+}
+
+/* Trạng thái đang xử lý */
+.btn-teacher-action.processing {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .stats-grid, .course-grid, .teacher-grid { grid-template-columns: 1fr 1fr; }
@@ -259,3 +459,27 @@ body { background: var(--bg-light); color: var(--text-dark); }
     .settings-layout { gap: 20px; }
     .photo-wrapper { width: 150px; margin: 0 auto; }
 }
+
+/* Confirm Bar Styles */
+.confirm-bar { position: fixed; bottom: -120px; left: 0; width: 100%; background: #1e293b; padding: 15px 20px; z-index: 9999; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 -5px 20px rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.1); }
+.confirm-bar.active { bottom: 0; }
+.confirm-content { display: flex; align-items: center; gap: 15px; color: #fff; font-size: 1rem; font-weight: 500; }
+.confirm-content i { font-size: 1.2rem; color: #f59e0b; }
+.confirm-actions { display: flex; gap: 10px; }
+.btn-cancel { background: transparent; border: 1px solid #64748b; color: #cbd5e1; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+.btn-cancel:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.btn-confirm { background: #3b82f6; border: none; color: white; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5); }
+.btn-confirm:hover { background: #2563eb; transform: translateY(-1px); }
+
+/* Nút trạng thái Teacher */
+/* 1. Chưa đăng ký (Màu tím/xanh - Nổi bật để mời gọi) */
+.btn-teacher-action.not-linked { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3); }
+.btn-teacher-action.not-linked:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4); }
+
+/* 2. Đã đăng ký (Màu xanh lá nhẹ hoặc xám - Trạng thái ổn định, bấm vào để hủy) */
+.btn-teacher-action.linked { background: #ecfdf5; color: #059669; border: 1px solid #10b981; font-weight: 600; }
+.btn-teacher-action.linked:hover { background: #fee2e2; color: #dc2626; border-color: #ef4444; content: "Hủy đăng ký"; } 
+/* Trick CSS: Khi hover vào nút Đã đăng ký -> đổi màu đỏ báo hiệu hủy */
+.btn-teacher-action.linked:hover span { display: none; }
+.btn-teacher-action.linked:hover::after { content: "Hủy liên kết"; }
+
