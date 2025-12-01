@@ -202,7 +202,11 @@ export class UserMinimumDto {
   @Expose()
   name: string;
 
-  @ApiProperty({ description: 'User (Student/Teacher) role', required: true })
+  @ApiProperty({
+    description: 'User (Student/Teacher) role',
+    example: 'Student',
+    required: true,
+  })
   @IsString()
   @Expose()
   role: string;
