@@ -219,5 +219,38 @@ function escapeHtml(text) {
         .replace(/'/g, "&#039;");
 }
 
-// Chạy khi trang load
-document.addEventListener('DOMContentLoaded', fetchSystemUsers);
+function setupLogout() {
+    // Tìm nút Sign out theo class trong HTML
+    const logoutBtn = document.querySelector('.logout-btn');
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Ngăn chặn load lại trang do thẻ a href="#"
+
+            // Hộp thoại xác nhận (Optional)
+            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                
+                // 1. Xóa toàn bộ dữ liệu lưu trong LocalStorage (Token, UserId, Role...)
+                localStorage.clear();
+                
+                // Hoặc nếu muốn xóa cụ thể từng cái:
+                // localStorage.removeItem('accessToken');
+                // localStorage.removeItem('userId');
+
+                console.log("Đã đăng xuất thành công.");
+
+                // 2. Chuyển hướng về trang đăng nhập
+                // Lưu ý: Đổi 'index.html' thành tên file đăng nhập thực tế của bạn (ví dụ: login.html)
+                window.location.href = 'login.html'; 
+            }
+        });
+    }
+}
+
+// --- KHỞI CHẠY KHI TRANG LOAD ---
+// Sửa lại dòng cuối cùng của file thành như sau:
+document.addEventListener('DOMContentLoaded', () => {
+    fetchSystemUsers(); // Gọi hàm lấy dữ liệu User cũ
+    setupLogout();      // Gọi hàm đăng xuất mới thêm
+});
+
