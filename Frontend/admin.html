@@ -80,30 +80,16 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Username</th>
                             <th>Student Name</th>
-                            <th>Enrolled Courses</th>
-                            <th>Avg. Score</th>
+                            <th>Email</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#ST001</td>
-                            <td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="avatar-sm"> Wade Warren</div></td>
-                            <td>5 Courses</td>
-                            <td>8.5/10</td>
-                            <td><span class="badge active">Active</span></td>
-                            <td><button class="btn-sm" onclick="openModal('studentModal')">View Detail</button></td>
-                        </tr>
-                        <tr>
-                            <td>#ST002</td>
-                            <td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=Jane+Cooper&background=random" class="avatar-sm"> Jane Cooper</div></td>
-                            <td>3 Courses</td>
-                            <td>9.2/10</td>
-                            <td><span class="badge active">Active</span></td>
-                            <td><button class="btn-sm" onclick="openModal('studentModal')">View Detail</button></td>
-                        </tr>
+
+                    <tbody id="student-list-body">
+                        <tr><td colspan="6" style="text-align:center;">Loading data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -118,27 +104,8 @@
                         <button class="btn-primary">Invite Teacher</button>
                     </div>
                 </div>
-                <div class="teacher-grid">
-                    <div class="teacher-card">
-                        <img src="https://ui-avatars.com/api/?name=Robert+Fox&background=c7d2fe&color=3730a3" alt="">
-                        <h4>Robert Fox</h4>
-                        <p>Senior Lecturer - CS</p>
-                        <div class="t-stats">
-                            <div><strong>12</strong> Courses</div>
-                            <div><strong>1.5k</strong> Students</div>
-                        </div>
-                        <button class="btn-block" onclick="alert('View teacher profile')">View Profile</button>
-                    </div>
-                    <div class="teacher-card">
-                        <img src="https://ui-avatars.com/api/?name=Esther+Howard&background=fecaca&color=991b1b" alt="">
-                        <h4>Esther Howard</h4>
-                        <p>UI/UX Expert</p>
-                        <div class="t-stats">
-                            <div><strong>8</strong> Courses</div>
-                            <div><strong>850</strong> Students</div>
-                        </div>
-                        <button class="btn-block" onclick="alert('View teacher profile')">View Profile</button>
-                    </div>
+                <div class="teacher-grid" id="teacher-list-grid">
+                    <p style="width: 100%; text-align: center;">Loading teachers...</p>
                 </div>
             </div>
         </div>
@@ -298,7 +265,21 @@
         </div>
     </div>
 
+    <div id="detailModal" class="modal">
+        <div class="modal-content large">
+            <span class="close-modal" onclick="closeModal('detailModal')">&times;</span>
+            <div class="profile-header">
+                <div id="modal-user-info" style="display: flex; align-items: center; gap: 15px;"></div>
+            </div>
+            <div class="modal-body">
+                <h3 style="margin: 20px 0 10px;">Created Quizzes Repository</h3>
+                <div id="user-quiz-list" class="quiz-grid-view"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="API-Fetch/Auth/auth.js"></script>
+    <script src="API-Fetch/Admin/UserGet.js"></script>
     <script>
         function switchTab(tabId) {
             // Hide all tabs
