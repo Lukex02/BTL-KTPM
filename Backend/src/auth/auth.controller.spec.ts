@@ -10,7 +10,13 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtRefreshGuard } from './guards/jwt/jwt.refresh.guard';
 import { MongoUserRepo } from 'src/domain/user/user.repository';
-import { UserService } from 'src/domain/user/user.service';
+import {
+  FindUsersByRole,
+  GetInChargeUsers,
+  LinkTeacher,
+  UnlinkTeacher,
+  UserService,
+} from 'src/domain/user/user.service';
 import {
   GetAll,
   FindUserByUsername,
@@ -88,6 +94,10 @@ describe('AuthController (integration with mongodb-memory-server)', () => {
         CreateUser,
         UpdateUser,
         DeleteUser,
+        FindUsersByRole,
+        GetInChargeUsers,
+        LinkTeacher,
+        UnlinkTeacher,
         { provide: JwtService, useValue: mockJwtService },
       ],
     })
