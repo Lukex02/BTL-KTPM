@@ -130,3 +130,41 @@ document.querySelectorAll('.toggle-pass').forEach(item => {
         input.type = input.type === 'password' ? 'text' : 'password';
     });
 });
+
+// Hàm chuyển đổi các bước (Step) trong form tạo Quiz
+function switchQuizStep(stepId) {
+    // 1. Xử lý UI nút bấm (Tab headers)
+    // Xóa class active ở tất cả các nút step
+    document.querySelectorAll('.step-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Thêm class active cho nút tương ứng với stepId
+    // Tìm nút có onclick chứa stepId tương ứng
+    const activeBtn = document.querySelector(`.step-btn[onclick*="'${stepId}'"]`);
+    if(activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    // 2. Xử lý hiển thị nội dung (Tab content)
+    // Ẩn tất cả các step-content
+    document.querySelectorAll('.step-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // Hiện step-content được chọn
+    const targetContent = document.getElementById('step-' + stepId);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    // 3. Cập nhật thanh Progress Bar (Tùy chọn cho đẹp)
+    const progressFill = document.getElementById('quiz-progress-fill');
+    if (progressFill) {
+        let width = '33%';
+        if (stepId === 'basic') width = '33%';
+        else if (stepId === 'question') width = '66%';
+        else if (stepId === 'publish') width = '100%';
+        progressFill.style.width = width;
+    }
+}
