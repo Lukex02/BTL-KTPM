@@ -1,7 +1,12 @@
 import { NotFoundException, Injectable, Inject } from '@nestjs/common';
 import type { IUserRepository } from './interface/user.interface';
 import { User } from './models/user.models';
-import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
+import {
+  ChangePasswordDto,
+  UpdateUserDto,
+  UserDto,
+  UserMinimumDto,
+} from './dto/user.dto';
 import { Command } from 'src/common/command';
 
 @Injectable()
@@ -13,11 +18,6 @@ export class GetAll implements Command {
   async execute(): Promise<UserDto[]> {
     const users = await this.userRepo.getAll();
     if (!users) throw new NotFoundException('User not found');
-    // const res = users.map((user) => {
-    //   const { password, ...rest } = user;
-    //   return rest;
-    // });
-    // return res;
     return users;
   }
 }
@@ -31,9 +31,6 @@ export class FindUserById implements Command {
   async execute(userId: string): Promise<UserDto> {
     const user = await this.userRepo.findById(userId);
     if (!user) throw new NotFoundException('User not found');
-    // Password is hashed tho so maybe isn't neccesary to exclude it
-    // const { password, ...rest } = user;
-    // return rest;
     return user;
   }
 }
@@ -47,9 +44,6 @@ export class FindUserByUsername implements Command {
   async execute(username: string): Promise<UserDto> {
     const user = await this.userRepo.findByUsername(username);
     if (!user) throw new NotFoundException('User not found');
-    // Password is hashed tho so maybe isn't neccesary to exclude it
-    // const { password, ...rest } = user;
-    // return rest;
     return user;
   }
 }
@@ -118,6 +112,54 @@ export class DeleteUser implements Command {
   }
 }
 
+@Injectable()
+export class FindUsersByRole implements Command {
+  constructor(
+    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+  ) {}
+
+  async execute(role: string): Promise<UserMinimumDto[]> {
+    const users = await this.userRepo.findByRole(role);
+    if (!users) throw new NotFoundException('User not found');
+    return users;
+  }
+}
+
+@Injectable()
+export class GetInChargeUsers implements Command {
+  constructor(
+    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+  ) {}
+
+  async execute(userId: string): Promise<UserMinimumDto[]> {
+    const users = await this.userRepo.getInChargeUsers(userId);
+    if (!users) throw new NotFoundException('User not found');
+    return users;
+  }
+}
+
+@Injectable()
+export class LinkTeacher implements Command {
+  constructor(
+    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+  ) {}
+
+  async execute(studentId: string, teacherId: string): Promise<any> {
+    return await this.userRepo.linkTeacher(studentId, teacherId);
+  }
+}
+
+@Injectable()
+export class UnlinkTeacher implements Command {
+  constructor(
+    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+  ) {}
+
+  async execute(studentId: string, teacherId: string): Promise<any> {
+    return await this.userRepo.unlinkTeacher(studentId, teacherId);
+  }
+}
+
 // Facade
 @Injectable()
 export class UserService {
@@ -129,6 +171,10 @@ export class UserService {
     private readonly CreateUser: CreateUser,
     private readonly UpdateUser: UpdateUser,
     private readonly DeleteUser: DeleteUser,
+    private readonly FindUsersByRole: FindUsersByRole,
+    private readonly GetInChargeUsers: GetInChargeUsers,
+    private readonly LinkTeacher: LinkTeacher,
+    private readonly UnlinkTeacher: UnlinkTeacher,
   ) {}
 
   async getAll(): Promise<UserDto[]> {
@@ -157,5 +203,21 @@ export class UserService {
 
   async deleteUser(userId: string): Promise<string> {
     return await this.DeleteUser.execute(userId);
+  }
+
+  async findUsersByRole(role: string): Promise<UserMinimumDto[]> {
+    return await this.FindUsersByRole.execute(role);
+  }
+
+  async getInChargeUsers(userId: string): Promise<UserMinimumDto[]> {
+    return await this.GetInChargeUsers.execute(userId);
+  }
+
+  async linkTeacher(studentId: string, teacherId: string): Promise<any> {
+    return await this.LinkTeacher.execute(studentId, teacherId);
+  }
+
+  async unlinkTeacher(studentId: string, teacherId: string): Promise<any> {
+    return await this.UnlinkTeacher.execute(studentId, teacherId);
   }
 }

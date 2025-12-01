@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
   UnauthorizedException,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -16,7 +17,13 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ChangePasswordDto, UpdateUserDto, UserDto } from './dto/user.dto';
+import {
+  ChangePasswordDto,
+  LinkUserDto,
+  UpdateUserDto,
+  UserDto,
+  UserMinimumDto,
+} from './dto/user.dto';
 import { JwtAccessGuard } from 'src/auth/guards/jwt/jwt.access.guard';
 import { ObjectIdPipe } from 'src/common/pipe/objectid.pipe';
 import { Roles, RolesGuard } from 'src/auth/guards/role.guard';
@@ -52,6 +59,27 @@ export class UserController {
   @Roles('Admin')
   async findByUsername(@Param('username') username: string) {
     return await this.userService.findUserByUsername(username);
+  }
+
+  @Get('findUsersByRole/:role')
+  @ApiOperation({ summary: 'Find users by role' })
+  @ApiOkResponse({ type: UserMinimumDto, isArray: true })
+  async findUsersByRole(@Param('role') role: string) {
+    return await this.userService.findUsersByRole(role);
+  }
+
+  @Get('getInChargeUsers/:userId')
+  @ApiOperation({ summary: 'Get students/teachers in charge of specific user' })
+  @ApiOkResponse({ type: UserMinimumDto, isArray: true })
+  async getInChargeUsers(
+    @Param('userId', new ObjectIdPipe()) userId: string,
+    @Req() req: any,
+  ) {
+    if (userId !== req.user.userId && req.user.role !== 'Admin') {
+      console.log(userId, req.user.userId);
+      throw new UnauthorizedException('Unauthorized');
+    }
+    return await this.userService.getInChargeUsers(userId);
   }
 
   @Get('self')
@@ -116,5 +144,59 @@ export class UserController {
     if (tokenUserId !== userId && req.user.role !== 'Admin')
       throw new UnauthorizedException('Unauthorized');
     return { message: await this.userService.deleteUser(userId) };
+  }
+
+  @Put('link')
+  @ApiOperation({ summary: 'Link teacher and student' })
+  @ApiResponse({
+    status: 201,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Teacher linked to student' },
+      },
+    },
+  })
+  async linkTeacher(@Req() req: any, @Body() body: LinkUserDto) {
+    const tokenUserId = req.user.userId;
+    if (
+      tokenUserId !== body.studentId &&
+      tokenUserId !== body.teacherId &&
+      req.user.role !== 'Admin'
+    )
+      throw new UnauthorizedException('Unauthorized');
+    return {
+      message: await this.userService.linkTeacher(
+        body.studentId,
+        body.teacherId,
+      ),
+    };
+  }
+
+  @Put('unlink')
+  @ApiOperation({ summary: 'Unlink teacher and student' })
+  @ApiResponse({
+    status: 201,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Teacher unlinked from student' },
+      },
+    },
+  })
+  async unlinkTeacher(@Req() req: any, @Body() body: LinkUserDto) {
+    const tokenUserId = req.user.userId;
+    if (
+      tokenUserId !== body.studentId &&
+      tokenUserId !== body.teacherId &&
+      req.user.role !== 'Admin'
+    )
+      throw new UnauthorizedException('Unauthorized');
+    return {
+      message: await this.userService.unlinkTeacher(
+        body.studentId,
+        body.teacherId,
+      ),
+    };
   }
 }

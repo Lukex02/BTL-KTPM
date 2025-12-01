@@ -3,6 +3,7 @@ import {
   ChangePasswordDto,
   UpdateUserDto,
   UserDto,
+  UserMinimumDto,
 } from 'src/domain/user/dto/user.dto';
 import { User } from 'src/domain/user/models/user.models';
 
@@ -14,4 +15,8 @@ export interface IUserRepository {
   createUser(user: User): Promise<any>;
   updateUser(update: UpdateUserDto | RefreshDto): Promise<any>;
   deleteUser(userId: string): Promise<any>;
+  findByRole(role: string): Promise<UserMinimumDto[]>;
+  getInChargeUsers(userId: string): Promise<UserMinimumDto[]>;
+  linkTeacher(studentId: string, teacherId: string): Promise<any>;
+  unlinkTeacher(studentId: string, teacherId: string): Promise<any>;
 }

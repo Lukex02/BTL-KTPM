@@ -14,6 +14,10 @@ import {
   FindUserById,
   FindUserByUsername,
   GetAll,
+  FindUsersByRole,
+  GetInChargeUsers,
+  LinkTeacher,
+  UnlinkTeacher,
   UpdateUser,
   UserService,
 } from './user.service';
@@ -29,6 +33,7 @@ describe('UserController (integration with mongodb-memory-server)', () => {
 
   const validId = '507f1f77bcf86cd799439011';
   let seededId: string | undefined;
+  let teacherId: string | undefined;
 
   const mockAssessmentService = {
     getAssessResult: jest.fn().mockResolvedValue([]),
@@ -55,13 +60,22 @@ describe('UserController (integration with mongodb-memory-server)', () => {
 
     // seed a user document
     const usersCol = db.collection('user');
-    const insertRes = await usersCol.insertOne({
-      username: 'john',
-      email: 'john@example.com',
-      password: await bcrypt.hash('hashedpass', 10),
-      role: 'User',
-    });
-    seededId = insertRes.insertedId.toString();
+    const insertRes = await usersCol.insertMany([
+      {
+        username: 'john',
+        email: 'john@example.com',
+        password: await bcrypt.hash('hashedpass', 10),
+        role: 'Student',
+      },
+      {
+        username: 'mark',
+        email: 'mark@example.com',
+        password: await bcrypt.hash('hashedpass', 10),
+        role: 'Teacher',
+      },
+    ]);
+    seededId = insertRes.insertedIds[0].toString();
+    teacherId = insertRes.insertedIds[1].toString();
 
     const moduleRef = await Test.createTestingModule({
       controllers: [UserController],
@@ -78,6 +92,10 @@ describe('UserController (integration with mongodb-memory-server)', () => {
         CreateUser,
         UpdateUser,
         DeleteUser,
+        FindUsersByRole,
+        GetInChargeUsers,
+        LinkTeacher,
+        UnlinkTeacher,
       ],
     })
       .overrideGuard(JwtAccessGuard as any)
@@ -160,6 +178,90 @@ describe('UserController (integration with mongodb-memory-server)', () => {
     );
     expect(getRes.status).toBe(200);
     expect(getRes.body).toHaveProperty('email', 'johnny@example.com');
+  });
+
+  it('PUT /user/link -> links teacher to student and returns message', async () => {
+    const payload = {
+      studentId: seededId,
+      teacherId: teacherId,
+    };
+
+    const res = await request(app.getHttpServer())
+      .put('/user/link')
+      .send(payload);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('message');
+    // verify the teacher was linked to student
+    const getStudentRes = await request(app.getHttpServer()).get(
+      `/user/findById/${seededId}`,
+    );
+    expect(getStudentRes.status).toBe(200);
+    expect(getStudentRes.body.teachersInCharge).toContain(teacherId);
+
+    const getTeacherRes = await request(app.getHttpServer()).get(
+      `/user/findById/${teacherId}`,
+    );
+    expect(getTeacherRes.status).toBe(200);
+    expect(getTeacherRes.body.studentsInCharge).toContain(seededId);
+  });
+
+  it('GET /user/getInChargeUsers -> returns users in charge', async () => {
+    const studentRes = await request(app.getHttpServer()).get(
+      `/user/getInChargeUsers/${seededId}`,
+    );
+    expect(studentRes.status).toBe(200);
+    expect(Array.isArray(studentRes.body)).toBe(true);
+    expect(studentRes.body.length).toBeGreaterThan(0);
+    // items should contain `id` and `username`
+    expect(studentRes.body[0]).toHaveProperty('id');
+    expect(studentRes.body[0]).toHaveProperty('username');
+  });
+
+  it('GET /user/findUsersByRole/:role -> returns users by role', async () => {
+    const studentRes = await request(app.getHttpServer()).get(
+      `/user/findUsersByRole/Student`,
+    );
+    expect(studentRes.status).toBe(200);
+    expect(Array.isArray(studentRes.body)).toBe(true);
+    expect(studentRes.body.length).toBeGreaterThan(0);
+    // items should contain `id` and `username`
+    expect(studentRes.body[0]).toHaveProperty('id', seededId);
+    expect(studentRes.body[0]).toHaveProperty('username');
+
+    const teacherRes = await request(app.getHttpServer()).get(
+      `/user/findUsersByRole/Teacher`,
+    );
+    expect(teacherRes.status).toBe(200);
+    expect(Array.isArray(teacherRes.body)).toBe(true);
+    expect(teacherRes.body.length).toBeGreaterThan(0);
+    // items should contain `id` and `username`
+    expect(teacherRes.body[0]).toHaveProperty('id', teacherId);
+    expect(teacherRes.body[0]).toHaveProperty('username');
+  });
+
+  it('PUT /user/unlink -> unlinks teacher from student and returns message', async () => {
+    const payload = {
+      studentId: seededId,
+      teacherId: teacherId,
+    };
+
+    const res = await request(app.getHttpServer())
+      .put('/user/unlink')
+      .send(payload);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('message');
+    // verify the teacher was unlinked from student
+    const getStudentRes = await request(app.getHttpServer()).get(
+      `/user/findById/${seededId}`,
+    );
+    expect(getStudentRes.status).toBe(200);
+    expect(getStudentRes.body.teachersInCharge).not.toContain(teacherId);
+
+    const getTeacherRes = await request(app.getHttpServer()).get(
+      `/user/findById/${teacherId}`,
+    );
+    expect(getTeacherRes.status).toBe(200);
+    expect(getTeacherRes.body.studentsInCharge).not.toContain(seededId);
   });
 
   it('DELETE /user/delete/:userId -> deletes current user and returns message', async () => {
