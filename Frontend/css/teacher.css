@@ -141,25 +141,58 @@ body { background: var(--bg-light); color: var(--text-dark); display: flex; min-
 /* =========================================
    7. STUDENT GRID (ĐÃ CHUẨN HÓA)
    ========================================= */
-.student-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
-.student-card { 
-    background: #fff; border-radius: 16px; border: 1px solid var(--border); 
-    overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; 
-    box-shadow: var(--card-shadow); 
-}
-.student-card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-
-.student-img-wrapper { 
-    width: 100%; height: 200px; background: #eee; position: relative; 
-}
-.student-img-wrapper img { 
-    width: 100%; height: 100%; object-fit: cover; object-position: top center; 
+/* Thêm CSS cho modal và list (vào file teacher.css) */
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
 }
 
-.student-content { padding: 20px; text-align: center; flex: 1; display: flex; flex-direction: column; }
-.st-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; color: var(--text-dark); }
-.st-role { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 20px; }
+.student-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-left: 4px solid #1A64F0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+.student-card .info {
+    flex: 1;
+}
+
+.student-card .avatar {
+    background: #1A64F0;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-left: 16px;
+}
+
+.student-card .actions {
+    margin-left: 16px;
+}
+
+.student-card .btn-small {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-success {
+    background: #27ae60;
+    color: white;
+    border: none;
+}
 .btn-message { 
     width: 100%; padding: 12px; border: 1px solid var(--primary); 
     background: #fff; color: var(--primary); font-weight: 600; 
@@ -549,4 +582,29 @@ background-color: #f0f7ff;
     font-size: 24px;
     cursor: pointer;
     color: #999;
+}
+/* Thêm hoặc cập nhật CSS trong teacher.css để đảm bảo modal hoạt động nhất quán */
+.add-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    display: none; /* Ẩn mặc định */
+}
+
+.add-modal-overlay.show {
+    display: flex; /* Hiển thị khi có class show */
+}
+
+.add-modal-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
 }

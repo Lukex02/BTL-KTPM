@@ -9,6 +9,35 @@
     <link rel="stylesheet" href="css/teacher.css">
 </head>
 <body>
+    <div class="add-modal-overlay" id="add-student-modal">
+        <div class="add-modal-content" style="max-width: 800px; width: 90%;">
+            <div class="modal-header">
+                <h3>Add New Student</h3>
+                <button class="close-modal" onclick="hideAddStudentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="student-search" placeholder="Search students..." oninput="filterStudents()">
+                </div>
+                
+                <div id="add-students-loading" style="text-align:center; padding:40px; display:none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                    <span style="margin-left:10px;">Đang tải...</span>
+                </div>
+
+                <div id="add-students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                    <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                    <p>Không còn học sinh nào để thêm</p>
+                </div>
+
+                <div id="available-students-list" class="students-grid" style="width: 80%;"></div>
+            </div>
+            <div class="modal-footer" style="text-align: right; padding: 16px; border-top: 1px solid #eee;">
+                <button type="button" class="btn-outline" onclick="hideAddStudentModal()">Close</button>
+            </div>
+        </div>
+    </div>
     <!-- Modal Change Password -->
 <div class="modal-overlay" id="change-password-modal">
     <div class="modal-content">
@@ -128,10 +157,23 @@
                     </div>
                 </div>
 
-                <h3 class="section-title">Recent Students</h3>
-            
-                <div class="student-grid" id="recent-students-grid"></div>
+                <div class="tab-content" id="my-students">
+                    <h2>My Students</h2>
+                    <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+                    <p>Danh sách học sinh bạn đang phụ trách</p>
 
+                    <div id="students-loading" style="text-align:center; padding:40px; display:none;">
+                        <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                        <span style="margin-left:10px;">Đang tải...</span>
+                    </div>
+
+                    <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                        <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                        <p>Chưa có học sinh nào được giao cho bạn</p>
+                    </div>
+
+                    <div id="students-list"></div>
+                </div>
                 <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
             </div>
 
@@ -238,31 +280,29 @@
 
                     <div id="step-publish" class="step-content">
                         <div class="card-box">
-                            <div class="row-2-col">
-                                <div class="form-group">
-                                    <label>Welcome Message</label>
-                                    <textarea class="form-control" rows="4" placeholder="Message before starting quiz..."></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Passing Message</label>
-                                    <textarea class="form-control" rows="4" placeholder="Message upon completion..."></textarea>
-                                </div>
+                            <h3>Publish Settings</h3>
+                            <div class="form-group">
+                                <label for="quiz-visibility">Visibility</label>
+                                <select id="quiz-visibility" class="form-control">
+                                    <option value="public">Public</option>
+                                    <option value="private">Private</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label>Add Students</label>
-                                <div class="search-box" style="width: 100%; margin-bottom: 15px;">
-                                    <i class="fas fa-search"></i><input type="text" placeholder="Search student by name...">
-                                </div>
-                                <div class="tags-container">
-                                    <div class="student-tag"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50"> <span>Wade Warren</span> <i class="fas fa-times"></i></div>
-                                    <div class="student-tag"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50"> <span>Bessie Cooper</span> <i class="fas fa-times"></i></div>
-                                </div>
+                                <label for="assign-student">Assign to Student (Optional - Select one)</label>
+                                <select id="assign-student" class="form-control">
+                                    <option value="">-- Select a student --</option>
+                                    <!-- Options sẽ được fill động bởi JS -->
+                                </select>
                             </div>
+                            <p class="form-info">Additional publish options...</p>
                         </div>
-                        <div class="step-footer">
+                                                <div class="step-footer">
                             <button class="btn-outline" onclick="switchQuizStep('question')">Previous</button>
                             <button type="submit" class="btn-primary" id="publish-button">Publish Quiz</button>
                         </div>
+                    </div>
+
                     </div>
                     </form>
                     
@@ -375,7 +415,6 @@
     <!-- <script src="API-Fetch/User/Get.js"></script> -->
     
     <script>
-        console.log(typeof getQuizzesByUserIdAPI);
         function switchTab(btn, id) {
             // Active button
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -384,7 +423,6 @@
             // Show content
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.getElementById(id + '-content').classList.add('active');
-
             // Nếu là tab Quiz Manager, fetch quizzes
             if (id === 'create-quiz') {
                 fetchAndRenderQuizzes();
@@ -404,45 +442,6 @@
                 alert('Error deleting quiz: ' + error.message);
             }
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. DỮ LIỆU: 8 Sinh viên cho phần Recent
-            const recentStudentsData = [
-                { name: "Wade Warren", role: "Product Designer", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" },
-                { name: "Bessie Cooper", role: "Developer", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" },
-                { name: "Floyd Miles", role: "UI/UX Designer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" },
-                { name: "Ronald Richards", role: "Software Eng.", img: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200" },
-                { name: "Guy Hawkins", role: "Web Designer", img: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200" },
-                { name: "Kristin Watson", role: "Marketing", img: "https://images.unsplash.com/photo-1554151228-14d9def656ec?w=200" },
-                { name: "Cody Fisher", role: "Project Manager", img: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200" },
-                { name: "Esther Howard", role: "Sales", img: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200" }
-            ];
-
-            // 2. HÀM RENDER
-            function renderStudents(id, data) {
-                const el = document.getElementById(id);
-                if(!el) return;
-                
-                el.innerHTML = data.map(s => `
-                    <div class="student-card">  <div class="student-img-wrapper"> <img src="${s.img}" alt="${s.name}">
-                        </div>
-                        
-                        <div class="student-content"> <h4 class="st-name">${s.name}</h4> <p class="st-role">${s.role}</p>
-                            <button class="btn-message">Send Message</button> </div>
-                    </div>
-                `).join('');
-            }
-
-            // Render vào Grid
-            renderStudents('recent-students-grid', recentStudentsData);
-            
-            // Render Tab My Students (Giả lập danh sách đầy đủ)
-            const allStudents = [...recentStudentsData, ...recentStudentsData]; 
-            renderStudents('all-students-grid', allStudents);
-            
-            // Vẽ phân trang (Nếu có container)
-            const pageDiv = document.getElementById('student-pagination');
-            if(pageDiv) pageDiv.innerHTML = `<button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">→</button>`;
-        });
 
         // 3. HÀM CHUYỂN TAB KHI BẤM "SEE MORE"
         function goToMyStudentsTab() {
@@ -453,6 +452,25 @@
             if (myStudentBtn) {
                 // Kích hoạt sự kiện click vào nút đó -> Nó sẽ tự gọi hàm switchTab
                 myStudentBtn.click();
+            }
+        }
+        function populateAssignStudentDropdown() {
+            const select = document.getElementById('assign-student');
+            select.innerHTML = '<option value="">-- Select a student --</option>'; // Reset
+
+            if (myStudents && myStudents.length > 0) {
+                myStudents.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.name || 'Chưa đặt tên'} (@${student.username || student.id})`;
+                    select.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "No students available";
+                option.disabled = true;
+                select.appendChild(option);
             }
         }
         function showCreateQuizForm() {
@@ -472,6 +490,7 @@
             document.getElementById('step-basic').classList.add('active');
             document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
             document.querySelector('.step-btn[onclick="switchQuizStep(\'basic\')"]').classList.add('active');  // Activate Basic button
+            populateAssignStudentDropdown();
         }
         function hideCreateQuizForm() {
             document.getElementById('quiz-form-view').style.display = 'none';
@@ -681,8 +700,15 @@
                     };
                     console.log('Quiz Update Data to Send:', JSON.stringify(quizData, null, 2));
                     result = await updateQuizAPI(quizId, quizData);
+                    const selectedStudentId = document.getElementById('assign-student').value;
+                    if (selectedStudentId) {
+                        await assignQuizToUserAPI(quizId, selectedStudentId); // Giả sử createdQuiz có id
+                        showMessage('quiz-message', 'Quiz assigned to student successfully!', 'success');
+                    }
                     showMessage('quiz-message', 'Quiz updated successfully!', 'success');
                 } else {
+                    const beforeQuizzes = await getQuizzesByUserIdAPI(userId);
+                    console.log('Before Quizzes:', beforeQuizzes);
                     quizData = {
                         userId,  // Keep for create
                         title,
@@ -691,7 +717,23 @@
                     };
                     console.log('Quiz Create Data to Send:', JSON.stringify(quizData, null, 2));
                     result = await createQuizAPI(quizData);
+                    console.log(result);
                     showMessage('quiz-message', 'Quiz created successfully!', 'success');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    const afterQuizzes = await getQuizzesByUserIdAPI(userId);
+                    console.log('After Quizzes:', afterQuizzes);
+                    const newQuiz = afterQuizzes.find(q => !beforeQuizzes.some(b => b.id === q.id));
+                    if (!newQuiz) {
+                        showMessage('quiz-message', 'Could not find newly created quiz. Please check the list.', 'error');
+                        return;
+                    }
+
+                    console.log('New Quiz ID:', newQuiz.id);  // Log để confirm
+                    const selectedStudentId = document.getElementById('assign-student').value;
+                    if (selectedStudentId) {
+                        await assignQuizToUserAPI(newQuiz.id, selectedStudentId); // Giả sử createdQuiz có id
+                        showMessage('quiz-message', 'Quiz assigned to student successfully!', 'success');
+                    }
                 }
                 console.log(result);
                 createQuizForm.reset();  // Reset form
@@ -781,6 +823,165 @@ document.getElementById('change-password-form').addEventListener('submit', async
         msgEl.style.color = '#e74c3c';
     }
 });
+</script>
+<script>
+let myStudents = [];
+
+// Cập nhật hàm loadMyStudents để lưu myStudents và hiển thị nút Add
+async function loadMyStudents() {
+    const loading = document.getElementById('students-loading');
+    const empty = document.getElementById('students-empty');
+    const list = document.getElementById('students-list');
+
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    list.innerHTML = '';
+
+    try {
+        const teacherId = localStorage.getItem('userId');
+        if (!teacherId) {
+            throw new Error('Không tìm thấy ID giáo viên. Vui lòng đăng nhập lại.');
+        }
+
+        myStudents = await getMyStudentsAPI(teacherId);
+
+        loading.style.display = 'none';
+
+        if (!myStudents || myStudents.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        // Render list
+        list.innerHTML = myStudents.map(student => `
+            <div class="student-card" style="margin-bottom:20px">
+                <div class="info">
+                    <h4>${student.name || 'Chưa đặt tên'}</h4>
+                    <p>@${student.username || student.id}</p>
+                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                </div>
+                <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        loading.style.display = 'none';
+        list.innerHTML = `
+            <div style="text-align:center; padding:40px; color:#e74c3c;">
+                <p>⚠️ ${error.message}</p>
+                <button onclick="loadMyStudents()" style="margin-top:10px; padding:8px 16px; background:#1A64F0; color:white; border:none; border-radius:8px; cursor:pointer;">Thử lại</button>
+            </div>
+        `;
+    }
+}
+function showAddStudentModal() {
+    const modal = document.getElementById('add-student-modal');
+    modal.classList.add('show');
+    loadAvailableStudents();
+    document.getElementById('student-search').value = ''; // Reset search
+}
+
+function hideAddStudentModal() {
+    const modal = document.getElementById('add-student-modal');
+    modal.classList.remove('show');
+}
+// Load available students (all trừ myStudents)
+async function loadAvailableStudents() {
+    const loading = document.getElementById('add-students-loading');
+    const empty = document.getElementById('add-students-empty');
+    const list = document.getElementById('available-students-list');
+
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    list.innerHTML = '';
+
+    try {
+        const allStudents = await getAllStudentsAPI();
+
+        // Filter loại trừ myStudents (so sánh bằng id)
+        const myStudentIds = new Set(myStudents.map(s => s.id));
+        const available = allStudents.filter(s => !myStudentIds.has(s.id));
+
+        loading.style.display = 'none';
+
+        if (available.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        // Render list với nút Assign
+        list.innerHTML = available.map(student => `
+            <div class="student-card" style="margin-bottom:20px">
+                <div class="info">
+                    <h4>${student.name || 'Chưa đặt tên'}</h4>
+                    <p>@${student.username || student.id}</p>
+                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                </div>
+                <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
+                <div class="actions">
+                    <button class="btn-small btn-success" onclick="assignStudent('${student.id}')">Assign</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        loading.style.display = 'none';
+        list.innerHTML = `
+            <div style="text-align:center; padding:40px; color:#e74c3c;">
+                <p>⚠️ ${error.message}</p>
+                <button onclick="loadAvailableStudents()" style="margin-top:10px; padding:8px 16px; background:#1A64F0; color:white; border:none; border-radius:8px; cursor:pointer;">Thử lại</button>
+            </div>
+        `;
+    }
+}
+
+// Hàm assign student
+async function assignStudent(studentId) {
+    try {
+        const teacherId = localStorage.getItem('userId');
+        await assignStudentAPI(teacherId, studentId);
+        
+        // Refresh lists
+        loadMyStudents();
+        loadAvailableStudents();
+        
+        // Optional: show success message
+        alert('Đã giao học sinh thành công!');
+    } catch (error) {
+        alert('Lỗi: ' + error.message);
+    }
+}
+
+// Hàm filter students theo search
+function filterStudents() {
+    const search = document.getElementById('student-search').value.toLowerCase();
+    const cards = document.querySelectorAll('#available-students-list .student-card');
+    
+    cards.forEach(card => {
+        const name = card.querySelector('h4').textContent.toLowerCase();
+        const username = card.querySelector('p:nth-child(2)').textContent.toLowerCase();
+        const email = card.querySelector('p:nth-child(3)').textContent.toLowerCase();
+        
+        if (name.includes(search) || username.includes(search) || email.includes(search)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+// Gọi khi mở tab My Students (bạn thêm vào phần switch tab hiện tại)
+// document.querySelector('[data-tab="my-students-content"]')?.addEventListener('click', loadMyStudents);
+document.addEventListener('DOMContentLoaded', function() {
+    // Load students cho preview trên dashboard luôn
+    loadMyStudents();
+
+    // Nếu đang ở tab quiz thì load quiz
+    if (document.getElementById('create-quiz-content').classList.contains('active')) {
+        fetchAndRenderQuizzes();
+    }
+});
+// Hoặc nếu dùng hàm showTab(tabId), thì thêm vào đó:
+// if (tabId === 'my-students-content') loadMyStudents();
 </script>
 </body>
 </html>
