@@ -188,4 +188,21 @@ export class AssessmentController {
       message: await this.assessmentService.deleteAssessResult(assessResId),
     };
   }
+
+  @Post('result/save')
+  @ApiOperation({ summary: 'Save assessment result' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Assessment result saved' },
+      },
+    },
+  })
+  async saveAssessResult(@Body() assessRes: AssessmentResult) {
+    return {
+      message: await this.assessmentService.saveAssessResult(assessRes),
+    };
+  }
 }

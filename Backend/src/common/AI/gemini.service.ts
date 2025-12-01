@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { AIRepository } from './ai.repository';
+import { AIService } from './ai.service';
 import {
   Answer,
   AssessmentResult,
@@ -12,7 +12,7 @@ import {
 } from 'src/domain/assessment/dto/assessment.dto';
 
 @Injectable()
-export class GeminiService extends AIRepository {
+export class GeminiService extends AIService {
   MODEL = 'gemini-2.0-flash-lite';
   private readonly client = new GoogleGenAI({
     apiKey: 'AIzaSyAR3ZvwI5FjlBkvuFNtRIMSyo70B1obRBk',

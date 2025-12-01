@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import {
+  IsDate,
+  IsEmpty,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class Question {
   @ApiProperty({ description: 'Question id', example: 1, required: true })
@@ -94,6 +102,9 @@ export class AssessmentResult {
     example: '0000',
     required: true,
   })
+  @IsString()
+  @IsMongoId()
+  @Exclude()
   id?: string;
 
   @ApiProperty({
@@ -101,6 +112,8 @@ export class AssessmentResult {
     example: 'Math',
     required: true,
   })
+  @IsString()
+  @IsMongoId()
   studentId: string;
 
   @ApiProperty({
@@ -108,6 +121,9 @@ export class AssessmentResult {
     example: 'Math',
     required: true,
   })
+  @IsString()
+  @IsMongoId()
+  @IsNotEmpty()
   quizId: string;
 
   @ApiProperty({
@@ -115,6 +131,8 @@ export class AssessmentResult {
     example: 10,
     required: true,
   })
+  @IsNumber()
+  @IsNotEmpty()
   rating: number;
 
   @ApiProperty({
@@ -122,6 +140,7 @@ export class AssessmentResult {
     example: 'This is the assessment comment',
     required: true,
   })
+  @IsString()
   comment: string;
 
   @ApiProperty({
@@ -129,5 +148,7 @@ export class AssessmentResult {
     example: '12/12/2022',
     required: true,
   })
+  @IsDate()
+  @Exclude()
   createdAt: Date;
 }

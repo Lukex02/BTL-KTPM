@@ -165,7 +165,12 @@ export class SaveAssessResult implements Command {
   ) {}
 
   async execute(assessRes: AssessmentResult): Promise<string> {
-    return this.assessResultRepo.saveAssessResult(assessRes);
+    const res = await this.assessResultRepo.saveAssessResult(assessRes);
+    if (res.insertedId) {
+      return 'Assessment result saved';
+    } else {
+      throw new NotFoundException("Couldn't save assessment result");
+    }
   }
 }
 
@@ -251,7 +256,10 @@ export class AssessmentService {
   }
 
   async saveAssessResult(assessRes: AssessmentResult): Promise<string> {
-    return await this.SaveAssessResult.execute(assessRes);
+    return await this.SaveAssessResult.execute({
+      ...assessRes,
+      createdAt: new Date(),
+    });
   }
 
   async assignQuizToUser(request: AssignQuizToUserRequestDto): Promise<string> {
