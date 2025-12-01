@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - System Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="logo-text">Admin Portal</span>
+        </div>
+        <nav>
+            <a href="javascript:void(0)" class="active" onclick="switchTab('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="javascript:void(0)" onclick="switchTab('students')"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="javascript:void(0)" onclick="switchTab('teachers')"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="javascript:void(0)" onclick="switchTab('quizzes')"><i class="fas fa-question-circle"></i> Quiz Management</a>
+            <a href="javascript:void(0)" onclick="switchTab('content')"><i class="fas fa-folder-open"></i> Content & Docs</a>
+            <a href="javascript:void(0)" onclick="switchTab('settings')"><i class="fas fa-cog"></i> Settings</a>
+        </nav>
+        <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2 id="page-title">Dashboard Overview</h2>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search anything...">
+                </div>
+                <div class="admin-profile">
+                    <div class="notif"><i class="fas fa-bell"></i><span class="dot"></span></div>
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="Admin">
+                    <span>Super Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="card stat-card">
+                    <div class="icon-box blue"><i class="fas fa-users"></i></div>
+                    <div><h3>2,450</h3><p>Total Students</p></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="icon-box purple"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div><h3>120</h3><p>Total Teachers</p></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="icon-box orange"><i class="fas fa-file-alt"></i></div>
+                    <div><h3>5,300</h3><p>Quizzes Created</p></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="icon-box green"><i class="fas fa-check-circle"></i></div>
+                    <div><h3>15</h3><p>Pending Approval</p></div>
+                </div>
+            </div>
+            
+            <div class="card recent-section">
+                <h3>System Activities</h3>
+                <ul class="activity-list">
+                    <li><span class="tag tag-blue">New</span> Student <strong>Nam Khanh</strong> registered via Facebook. <span class="time">2 mins ago</span></li>
+                    <li><span class="tag tag-green">Quiz</span> Teacher <strong>Mr. John</strong> updated "Advanced CSS". <span class="time">1 hour ago</span></li>
+                    <li><span class="tag tag-red">Alert</span> Server load high detected. <span class="time">3 hours ago</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="students" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3>All Students List</h3>
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Add Student</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student Name</th>
+                            <th>Enrolled Courses</th>
+                            <th>Avg. Score</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#ST001</td>
+                            <td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="avatar-sm"> Wade Warren</div></td>
+                            <td>5 Courses</td>
+                            <td>8.5/10</td>
+                            <td><span class="badge active">Active</span></td>
+                            <td><button class="btn-sm" onclick="openModal('studentModal')">View Detail</button></td>
+                        </tr>
+                        <tr>
+                            <td>#ST002</td>
+                            <td><div class="user-cell"><img src="https://ui-avatars.com/api/?name=Jane+Cooper&background=random" class="avatar-sm"> Jane Cooper</div></td>
+                            <td>3 Courses</td>
+                            <td>9.2/10</td>
+                            <td><span class="badge active">Active</span></td>
+                            <td><button class="btn-sm" onclick="openModal('studentModal')">View Detail</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="teachers" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3>All Teachers</h3>
+                    <div class="actions">
+                        <button class="btn-outline">Export CSV</button>
+                        <button class="btn-primary">Invite Teacher</button>
+                    </div>
+                </div>
+                <div class="teacher-grid">
+                    <div class="teacher-card">
+                        <img src="https://ui-avatars.com/api/?name=Robert+Fox&background=c7d2fe&color=3730a3" alt="">
+                        <h4>Robert Fox</h4>
+                        <p>Senior Lecturer - CS</p>
+                        <div class="t-stats">
+                            <div><strong>12</strong> Courses</div>
+                            <div><strong>1.5k</strong> Students</div>
+                        </div>
+                        <button class="btn-block" onclick="alert('View teacher profile')">View Profile</button>
+                    </div>
+                    <div class="teacher-card">
+                        <img src="https://ui-avatars.com/api/?name=Esther+Howard&background=fecaca&color=991b1b" alt="">
+                        <h4>Esther Howard</h4>
+                        <p>UI/UX Expert</p>
+                        <div class="t-stats">
+                            <div><strong>8</strong> Courses</div>
+                            <div><strong>850</strong> Students</div>
+                        </div>
+                        <button class="btn-block" onclick="alert('View teacher profile')">View Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quizzes" class="tab-content">
+            <div class="card">
+                <h3>Quiz Repository</h3>
+                <div class="filter-bar">
+                    <select><option>All Categories</option><option>IT</option><option>Language</option></select>
+                    <select><option>Sort by Date</option><option>Sort by Popularity</option></select>
+                </div>
+                <div class="quiz-list-item">
+                    <div class="q-info">
+                        <h4>Intro to ReactJS Hooks</h4>
+                        <p>Created by: <strong>Robert Fox</strong> | Questions: 20 | Time: 45m</p>
+                    </div>
+                    <div class="q-actions">
+                        <button class="btn-icon"><i class="fas fa-eye"></i></button>
+                        <button class="btn-icon edit" onclick="openModal('quizModal')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="quiz-list-item">
+                    <div class="q-info">
+                        <h4>Japanese N3 Mock Test</h4>
+                        <p>Created by: <strong>Admin</strong> | Questions: 50 | Time: 90m</p>
+                    </div>
+                    <div class="q-actions">
+                        <button class="btn-icon"><i class="fas fa-eye"></i></button>
+                        <button class="btn-icon edit" onclick="openModal('quizModal')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="tab-content">
+            <div class="content-wrapper">
+                <div class="card upload-zone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload New Resource</h3>
+                    <p>Drag files here or click to browse</p>
+                    <button class="btn-primary">Select Files</button>
+                </div>
+                <div class="card">
+                    <h3>Pending Approval</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Uploader</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fas fa-file-pdf red-text"></i> UX_Guideline_2025.pdf</td>
+                                <td>Esther Howard</td>
+                                <td>Document</td>
+                                <td>2.4 MB</td>
+                                <td>
+                                    <button class="btn-xs success"><i class="fas fa-check"></i> Approve</button>
+                                    <button class="btn-xs danger"><i class="fas fa-times"></i> Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-file-video blue-text"></i> Intro_Video.mp4</td>
+                                <td>Robert Fox</td>
+                                <td>Video</td>
+                                <td>150 MB</td>
+                                <td>
+                                    <button class="btn-xs success"><i class="fas fa-check"></i> Approve</button>
+                                    <button class="btn-xs danger"><i class="fas fa-times"></i> Reject</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <div class="card setting-card">
+                <h3>Admin Profile Settings</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="Super Admin">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="admin@sys.com" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select>
+                        <option>Super Admin</option>
+                        <option>Moderator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Change Password</label>
+                    <input type="password" placeholder="New Password">
+                </div>
+                <button class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('studentModal')">&times;</span>
+            <div class="profile-header">
+                <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="avatar-lg">
+                <div>
+                    <h2>Wade Warren</h2>
+                    <p>Student ID: ST001 | Joined: Jan 2024</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h4>Instructors</h4>
+                <div class="tag-container">
+                    <span class="tag tag-blue">Mr. Robert</span>
+                    <span class="tag tag-blue">Ms. Esther</span>
+                </div>
+                <h4 style="margin-top:20px;">Quiz History</h4>
+                <table class="data-table">
+                    <tr><th>Quiz Name</th><th>Score</th><th>Date</th></tr>
+                    <tr><td>React Basics</td><td><span class="badge success">90/100</span></td><td>20/10/2024</td></tr>
+                    <tr><td>Advanced CSS</td><td><span class="badge warning">65/100</span></td><td>22/10/2024</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="quizModal" class="modal">
+        <div class="modal-content large">
+            <span class="close-modal" onclick="closeModal('quizModal')">&times;</span>
+            <h3>Edit Quiz: Intro to ReactJS</h3>
+            <div class="modal-body">
+                <div class="question-item">
+                    <label>Question 1:</label>
+                    <input type="text" class="full-width" value="What is a Hook in React?">
+                    <div class="options-grid">
+                        <input type="text" value="A function">
+                        <input type="text" value="A class">
+                        <input type="text" value="A component">
+                        <input type="text" value="None">
+                    </div>
+                    <label>Correct Answer: A</label>
+                </div>
+                <button class="btn-primary" style="margin-top:10px;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="API-Fetch/Auth/auth.js"></script>
+    <script>
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            // Show target tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            const activeLink = document.querySelector(`.sidebar a[onclick="switchTab('${tabId}')"]`);
+            if(activeLink) activeLink.classList.add('active');
+
+            // Update Title
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'students': 'Student Management',
+                'teachers': 'Teacher Directory',
+                'quizzes': 'Quiz Administration',
+                'content': 'Content Verification',
+                'settings': 'Account Settings'
+            };
+            document.getElementById('page-title').textContent = titles[tabId];
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
