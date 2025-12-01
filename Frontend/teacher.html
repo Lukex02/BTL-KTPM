@@ -4,20 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Dashboard - Academic Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style type="text/css">@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/300/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/500/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/500/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/600/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/700/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}</style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/teacher.css">
 </head>
 <body>
-
+    <!-- Modal Change Password -->
+<div class="modal-overlay" id="change-password-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Change Password</h3>
+            <button class="close-modal" onclick="hideChangePasswordModal()">&times;</button>
+        </div>
+        <form id="change-password-form">
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="old-password" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="new-password" class="form-control"  minlength="6">
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="confirm-password" class="form-control"  minlength="6">
+            </div>
+            <div id="password-message" style="margin: 10px 0; font-size: 14px;"></div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn-outline" onclick="hideChangePasswordModal()">Cancel</button>
+                <button type="submit" class="btn-primary" style="margin-left: 10px;">Update Password</button>
+            </div>
+        </form>
+    </div>
+</div>
     <div class="sidebar">
-        <div class="logo"><div class="logo-icon"><i class="fas fa-cube"></i></div> ITS System</div>
+        <div class="logo"><img src="./assets/BK 1.png" class="logo-icon" alt="Logo"> ITS System</div>
         
         <a href="#" class="tab-btn active" onclick="switchTab(this, 'inst-dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
         <a href="#" class="tab-btn" onclick="switchTab(this, 'create-quiz')"><i class="fas fa-plus-circle"></i> Quiz Manager</a>
         <a href="#" class="tab-btn" onclick="switchTab(this, 'my-students')"><i class="fas fa-user-graduate"></i> My Students</a>
         <a href="#" class="tab-btn" onclick="switchTab(this, 'resources')"><i class="fas fa-folder-open"></i> Resources</a>
-        <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-message')"><i class="fas fa-comment-dots"></i> Message <span class="badge-mini">3</span></a>
+        <!-- <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-message')"><i class="fas fa-comment-dots"></i> Message <span class="badge-mini">3</span></a> -->
         <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-settings')"><i class="fas fa-cog"></i> Settings</a>
         
         <a href="login.html" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sign out</a>
@@ -37,9 +64,14 @@
                 </div>
                 <div class="user-action">
                     <button><i class="far fa-bell"></i></button>
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User">
+                    <div class="avatar-wrapper" id="avatar-wrapper" style="cursor: pointer;">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User" class="avatar-img">
+                        <div class="user-dropdown" id="user-dropdown" style="margin-top: 2%;">
+                            <a href="#" onclick="showChangePasswordModal(); return false;">Change Password</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+</div>
         </div>
 
         <div class="tab-content-wrapper">
@@ -107,7 +139,7 @@
                 
                 <div id="quiz-list-view">
                     <div class="section-header">
-                        <h3>Quiz Management</h3>
+                        <h2>Quiz Management</h2>
                         <button class="btn-primary" onclick="showCreateQuizForm()"><i class="fas fa-plus"></i> Create New Quiz</button>
                     </div>
                     
@@ -117,7 +149,7 @@
                 </div>
 
                 <div id="quiz-form-view" style="display: none;">
-                    
+                    <h1 id="quiz-form-title">Create New Quiz</h1>
                     <div class="section-header">
                         <button class="btn-back-text" onclick="hideCreateQuizForm()"><i class="fas fa-arrow-left"></i> Back to List</button>
                         <div class="form-actions">
@@ -126,11 +158,12 @@
                         </div>
                     </div>
                     <form id="create-quiz-form">
+                        <input type="hidden" id="quiz-id" value="">
                         <div id="quiz-message" style="display: none;"></div>
                         <div class="quiz-steps">
-                        <button class="step-btn active" onclick="switchQuizStep('basic')">1. Basic Information</button>
-                        <button class="step-btn" onclick="switchQuizStep('question')">2. Question Settings</button>
-                        <button class="step-btn" onclick="switchQuizStep('publish')">3. Publish</button>
+                        <button type="button" class="step-btn active" onclick="switchQuizStep('basic')">1. Basic Information</button>
+                        <button type="button" class="step-btn" onclick="switchQuizStep('question')">2. Question Settings</button>
+                        <button type="button" class="step-btn" onclick="switchQuizStep('publish')">3. Publish</button>
                         </div>
                     <div class="step-progress-bar"><div class="bar-fill" id="quiz-progress-fill" style="width: 33%;"></div></div>
 
@@ -196,7 +229,7 @@
                             <input type="text" class="correct-answer" placeholder="Correct Answer (optional)">
                         </div>
                     </div>
-                    <button type="button" onclick="addQuestion()">Add Question</button>
+                    <button type="button" onclick="addQuestion()" class="btn-outline">Add Question</button>
                         <div class="step-footer">
                             <button type="button" class="btn-outline" onclick="switchQuizStep('basic')">Previous</button>
                             <button type="button" class="btn-primary" onclick="switchQuizStep('publish')">Next Step <i class="fas fa-arrow-right"></i></button>
@@ -228,7 +261,7 @@
                         </div>
                         <div class="step-footer">
                             <button class="btn-outline" onclick="switchQuizStep('question')">Previous</button>
-                            <button type="submit" class="btn-primary" >Publish Quiz</button>
+                            <button type="submit" class="btn-primary" id="publish-button">Publish Quiz</button>
                         </div>
                     </div>
                     </form>
@@ -336,11 +369,13 @@
 
         </div>
     </div>
+    <script src="API-Fetch/Assessment/Post.js"></script>
     <script src="script.js"></script>
     <script src="API-Fetch/Auth/auth.js"></script>
-    <script src="API-Fetch/User/Get.js"></script>
-    <script src="API-Fetch/Assessment/Post.js"></script>
+    <!-- <script src="API-Fetch/User/Get.js"></script> -->
+    
     <script>
+        console.log(typeof getQuizzesByUserIdAPI);
         function switchTab(btn, id) {
             // Active button
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -355,7 +390,20 @@
                 fetchAndRenderQuizzes();
             }
         }
+        // Hàm xử lý xóa quiz
+        async function deleteQuiz(quizId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa quiz này không?')) {
+                return;  // Hủy nếu không confirm
+            }
 
+            try {
+                const result = await deleteQuizAPI(quizId);
+                alert(result.message || 'Quiz deleted successfully!');  // Hiển thị message từ API
+                fetchAndRenderQuizzes();  // Refresh danh sách quizzes
+            } catch (error) {
+                alert('Error deleting quiz: ' + error.message);
+            }
+        }
         document.addEventListener('DOMContentLoaded', () => {
             // 1. DỮ LIỆU: 8 Sinh viên cho phần Recent
             const recentStudentsData = [
@@ -407,10 +455,35 @@
                 myStudentBtn.click();
             }
         }
+        function showCreateQuizForm() {
+            document.getElementById('quiz-list-view').style.display = 'none';
+            document.getElementById('quiz-form-view').style.display = 'block';
+            document.getElementById('quiz-form-title').textContent = 'Create New Quiz';  // Reset to create mode
+            document.getElementById('quiz-id').value = '';  // Clear quizId for create
+            // Optional: Reset form fields if needed
+            document.getElementById('create-quiz-form').reset();
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';  // Clear questions
+            questionId = 0;
+            addQuestion();  // Add default first question
+
+            // Added: Reset steps to start at Basic Information
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('step-basic').classList.add('active');
+            document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
+            document.querySelector('.step-btn[onclick="switchQuizStep(\'basic\')"]').classList.add('active');  // Activate Basic button
+        }
         function hideCreateQuizForm() {
             document.getElementById('quiz-form-view').style.display = 'none';
             document.getElementById('quiz-list-view').style.display = 'block';
-            fetchAndRenderQuizzes();
+            document.getElementById('quiz-form-title').textContent = 'Create New Quiz';  // Reset title
+            document.getElementById('quiz-id').value = '';  // Clear quizId
+            // Optional: Reset form
+            document.getElementById('create-quiz-form').reset();
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            questionId = 0;
+            fetchAndRenderQuizzes();  // Refresh list on back
         }
         // Hàm fetch và render quizzes động vào quiz-manager-grid
         async function fetchAndRenderQuizzes() {
@@ -433,7 +506,8 @@
                                 <h4>${quiz.title}</h4>
                                 <p>${quiz.description}</p> <!-- Thay thế bằng description từ DB -->
                             </div>
-                            <button class="btn-outline">Edit</button> <!-- Có thể thêm onclick để edit quiz cụ thể -->
+                            <button class="btn-outline" onclick="editQuiz('${quiz.id}')">Edit</button> <!-- Có thể thêm onclick để edit quiz cụ thể -->
+                            <button type="button" class="btn-outlines" onclick="deleteQuiz('${quiz.id}')">Delete</button>
                         </div>
                     `).join('');
                 } else {
@@ -444,8 +518,65 @@
                 grid.innerHTML = '<p>Error loading quizzes. Please try again later.</p>';
             }
         }
+        // Hàm xử lý edit quiz
+        async function editQuiz(quizId) {
+            try {
+                const quiz = await getQuizByIdAPI(quizId);
+                showCreateQuizForm();  // Show form (resets to create, but we'll override)
+                document.getElementById('quiz-form-title').textContent = 'Edit Quiz';
+                document.getElementById('quiz-id').value = quiz.id;
+                document.getElementById('quiz-title').value = quiz.title;
+                document.getElementById('quiz-description').value = quiz.description;
+                document.getElementById('publish-button').textContent = 'Update Quiz';
+                // Clear existing questions
+                const container = document.getElementById('questions-container');
+                container.innerHTML = '';
+                questionId = 0;
 
-let questionId = 1;
+                // Populate questions
+                quiz.questions.forEach(q => {
+                    addQuestion();  // Creates a new question group and increments questionId
+                    const group = container.lastChild;  // Get the newly added group
+
+                    let baseQuestion = q.question;
+                    const typeSelect = group.querySelector('.question-type');
+                    typeSelect.value = q.type;
+                    toggleOptions(typeSelect);
+
+                    if (q.type === 'multiple-choice') {
+                        // Parse embedded options (format: "Question\nA. Opt1\nB. Opt2...")
+                        const lines = q.question.split('\n');
+                        baseQuestion = lines[0];
+                        const options = lines.slice(1).map(line => line.substring(3).trim());  // Remove "A. " (3 chars: letter + . + space)
+
+                        // Clear default option and rebuild
+                        const optsContainer = group.querySelector('.options-container');
+                        optsContainer.innerHTML = '<h4>Options</h4>';  // Reset options
+                        options.forEach((opt, i) => {
+                            const optGroup = document.createElement('div');
+                            optGroup.className = 'option-group';
+                            optGroup.innerHTML = `<input type="text" class="option-text" placeholder="Option ${i + 1}" value="${opt}">`;
+                            optsContainer.appendChild(optGroup);
+                        });
+                        // Re-append the "Add Option" button (it gets removed by innerHTML reset)
+                        const addBtn = document.createElement('button');
+                        addBtn.type = 'button';
+                        addBtn.className = 'add-option';
+                        addBtn.textContent = 'Add Option';
+                        addBtn.onclick = function() { addOption(this); };
+                        optsContainer.appendChild(addBtn);
+                    }
+
+                    group.querySelector('.question-text').value = baseQuestion;
+                    group.querySelector('.question-explanation').value = q.questionExplanation || '';
+                    group.querySelector('.answer-explanation').value = q.answerExplanation || '';
+                    group.querySelector('.correct-answer').value = q.correctAnswer || '';
+                });
+            } catch (error) {
+                alert('Error loading quiz for edit: ' + error.message);
+            }
+}
+        let questionId = 1;
         function addQuestion() {
             questionId++;
             const container = document.getElementById('questions-container');
@@ -496,7 +627,7 @@ let questionId = 1;
             button.before(newOption);
         }
 
-        // Handle submit form create quiz
+                // Handle submit form create quiz
         const createQuizForm = document.getElementById('create-quiz-form');
         if (createQuizForm) {
             createQuizForm.addEventListener('submit', async (e) => {
@@ -538,22 +669,38 @@ let questionId = 1;
                         questions.push(questionObj);
                     });
 
-                const quizData = {
-                    userId,
-                    title,
-                    description,
-                    questions
-                };
-                console.log('Quiz Data to Send:', JSON.stringify(quizData, null, 2));  // Pretty-print JSON
-                    const result = await createQuizAPI(quizData);
-                    console.log(result);
+                const quizId = document.getElementById('quiz-id').value;
+                let quizData;
+                let result;
+                if (quizId) {
+                    quizData = {
+                        quizId,  // Add for update (matches API spec)
+                        title,
+                        description,
+                        questions
+                    };
+                    console.log('Quiz Update Data to Send:', JSON.stringify(quizData, null, 2));
+                    result = await updateQuizAPI(quizId, quizData);
+                    showMessage('quiz-message', 'Quiz updated successfully!', 'success');
+                } else {
+                    quizData = {
+                        userId,  // Keep for create
+                        title,
+                        description,
+                        questions
+                    };
+                    console.log('Quiz Create Data to Send:', JSON.stringify(quizData, null, 2));
+                    result = await createQuizAPI(quizData);
                     showMessage('quiz-message', 'Quiz created successfully!', 'success');
-                    createQuizForm.reset();  // Reset form
-                    // Refresh quizzes list after create
-                    fetchAndRenderQuizzes();
-                    setTimeout(() => {
-                        hideCreateQuizForm();
-                    }, 2000);
+                }
+                console.log(result);
+                createQuizForm.reset();  // Reset form
+                document.getElementById('quiz-id').value = '';  // Clear to prevent issues on next create
+                // Refresh quizzes list
+                fetchAndRenderQuizzes();
+                setTimeout(() => {
+                    hideCreateQuizForm();
+                }, 2000);
             });
         }
 
@@ -571,6 +718,69 @@ let questionId = 1;
         if (document.querySelector('#create-quiz-content').classList.contains('active')) {
             fetchAndRenderQuizzes();
         }
+       
     </script>
+    <script>
+// Dropdown Avatar
+const avatarWrapper = document.getElementById('avatar-wrapper');
+const userDropdown = document.getElementById('user-dropdown');
+
+avatarWrapper.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown.classList.toggle('show');
+});
+
+// Đóng dropdown khi click ngoài
+document.addEventListener('click', () => {
+    userDropdown.classList.remove('show');
+});
+
+// Modal functions
+function showChangePasswordModal() {
+    document.getElementById('change-password-modal').classList.add('show');
+    userDropdown.classList.remove('show'); // đóng dropdown
+    document.getElementById('change-password-form').reset();
+    document.getElementById('password-message').textContent = '';
+}
+
+function hideChangePasswordModal() {
+    document.getElementById('change-password-modal').classList.remove('show');
+}
+
+
+
+// Submit form
+document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const oldPassword = document.getElementById('old-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    const msgEl = document.getElementById('password-message');
+
+    if (newPassword !== confirmPassword) {
+        msgEl.textContent = 'New passwords do not match!';
+        msgEl.style.color = '#e74c3c';
+        return;
+    }
+
+    try {
+        msgEl.textContent = 'Updating...';
+        msgEl.style.color = '#1A64F0';
+
+        await changePasswordAPI(oldPassword, newPassword, confirmPassword);
+
+        msgEl.textContent = 'Password changed successfully!';
+        msgEl.style.color = '#27ae60';
+
+        setTimeout(() => {
+            hideChangePasswordModal();
+        }, 1500);
+
+    } catch (err) {
+        msgEl.textContent = err.message || 'Something went wrong';
+        msgEl.style.color = '#e74c3c';
+    }
+});
+</script>
 </body>
 </html>
