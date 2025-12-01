@@ -316,7 +316,6 @@
             <div id="quiz-detail-content" class="tab-pane">
                 <div class="detail-card">
                     <h2 class="text-blue" id="quiz-detail-title">Loading...</h2>
-                    
                     <p class="sub-text" id="quiz-detail-desc">Loading description...</p>
                     
                     <div class="detail-flex">
@@ -324,14 +323,31 @@
                             <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb" id="quiz-detail-img">
                             <div class="play-icon"><i class="fas fa-play"></i></div>
                         </div>
-                        <div class="info-box">
+
+                        <div class="info-box" style="position: relative;">
                             <div class="info-line"><span>Total Questions:</span> <span id="quiz-detail-q-count">0</span></div>
                             <div class="info-line"><span>Time Limit:</span> <span>Unset</span></div>
                             <div class="info-line"><span>Pass Points:</span> <span>50%</span></div>
                             
-                            <div class="btn-row">
+                            <div class="btn-row" style="margin-bottom: 20px;">
                                 <button class="btn-start" id="btn-start-quiz-action">Start Quiz</button>
-                                <button class="btn-back" onclick="backToQuizList()">Go Back</button>
+                                <button class="btn-back" onclick="backToQuizList()">Go Back List</button>
+                            </div>
+
+                            <div id="mini-result-box" style="display: none; border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 10px;">
+                                <h4 style="font-size: 1rem; margin-bottom: 10px; color: #333;">
+                                    <i class="fas fa-history" style="color: #888; margin-right: 5px;"></i> Latest Result
+                                </h4>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #555;">Score:</span>
+                                    <span id="mini-score" style="font-weight: bold; color: #1A64F0; font-size: 1.1rem;">--</span>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                    <strong style="display:block; margin-bottom:4px; color:#333;">AI Feedback:</strong>
+                                    <span id="mini-feedback">--</span>
+                                </div>
                             </div>
                         </div>
                     </div>

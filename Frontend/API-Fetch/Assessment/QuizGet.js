@@ -244,6 +244,10 @@ function openQuizDetail(quizId) {
         return;
     }
 
+    // --- THÊM DÒNG NÀY: Ẩn bảng kết quả cũ đi ---
+    const miniBox = document.getElementById('mini-result-box');
+    if (miniBox) miniBox.style.display = 'none';
+
     // Điền thông tin vào trang chi tiết
     document.getElementById('quiz-detail-title').innerText = selectedQuiz.title;
     document.getElementById('quiz-detail-desc').innerText = selectedQuiz.description || "No description available.";

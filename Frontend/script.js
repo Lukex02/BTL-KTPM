@@ -31,76 +31,253 @@ function switchTab(button, tabName) {
 
 
 /* =========================================
-   2. QUIZ TAKING ENGINE (LÀM BÀI)
-   (Giữ lại phần này nếu bạn muốn demo giao diện làm bài)
+   2. QUIZ TAKING ENGINE (REAL DATA)
    ========================================= */
-const totalQuestions = 18;
-const dummyQuestionText = "You see a non-familiar face in the access-controlled areas of our office...";
-const dummyOptions = [
-    "A. None of my business...",
-    "B. Ask the person to leave...",
-    "C. Escort the person to security...",
-    "D. Raise a security incident..."
-];
 
-// Hàm bắt đầu làm bài (Được gọi từ QuizGet.js)
-function startQuizTaking() {
+let currentActiveQuiz = null;   // Lưu trữ bài quiz đang làm
+let userAnswers = {};           // Lưu câu trả lời: { questionIndex: "answer" }
+
+// Hàm bắt đầu làm bài (Được gọi từ QuizGet.js với dữ liệu thật)
+function startQuizTaking(quizData) {
+    if (!quizData || !quizData.questions) {
+        alert("Dữ liệu bài kiểm tra bị lỗi hoặc không có câu hỏi.");
+        return;
+    }
+
+    currentActiveQuiz = quizData;
+    userAnswers = {}; // Reset câu trả lời
+
+    // Cập nhật Header UI
+    const titleEl = document.querySelector('#quiz-taking-content h2');
+    const subTextEl = document.querySelector('#quiz-taking-content .sub-text');
+    
+    if(titleEl) titleEl.innerText = quizData.title;
+    // Nếu có tên giáo viên thì hiện, không thì ẩn
+    if(subTextEl) subTextEl.innerText = quizData.teacherName ? `Teacher: ${quizData.teacherName}` : 'Self Practice';
+
+    // Reset Timer (Giả sử mặc định 45 phút hoặc lấy từ data nếu có)
+    const timerEl = document.getElementById('timer');
+    if(timerEl) timerEl.innerText = "45:00"; 
+
+    // Chuyển Tab
     document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
     document.getElementById('quiz-taking-content').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Render câu hỏi
     renderQuestions();
 }
 
 function renderQuestions() {
     const questionsContainer = document.getElementById('questions-container');
     const navContainer = document.getElementById('question-nav-grid');
+    
     if(!questionsContainer || !navContainer) return;
 
     questionsContainer.innerHTML = '';
     navContainer.innerHTML = '';
 
-    for (let i = 1; i <= totalQuestions; i++) {
+    const questions = currentActiveQuiz.questions;
+
+    questions.forEach((q, index) => {
+        const qNum = index + 1; // Số thứ tự câu hỏi (1, 2, 3...)
+
+        // 1. Xử lý nội dung câu hỏi và đáp án
+        // Dựa vào logic tạo quiz: Multiple choice được lưu dạng "Câu hỏi\nA. Opt1\nB. Opt2..."
+        let questionText = q.question;
+        let optionsHtml = '';
+
+        if (q.type === 'multiple-choice') {
+            // Tách câu hỏi và đáp án dựa trên xuống dòng
+            const parts = q.question.split('\n');
+            const mainQuestion = parts[0]; 
+            const options = parts.slice(1); // Các dòng còn lại là đáp án (A..., B...)
+
+            questionText = mainQuestion; // Hiển thị câu hỏi chính
+
+            // Render các nút bấm trắc nghiệm
+            if (options.length > 0) {
+                optionsHtml = `<div class="options-group" id="options-group-${index}">
+                    ${options.map((opt, optIdx) => {
+                        // Xử lý cắt bỏ "A. " để lấy nội dung nếu cần, ở đây giữ nguyên cho giống đề
+                        return `<button class="option-btn" onclick="selectAnswer(${index}, '${opt.replace(/'/g, "\\'")}', this)">${opt}</button>`;
+                    }).join('')}
+                </div>`;
+            }
+        } else {
+            // Trường hợp Text hoặc Number (Tự luận)
+            optionsHtml = `<div class="input-answer-group">
+                <input type="${q.type === 'number' ? 'number' : 'text'}" 
+                       class="form-control" 
+                       placeholder="Type your answer here..." 
+                       onchange="inputTextAnswer(${index}, this.value)">
+            </div>`;
+        }
+
+        // 2. Tạo HTML cho khối câu hỏi
         const qBlock = document.createElement('div');
         qBlock.className = 'question-block';
-        qBlock.id = `q-block-${i}`;
+        qBlock.id = `q-block-${qNum}`;
         qBlock.innerHTML = `
-            <div class="question-meta"><span>5 points</span><span>Question ${i}</span></div>
-            <p class="question-text">${dummyQuestionText}</p>
-            <div class="options-group" id="options-group-${i}">
-                ${dummyOptions.map((opt, idx) => `<button class="option-btn" onclick="selectAnswer(${i}, ${idx})">${opt}</button>`).join('')}
+            <div class="question-meta">
+                <span>Question ${qNum}</span>
+                <span style="font-size: 0.8rem; color: #666; font-weight: normal;">Type: ${q.type}</span>
             </div>
+            <p class="question-text" style="white-space: pre-line;">${questionText}</p>
+            ${optionsHtml}
         `;
         questionsContainer.appendChild(qBlock);
 
+        // 3. Tạo nút điều hướng bên phải
         const navItem = document.createElement('div');
         navItem.className = 'nav-item';
-        navItem.id = `nav-item-${i}`;
-        navItem.innerText = i;
-        navItem.onclick = () => scrollToQuestion(i);
+        navItem.id = `nav-item-${index}`;
+        navItem.innerText = qNum;
+        navItem.onclick = () => scrollToQuestion(qNum);
         navContainer.appendChild(navItem);
-    }
+    });
 }
 
-function selectAnswer(qIdx, oIdx) {
+// Xử lý khi chọn trắc nghiệm
+function selectAnswer(qIdx, answerValue, btnElement) {
+    // 1. Lưu đáp án
+    userAnswers[qIdx] = answerValue;
+
+    // 2. Update UI (Highligh nút được chọn)
     const group = document.getElementById(`options-group-${qIdx}`);
-    group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-    group.querySelectorAll('.option-btn')[oIdx].classList.add('selected');
-    
+    if (group) {
+        group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btnElement.classList.add('selected');
+    }
+
+    // 3. Update Sidebar (Đánh dấu đã làm)
     const navItem = document.getElementById(`nav-item-${qIdx}`);
     if (navItem) navItem.classList.add('answered');
 }
 
-function scrollToQuestion(index) {
-    const el = document.getElementById(`q-block-${index}`);
+// Xử lý khi nhập tự luận
+function inputTextAnswer(qIdx, value) {
+    const navItem = document.getElementById(`nav-item-${qIdx}`);
+    
+    if (value && value.trim() !== "") {
+        userAnswers[qIdx] = value;
+        if (navItem) navItem.classList.add('answered');
+    } else {
+        delete userAnswers[qIdx];
+        if (navItem) navItem.classList.remove('answered');
+    }
+}
+
+function scrollToQuestion(qNum) {
+    const el = document.getElementById(`q-block-${qNum}`);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-function submitQuiz() {
-    const count = document.querySelectorAll('.nav-item.answered').length;
-    if(confirm(`Nộp bài? (${count}/${totalQuestions} câu đã làm)`)) {
-        alert("Nộp bài thành công!");
-        // Quay về danh sách (Gọi hàm từ QuizGet.js)
-        if(typeof backToQuizList === 'function') backToQuizList();
+
+/* =========================================
+   3. SUBMIT QUIZ LOGIC (SHOW RESULT IN DETAIL PAGE)
+   ========================================= */
+
+async function submitQuiz() {
+    if (!currentActiveQuiz) return;
+    const studentId = localStorage.getItem('userId');
+    
+    if (!studentId) {
+        alert("Bạn cần đăng nhập để nộp bài.");
+        return;
+    }
+
+    const totalQ = currentActiveQuiz.questions.length;
+    const answeredCount = Object.keys(userAnswers).length;
+
+    if (!confirm(`Bạn có chắc chắn muốn nộp bài?\nĐã làm: ${answeredCount}/${totalQ} câu.`)) {
+        return;
+    }
+
+    const submitBtn = document.querySelector('.btn-submit');
+    const originalText = submitBtn ? submitBtn.innerText : 'Submit';
+    if (submitBtn) {
+        submitBtn.innerText = "Đang chấm điểm...";
+        submitBtn.disabled = true;
+    }
+
+    try {
+        const answersPayload = currentActiveQuiz.questions.map((q, index) => {
+            return {
+                question: q.question, 
+                answer: userAnswers[index] || "" 
+            };
+        });
+
+        const payload = {
+            quizId: currentActiveQuiz.id,
+            studentId: studentId,
+            answers: answersPayload
+        };
+
+        const response = await authFetch(`http://localhost:3000/assessment/result/ai/grade`, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(errText || "Lỗi khi chấm điểm");
+        }
+
+        const result = await response.json();
+        console.log("Grading Result:", result);
+
+        // --- THAY ĐỔI Ở ĐÂY: Hiển thị kết quả trên trang chi tiết ---
+        showQuizResultOnDetail(result);
+
+    } catch (error) {
+        console.error("Submit Error:", error);
+        alert(`Có lỗi xảy ra: ${error.message}`);
+    } finally {
+        if (submitBtn) {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+}
+
+/**
+ * Hàm mới: Quay về trang chi tiết và hiện bảng điểm
+ */
+function showQuizResultOnDetail(result) {
+    // 1. Chuyển Tab về trang chi tiết
+    document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+    document.getElementById('quiz-detail-content').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 2. Điền dữ liệu vào Mini Box
+    const resultBox = document.getElementById('mini-result-box');
+    const scoreEl = document.getElementById('mini-score');
+    const feedbackEl = document.getElementById('mini-feedback');
+
+    if (resultBox && scoreEl && feedbackEl) {
+        // Hiện box
+        resultBox.style.display = 'block';
+
+        // Gán điểm
+        scoreEl.innerText = result.rating !== undefined ? result.rating : "N/A";
+
+        // Gán feedback
+        feedbackEl.innerText = result.comment || result.message || "No feedback available.";
+        
+        // Thêm hiệu ứng nhấp nháy nhẹ để người dùng chú ý
+        resultBox.style.animation = "fadeIn 0.5s ease-in-out";
+    }
+}
+
+/**
+ * Hàm ẩn bảng kết quả (gắn vào nút "Đóng kết quả")
+ */
+function hideResultBox() {
+    const resultBox = document.getElementById('quiz-result-box');
+    if (resultBox) {
+        resultBox.style.display = 'none';
     }
 }
 
