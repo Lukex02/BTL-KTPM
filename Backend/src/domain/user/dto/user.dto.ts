@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 import {
   IsArray,
   IsEmail,
@@ -11,6 +12,7 @@ export class UserDto {
   @ApiProperty({ description: 'User id', example: 'abcdef', required: false })
   @IsString()
   @IsMongoId()
+  @Expose()
   id?: string;
 
   @ApiProperty({
@@ -19,6 +21,7 @@ export class UserDto {
     required: false,
   })
   @IsString()
+  @Expose()
   username?: string;
 
   @ApiProperty({
@@ -27,6 +30,7 @@ export class UserDto {
     required: false,
   })
   @IsString()
+  @Expose()
   role?: string;
 
   @ApiProperty({
@@ -35,6 +39,7 @@ export class UserDto {
     required: false,
   })
   @IsString()
+  @Expose()
   password?: string;
 
   @ApiProperty({
@@ -43,6 +48,7 @@ export class UserDto {
     required: false,
   })
   @IsString()
+  @Expose()
   name?: string;
 
   @ApiProperty({
@@ -51,6 +57,7 @@ export class UserDto {
     required: false,
   })
   @IsEmail()
+  @Expose()
   email?: string;
 
   @ApiProperty({
@@ -60,6 +67,7 @@ export class UserDto {
     required: false,
   })
   @IsArray()
+  @Expose()
   assignedQuizIds?: string[];
 
   @ApiProperty({
@@ -69,7 +77,26 @@ export class UserDto {
     required: false,
   })
   @IsArray()
+  @Expose()
   assignedContentIds?: string[];
+
+  @ApiProperty({
+    description: '(For student) Assigned teacher ids',
+    example: ['123456', 'abcdef'],
+    required: false,
+  })
+  @IsArray()
+  @Expose()
+  teachersInCharge?: string[];
+
+  @ApiProperty({
+    description: '(For teacher) Assigned student ids',
+    example: ['123456', 'abcdef'],
+    required: false,
+  })
+  @IsArray()
+  @Expose()
+  studentsInCharge?: string[];
 }
 
 export class UpdateUserDto {
@@ -145,4 +172,67 @@ export class ChangePasswordDto {
   })
   @IsString()
   confirmNewPassword: string;
+}
+
+export class UserMinimumDto {
+  @ApiProperty({
+    description: 'User (Student/Teacher) id',
+    example: '123456',
+    required: true,
+  })
+  @IsString()
+  @Expose()
+  id: string;
+
+  @ApiProperty({
+    description: 'User (Student/Teacher) username',
+    example: 'NgVanA',
+    required: true,
+  })
+  @IsString()
+  @Expose()
+  username: string;
+
+  @ApiProperty({
+    description: 'User (Student/Teacher) name',
+    example: 'Nguyễn Văn A',
+    required: true,
+  })
+  @IsString()
+  @Expose()
+  name: string;
+
+  @ApiProperty({ description: 'User (Student/Teacher) role', required: true })
+  @IsString()
+  @Expose()
+  role: string;
+
+  @ApiProperty({
+    description: 'User (Student/Teacher) email',
+    example: 'ngvana@gmail.com',
+    required: true,
+  })
+  @IsEmail()
+  @Expose()
+  email: string;
+}
+
+export class LinkUserDto {
+  @ApiProperty({
+    description: 'Student id',
+    example: '123456',
+    required: true,
+  })
+  @IsString()
+  @IsMongoId()
+  studentId: string;
+
+  @ApiProperty({
+    description: 'Teacher id',
+    example: '123456',
+    required: true,
+  })
+  @IsString()
+  @IsMongoId()
+  teacherId: string;
 }

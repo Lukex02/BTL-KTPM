@@ -9,7 +9,11 @@ import {
   DeleteUser,
   FindUserById,
   FindUserByUsername,
+  FindUsersByRole,
   GetAll,
+  GetInChargeUsers,
+  LinkTeacher,
+  UnlinkTeacher,
   UpdateUser,
   UserService,
 } from './user.service';
@@ -40,6 +44,10 @@ import { AssessmentModule } from '../assessment/assessment.module';
     CreateUser,
     UpdateUser,
     DeleteUser,
+    FindUsersByRole,
+    GetInChargeUsers,
+    LinkTeacher,
+    UnlinkTeacher,
   ],
   exports: [UserService],
 })
