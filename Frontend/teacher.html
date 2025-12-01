@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Dashboard - Academic Hub</title>
     <style type="text/css">@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/300/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/500/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/500/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/600/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/700/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}</style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/teacher.css">
 </head>
@@ -160,19 +161,19 @@
                 <div class="tab-content" id="my-students">
                     <h2>My Students</h2>
                     <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
-                    <p>Danh sách học sinh bạn đang phụ trách</p>
+                <p class="list-title">List of students you are in charge of</p>
 
-                    <div id="students-loading" style="text-align:center; padding:40px; display:none;">
-                        <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
-                        <span style="margin-left:10px;">Đang tải...</span>
-                    </div>
+                <div id="students-loading" style="text-align:center; padding:40px; display:none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                    <span style="margin-left:10px;">Đang tải...</span>
+                </div>
 
-                    <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
-                        <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
-                        <p>Chưa có học sinh nào được giao cho bạn</p>
-                    </div>
+                <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                    <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                    <p>Chưa có học sinh nào được giao cho bạn</p>
+                </div>
 
-                    <div id="students-list"></div>
+                <div id="dashboard-students-list" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;"></div>
                 </div>
                 <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
             </div>
@@ -281,13 +282,13 @@
                     <div id="step-publish" class="step-content">
                         <div class="card-box">
                             <h3>Publish Settings</h3>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="quiz-visibility">Visibility</label>
                                 <select id="quiz-visibility" class="form-control">
                                     <option value="public">Public</option>
                                     <option value="private">Private</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="assign-student">Assign to Student (Optional - Select one)</label>
                                 <select id="assign-student" class="form-control">
@@ -312,34 +313,27 @@
             
             </div>
 
-            <div id="my-students-content" class="tab-pane">
-                <div class="section-header">
-                    <h3>All Students (100)</h3>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Find student name...">
-                    </div>
-                </div>
-                <div class="student-grid">
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div><div class="student-content"><h4 class="st-name">Wade Warren</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200"></div><div class="student-content"><h4 class="st-name">Bessie Cooper</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200"></div><div class="student-content"><h4 class="st-name">Floyd Miles</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200"></div><div class="student-content"><h4 class="st-name">Ronald Richards</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200"></div><div class="student-content"><h4 class="st-name">Guy Hawkins</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1554151228-14d9def656ec?w=200"></div><div class="student-content"><h4 class="st-name">Kristin Watson</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200"></div><div class="student-content"><h4 class="st-name">Cody Fisher</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200"></div><div class="student-content"><h4 class="st-name">Esther Howard</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                </div>
-                <div class="pagination-wrapper">
-                    <div class="pagination">
-                        <button class="page-btn disabled"><i class="fas fa-arrow-left"></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
+            <!-- Cập nhật phần HTML cho tab My Students (teacher.html) -->
+        <div id="my-students-content" class="tab-pane">
+            <div class="section-header">
+                <h2>My Students</h2>
+                <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
             </div>
+            <p class="list-title">List of students you are in charge of</p>
+
+
+            <div id="students-loading" style="text-align:center; padding:40px; display:none;">
+                <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                <span style="margin-left:10px;">Đang tải...</span>
+            </div>
+
+            <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                <p>Chưa có học sinh nào được giao cho bạn</p>
+            </div>
+
+            <div id="students-list" class="students-grid"></div>
+        </div>
 
             <div id="resources-content" class="tab-pane">
                 <div class="section-header"><h3>Course Resources</h3><button class="btn-primary"><i class="fas fa-upload"></i> Upload File</button></div>
@@ -391,20 +385,28 @@
                 </div>
             </div>
 
+            <!-- Add this inside the <div class="tab-content-wrapper">, after the existing tab-panes -->
             <div id="inst-settings-content" class="tab-pane">
-                <h3 class="section-title">Instructor Profile</h3>
-                <div class="settings-layout">
-                    <div class="photo-col">
-                        <div class="photo-box"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div>
-                        <button class="btn-outline" style="margin-top:10px;">Change Avatar</button>
+                <h2>Settings</h2>
+                <h3>Update Profile</h3>
+                <form id="update-profile-form">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="profile-username" class="form-control" required>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group"><label>Display Name</label><input type="text" class="form-control" value="Lê Nguyễn Nam Khánh"></div>
-                        <div class="form-group"><label>Title</label><input type="text" class="form-control" value="Senior Instructor"></div>
-                        <div class="form-group"><label>Bio</label><textarea class="form-control" rows="4" style="resize:none; padding:10px; border:1px solid #E9EAF0; border-radius:4px; width:100%;">Passionate about teaching Computer Science and Japanese culture.</textarea></div>
-                        <button class="btn-primary">Update Profile</button>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profile-name" class="form-control" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profile-email" class="form-control" required>
+                    </div>
+                    <div id="profile-message" style="margin: 10px 0; font-size: 14px;"></div>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button type="submit" class="btn-primary">Update Profile</button>
+                    </div>
+                </form>
             </div>
 
         </div>
@@ -423,9 +425,15 @@
             // Show content
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.getElementById(id + '-content').classList.add('active');
+            if (id === 'my-students-content') {
+                loadMyStudents();
+            }
             // Nếu là tab Quiz Manager, fetch quizzes
             if (id === 'create-quiz') {
                 fetchAndRenderQuizzes();
+            }
+            if (id === 'inst-settings') {
+                loadProfileData();
             }
         }
         // Hàm xử lý xóa quiz
@@ -827,16 +835,16 @@ document.getElementById('change-password-form').addEventListener('submit', async
 <script>
 let myStudents = [];
 
-// Cập nhật hàm loadMyStudents để lưu myStudents và hiển thị nút Add
+// Cập nhật hàm loadMyStudents trong script của teacher.html
 async function loadMyStudents() {
     const loading = document.getElementById('students-loading');
     const empty = document.getElementById('students-empty');
     const list = document.getElementById('students-list');
-
+    const dashboardstudentlist = document.getElementById('dashboard-students-list');
     loading.style.display = 'block';
     empty.style.display = 'none';
     list.innerHTML = '';
-
+    dashboardstudentlist.innerHTML = '';
     try {
         const teacherId = localStorage.getItem('userId');
         if (!teacherId) {
@@ -852,15 +860,73 @@ async function loadMyStudents() {
             return;
         }
 
-        // Render list
+        // Render list với style mới giống hình (không dùng ảnh thật, dùng placeholder màu)
         list.innerHTML = myStudents.map(student => `
-            <div class="student-card" style="margin-bottom:20px">
-                <div class="info">
-                    <h4>${student.name || 'Chưa đặt tên'}</h4>
+            <div style="
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                min-width: 200px;
+                width: auto;
+                text-align: center;
+                overflow: hidden;
+            ">
+                <div style="padding: 15px;">
+                    <h4>${student.name || student.username}</h4>
                     <p>@${student.username || student.id}</p>
-                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
+                    <p style="margin: 5px 0 10px; color: #666; font-size: 0.9rem;">
+                        Student
+                    </p>
+                    <button style="
+                        background: #1A64F0;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        width: 100%;
+                        font-size: 0.95rem;
+                    ">
+                        Contact
+                    </button>
                 </div>
-                <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
+            </div>
+        `).join('');
+        dashboardstudentlist.innerHTML = myStudents.map(student => `
+            <div style="
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                min-width: 200px;
+                width: auto;
+                text-align: center;
+                overflow: hidden;
+            ">
+                <div style="padding: 15px;">
+                    <h4>${student.name || student.username}</h4>
+                    <p>@${student.username || student.id}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
+                    <p style="margin: 5px 0 10px; color: #666; font-size: 0.9rem;">
+                        Student
+                    </p>
+                    <button style="
+                        background: #1A64F0;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        width: 100%;
+                        font-size: 0.95rem;
+                    ">
+                        Contact
+                    </button>
+                </div>
             </div>
         `).join('');
 
@@ -915,7 +981,9 @@ async function loadAvailableStudents() {
                 <div class="info">
                     <h4>${student.name || 'Chưa đặt tên'}</h4>
                     <p>@${student.username || student.id}</p>
-                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                   <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
                 </div>
                 <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
                 <div class="actions">
@@ -982,6 +1050,80 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Hoặc nếu dùng hàm showTab(tabId), thì thêm vào đó:
 // if (tabId === 'my-students-content') loadMyStudents();
+
+///// UPDATE PROFILE
+async function loadProfileData() {
+    const msgEl = document.getElementById('profile-message');
+    if (!msgEl) return;  // If not in settings tab, skip
+
+    msgEl.textContent = '';
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            msgEl.textContent = 'User ID not found. Please login again.';
+            msgEl.style.color = '#e74c3c';
+            return;
+        }
+
+        const user = await getUserByIdAPI(userId);
+        
+        document.getElementById('profile-username').value = user.username || '';
+        document.getElementById('profile-name').value = user.name || '';
+        document.getElementById('profile-email').value = user.email || '';
+
+    } catch (err) {
+        msgEl.textContent = err.message || 'Failed to load profile data';
+        msgEl.style.color = '#e74c3c';
+    }
+}
+document.getElementById('update-profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById('profile-username').value;
+    const name = document.getElementById('profile-name').value;
+    const email = document.getElementById('profile-email').value;
+    const msgEl = document.getElementById('profile-message');
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        msgEl.textContent = 'User ID not found. Please login again.';
+        msgEl.style.color = '#e74c3c';
+        return;
+    }
+
+    const payload = {
+        id: userId,
+        username,
+        role: 'Teacher',  // Giả sử role không thay đổi, hoặc lấy từ current user nếu cần
+        name,
+        email
+    };
+
+    try {
+        msgEl.textContent = 'Updating...';
+        msgEl.style.color = '#1A64F0';
+
+        await updateUserAPI(payload);
+
+        msgEl.textContent = 'Profile updated successfully!';
+        msgEl.style.color = '#27ae60';
+
+        // Optional: Update greeting
+        document.querySelector('.greeting h2').textContent = `Good Morning, ${name}!`;
+
+        setTimeout(() => {
+            msgEl.textContent = '';
+            const dashboardBtn = document.querySelector('.tab-btn[onclick*="\'inst-dashboard\'"]');
+            if (dashboardBtn) {
+                switchTab(dashboardBtn, 'inst-dashboard');
+            }
+        }, 3000);
+
+    } catch (err) {
+        msgEl.textContent = err.message || 'Something went wrong';
+        msgEl.style.color = '#e74c3c';
+    }
+});
 </script>
 </body>
 </html>
