@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Dashboard - Academic Hub</title>
     <style type="text/css">@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/300/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/500/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/500/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/600/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/700/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}</style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/teacher.css">
 </head>
@@ -384,20 +385,28 @@
                 </div>
             </div>
 
+            <!-- Add this inside the <div class="tab-content-wrapper">, after the existing tab-panes -->
             <div id="inst-settings-content" class="tab-pane">
-                <h3 class="section-title">Instructor Profile</h3>
-                <div class="settings-layout">
-                    <div class="photo-col">
-                        <div class="photo-box"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div>
-                        <button class="btn-outline" style="margin-top:10px;">Change Avatar</button>
+                <h2>Settings</h2>
+                <h3>Update Profile</h3>
+                <form id="update-profile-form">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="profile-username" class="form-control" required>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group"><label>Display Name</label><input type="text" class="form-control" value="Lê Nguyễn Nam Khánh"></div>
-                        <div class="form-group"><label>Title</label><input type="text" class="form-control" value="Senior Instructor"></div>
-                        <div class="form-group"><label>Bio</label><textarea class="form-control" rows="4" style="resize:none; padding:10px; border:1px solid #E9EAF0; border-radius:4px; width:100%;">Passionate about teaching Computer Science and Japanese culture.</textarea></div>
-                        <button class="btn-primary">Update Profile</button>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profile-name" class="form-control" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profile-email" class="form-control" required>
+                    </div>
+                    <div id="profile-message" style="margin: 10px 0; font-size: 14px;"></div>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button type="submit" class="btn-primary">Update Profile</button>
+                    </div>
+                </form>
             </div>
 
         </div>
@@ -422,6 +431,9 @@
             // Nếu là tab Quiz Manager, fetch quizzes
             if (id === 'create-quiz') {
                 fetchAndRenderQuizzes();
+            }
+            if (id === 'inst-settings') {
+                loadProfileData();
             }
         }
         // Hàm xử lý xóa quiz
@@ -1038,6 +1050,80 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Hoặc nếu dùng hàm showTab(tabId), thì thêm vào đó:
 // if (tabId === 'my-students-content') loadMyStudents();
+
+///// UPDATE PROFILE
+async function loadProfileData() {
+    const msgEl = document.getElementById('profile-message');
+    if (!msgEl) return;  // If not in settings tab, skip
+
+    msgEl.textContent = '';
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            msgEl.textContent = 'User ID not found. Please login again.';
+            msgEl.style.color = '#e74c3c';
+            return;
+        }
+
+        const user = await getUserByIdAPI(userId);
+        
+        document.getElementById('profile-username').value = user.username || '';
+        document.getElementById('profile-name').value = user.name || '';
+        document.getElementById('profile-email').value = user.email || '';
+
+    } catch (err) {
+        msgEl.textContent = err.message || 'Failed to load profile data';
+        msgEl.style.color = '#e74c3c';
+    }
+}
+document.getElementById('update-profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById('profile-username').value;
+    const name = document.getElementById('profile-name').value;
+    const email = document.getElementById('profile-email').value;
+    const msgEl = document.getElementById('profile-message');
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        msgEl.textContent = 'User ID not found. Please login again.';
+        msgEl.style.color = '#e74c3c';
+        return;
+    }
+
+    const payload = {
+        id: userId,
+        username,
+        role: 'Teacher',  // Giả sử role không thay đổi, hoặc lấy từ current user nếu cần
+        name,
+        email
+    };
+
+    try {
+        msgEl.textContent = 'Updating...';
+        msgEl.style.color = '#1A64F0';
+
+        await updateUserAPI(payload);
+
+        msgEl.textContent = 'Profile updated successfully!';
+        msgEl.style.color = '#27ae60';
+
+        // Optional: Update greeting
+        document.querySelector('.greeting h2').textContent = `Good Morning, ${name}!`;
+
+        setTimeout(() => {
+            msgEl.textContent = '';
+            const dashboardBtn = document.querySelector('.tab-btn[onclick*="\'inst-dashboard\'"]');
+            if (dashboardBtn) {
+                switchTab(dashboardBtn, 'inst-dashboard');
+            }
+        }, 3000);
+
+    } catch (err) {
+        msgEl.textContent = err.message || 'Something went wrong';
+        msgEl.style.color = '#e74c3c';
+    }
+});
 </script>
 </body>
 </html>
