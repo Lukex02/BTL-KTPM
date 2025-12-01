@@ -51,7 +51,7 @@
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab(this, 'dashboard')">Dashboard</button>
                 <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz')">Quizz</button>
-                <button class="tab-btn" onclick="switchTab(this, 'teachers')">Teachers</button>
+               <button class="tab-btn" onclick="switchTab(this, 'teachers'); loadAllTeachers()">Teachers</button>
                 <button class="tab-btn" onclick="switchTab(this, 'message')">Message</button>
                 <button class="tab-btn" onclick="switchTab(this, 'settings')">Settings</button>
             </div>
@@ -275,19 +275,33 @@
 
                 <h3 class="section-title mt-40">Change password</h3>
                 <div class="password-box">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <button class="btn-save">Change Password</button>
+                    <form id="form-change-password" class="password-box">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="current-pass" class="form-control" placeholder="Enter current password" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="new-pass" class="form-control" placeholder="Enter new password (min 6 chars)" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="confirm-pass" class="form-control" placeholder="Confirm new password" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-save">Update Password</button>
+                    </form>
                 </div>
                 
                 <h3 class="section-title mt-40" style="color: #dc2626;">Danger Zone</h3>
@@ -363,10 +377,24 @@
         <div class="footer-bottom"><p>© 2025 Academic Hub. All rights reserved.</p></div>
     </div>
 
+    
+
     <script src="script.js"></script>
     <script src="API-Fetch/Auth/auth.js"></script>
     <script src="API-Fetch/User/UserGet.js"></script>
     <script src="API-Fetch/User/UserUpdate.js"></script>
-    <script src="teacherRender.js"></script>
+    <script src="API-Fetch/User/TeacherGet.js"></script>
+    <!-- <script src="teacherRender.js"></script> -->
+
+    <div id="action-confirm-bar" class="confirm-bar">
+        <div class="confirm-content">
+            <i class="fas fa-question-circle"></i>
+            <span id="confirm-text">Bạn có chắc chắn muốn thực hiện hành động này?</span>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn-cancel" onclick="closeConfirmBar()">Hủy bỏ</button>
+            <button id="btn-confirm-yes" class="btn-confirm" onclick="executeTeacherAction()">Xác nhận</button>
+        </div>
+    </div>
 </body>
 </html>

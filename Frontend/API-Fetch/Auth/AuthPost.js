@@ -86,13 +86,22 @@ if (loginForm) {
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Sai tài khoản hoặc mật khẩu");
 
+             // Giải mã lấy ID
+            const decoded = parseJwt(data.access_token);
+            const serverRole = decoded.role || decoded.roles;
+            const userId = decoded.id || decoded.userId || decoded.sub;
+
+             if (serverRole) {
+                // Chuyển về chữ thường để so sánh chính xác (vd: "Admin" == "admin")
+                if (serverRole.toLowerCase() !== selectedRole.toLowerCase()) {
+                    throw new Error("Tài khoản này không tồn tại"); 
+                }
+            }
+
             // --- LƯU TOKEN & THÔNG TIN ---
             if (data.access_token) localStorage.setItem('accessToken', data.access_token);
             if (data.refresh_token) localStorage.setItem('refreshToken', data.refresh_token);
 
-            // Giải mã lấy ID
-            const decoded = parseJwt(data.access_token);
-            const userId = decoded.id || decoded.userId || decoded.sub;
             if (userId) localStorage.setItem('userId', userId);
 
             localStorage.setItem('username', username);
@@ -101,11 +110,9 @@ if (loginForm) {
             showMessage('login-msg', "Đăng nhập thành công!", 'success');
 
             setTimeout(() => {
-                if (selectedRole.toLowerCase() === 'instructor') {
-                    window.location.href = "teacher.html";
-                } else {
-                    window.location.href = "Index.html";
-                }
+                if (selectedRole.toLowerCase() === 'teacher') window.location.href = "teacher.html";
+                else if (selectedRole.toLowerCase() === 'admin') window.location.href = "admin.html";
+                else window.location.href = "Index.html";
             }, 1000);
 
         } catch (error) {

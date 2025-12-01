@@ -11,10 +11,10 @@ import {
   Question,
   Quiz,
 } from 'src/domain/assessment/models/assessment.models';
-import { AIRepository } from './ai.repository';
+import { AIService } from './ai.service';
 
 @Injectable()
-export class OllamaService extends AIRepository {
+export class OllamaService extends AIService {
   MODEL = 'gpt-oss';
   async generateQuiz(request: GenQuizRequestDto) {
     const message = this.generateQuizMessage(request);

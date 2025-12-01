@@ -23,14 +23,14 @@ import {
   AssignQuizToUserRequestDto,
 } from './dto/assessment.dto';
 import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
-import { AIRepository } from 'src/common/AI/ai.repository';
+import { AIService } from 'src/common/AI/ai.service';
 import { UserService } from 'src/domain/user/user.service';
 
 @Injectable()
 export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
-    @Inject('AI_SERVICE') private readonly AIService: AIRepository,
+    @Inject('AI_SERVICE') private readonly AIService: AIService,
     @Inject(forwardRef(() => UserService))
     private readonly UserService: UserService,
   ) {
@@ -178,7 +178,7 @@ export class MongoAssessResultRepo
 {
   constructor(
     @Inject('MONGO_DB_CONN') db: Db,
-    @Inject('AI_SERVICE') private readonly AIService: AIRepository,
+    @Inject('AI_SERVICE') private readonly AIService: AIService,
   ) {
     super(db, 'assessment'); // collectionName for assessment results
   }

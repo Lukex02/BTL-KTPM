@@ -33,6 +33,7 @@ function getAuthHeaders() {
 
 // Xử lý Đăng xuất
 function handleLogout() {
+    // localStorage.removeItem('token');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userId');

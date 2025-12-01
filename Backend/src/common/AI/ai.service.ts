@@ -4,13 +4,12 @@ import {
 } from 'src/domain/assessment/dto/assessment.dto';
 import {
   Answer,
-  AssessmentResult,
   Question,
   Quiz,
 } from 'src/domain/assessment/models/assessment.models';
-import { IAIRepository } from './ai.interface';
+import { IAIService } from './ai.interface';
 
-export abstract class AIRepository implements IAIRepository {
+export abstract class AIService implements IAIService {
   LANGUAGE = 'Vietnamese';
 
   generateQuizMessage(request: GenQuizRequestDto): string {
