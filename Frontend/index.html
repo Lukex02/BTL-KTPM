@@ -50,8 +50,8 @@
             
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab(this, 'dashboard')">Dashboard</button>
-                <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz'); loadUserQuizzes()">Quizz</button>
-                <button class="tab-btn" onclick="switchTab(this, 'teachers'); loadAllTeachers()">Teachers</button>
+                <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz')">Quizz</button>
+               <button class="tab-btn" onclick="switchTab(this, 'teachers'); loadAllTeachers()">Teachers</button>
                 <button class="tab-btn" onclick="switchTab(this, 'message')">Message</button>
                 <button class="tab-btn" onclick="switchTab(this, 'settings')">Settings</button>
             </div>
@@ -315,22 +315,20 @@
 
             <div id="quiz-detail-content" class="tab-pane">
                 <div class="detail-card">
-                    <h2 class="text-blue" id="quiz-detail-title">Loading...</h2>
-                    
-                    <p class="sub-text" id="quiz-detail-desc">Loading description...</p>
-                    
+                    <h2 class="text-blue">Calculus 1 - Quiz 1</h2>
+                    <p class="sub-text">Teacher: Wade Warren</p>
                     <div class="detail-flex">
                         <div class="video-box">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb" id="quiz-detail-img">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb">
                             <div class="play-icon"><i class="fas fa-play"></i></div>
                         </div>
                         <div class="info-box">
-                            <div class="info-line"><span>Total Questions:</span> <span id="quiz-detail-q-count">0</span></div>
-                            <div class="info-line"><span>Time Limit:</span> <span>Unset</span></div>
-                            <div class="info-line"><span>Pass Points:</span> <span>50%</span></div>
-                            
+                            <div class="info-line"><span>Date:</span> <span>28/07/2021</span></div>
+                            <div class="info-line"><span>Time Limit:</span> <span>15 Mins</span></div>
+                            <div class="info-line"><span>Attempts:</span> <span>2</span></div>
+                            <div class="info-line"><span>Pass Points:</span> <span>80 Points</span></div>
                             <div class="btn-row">
-                                <button class="btn-start" id="btn-start-quiz-action">Start Quiz</button>
+                                <button class="btn-start" onclick="startQuizTaking()">Start Quiz</button>
                                 <button class="btn-back" onclick="backToQuizList()">Go Back</button>
                             </div>
                         </div>
@@ -379,12 +377,13 @@
         <div class="footer-bottom"><p>© 2025 Academic Hub. All rights reserved.</p></div>
     </div>
 
+    
+
     <script src="script.js"></script>
     <script src="API-Fetch/Auth/auth.js"></script>
     <script src="API-Fetch/User/UserGet.js"></script>
     <script src="API-Fetch/User/UserUpdate.js"></script>
     <script src="API-Fetch/User/TeacherGet.js"></script>
-    <script src="API-Fetch/Assessment/QuizGet.js"></script>
     <!-- <script src="teacherRender.js"></script> -->
 
     <div id="action-confirm-bar" class="confirm-bar">
