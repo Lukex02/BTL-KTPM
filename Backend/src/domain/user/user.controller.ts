@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import {
   ChangePasswordDto,
+  LinkUserDto,
   UpdateUserDto,
   UserDto,
   UserMinimumDto,
@@ -156,7 +157,7 @@ export class UserController {
       },
     },
   })
-  async linkTeacher(@Req() req: any, @Body() body: any) {
+  async linkTeacher(@Req() req: any, @Body() body: LinkUserDto) {
     const tokenUserId = req.user.userId;
     if (
       tokenUserId !== body.studentId &&
@@ -183,7 +184,7 @@ export class UserController {
       },
     },
   })
-  async unlinkTeacher(@Req() req: any, @Body() body: any) {
+  async unlinkTeacher(@Req() req: any, @Body() body: LinkUserDto) {
     const tokenUserId = req.user.userId;
     if (
       tokenUserId !== body.studentId &&
