@@ -160,19 +160,19 @@
                 <div class="tab-content" id="my-students">
                     <h2>My Students</h2>
                     <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
-                    <p>Danh sách học sinh bạn đang phụ trách</p>
+                <p class="list-title">List of students you are in charge of</p>
 
-                    <div id="students-loading" style="text-align:center; padding:40px; display:none;">
-                        <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
-                        <span style="margin-left:10px;">Đang tải...</span>
-                    </div>
+                <div id="students-loading" style="text-align:center; padding:40px; display:none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                    <span style="margin-left:10px;">Đang tải...</span>
+                </div>
 
-                    <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
-                        <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
-                        <p>Chưa có học sinh nào được giao cho bạn</p>
-                    </div>
+                <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                    <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                    <p>Chưa có học sinh nào được giao cho bạn</p>
+                </div>
 
-                    <div id="students-list"></div>
+                <div id="dashboard-students-list" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;"></div>
                 </div>
                 <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
             </div>
@@ -281,13 +281,13 @@
                     <div id="step-publish" class="step-content">
                         <div class="card-box">
                             <h3>Publish Settings</h3>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="quiz-visibility">Visibility</label>
                                 <select id="quiz-visibility" class="form-control">
                                     <option value="public">Public</option>
                                     <option value="private">Private</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="assign-student">Assign to Student (Optional - Select one)</label>
                                 <select id="assign-student" class="form-control">
@@ -312,34 +312,27 @@
             
             </div>
 
-            <div id="my-students-content" class="tab-pane">
-                <div class="section-header">
-                    <h3>All Students (100)</h3>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Find student name...">
-                    </div>
-                </div>
-                <div class="student-grid">
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200"></div><div class="student-content"><h4 class="st-name">Wade Warren</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200"></div><div class="student-content"><h4 class="st-name">Bessie Cooper</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200"></div><div class="student-content"><h4 class="st-name">Floyd Miles</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200"></div><div class="student-content"><h4 class="st-name">Ronald Richards</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=200"></div><div class="student-content"><h4 class="st-name">Guy Hawkins</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1554151228-14d9def656ec?w=200"></div><div class="student-content"><h4 class="st-name">Kristin Watson</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200"></div><div class="student-content"><h4 class="st-name">Cody Fisher</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                    <div class="student-card"><div class="student-img-wrapper"><img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=200"></div><div class="student-content"><h4 class="st-name">Esther Howard</h4><p class="st-role">Student</p><button class="btn-message">Message</button></div></div>
-                </div>
-                <div class="pagination-wrapper">
-                    <div class="pagination">
-                        <button class="page-btn disabled"><i class="fas fa-arrow-left"></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
+            <!-- Cập nhật phần HTML cho tab My Students (teacher.html) -->
+        <div id="my-students-content" class="tab-pane">
+            <div class="section-header">
+                <h2>My Students</h2>
+                <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
             </div>
+            <p class="list-title">List of students you are in charge of</p>
+
+
+            <div id="students-loading" style="text-align:center; padding:40px; display:none;">
+                <i class="fas fa-spinner fa-spin" style="font-size:24px; color:#1A64F0;"></i>
+                <span style="margin-left:10px;">Đang tải...</span>
+            </div>
+
+            <div id="students-empty" style="text-align:center; padding:60px; color:#888; display:none;">
+                <i class="fas fa-users" style="font-size:48px; margin-bottom:16px; opacity:0.3;"></i>
+                <p>Chưa có học sinh nào được giao cho bạn</p>
+            </div>
+
+            <div id="students-list" class="students-grid"></div>
+        </div>
 
             <div id="resources-content" class="tab-pane">
                 <div class="section-header"><h3>Course Resources</h3><button class="btn-primary"><i class="fas fa-upload"></i> Upload File</button></div>
@@ -423,6 +416,9 @@
             // Show content
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.getElementById(id + '-content').classList.add('active');
+            if (id === 'my-students-content') {
+                loadMyStudents();
+            }
             // Nếu là tab Quiz Manager, fetch quizzes
             if (id === 'create-quiz') {
                 fetchAndRenderQuizzes();
@@ -827,16 +823,16 @@ document.getElementById('change-password-form').addEventListener('submit', async
 <script>
 let myStudents = [];
 
-// Cập nhật hàm loadMyStudents để lưu myStudents và hiển thị nút Add
+// Cập nhật hàm loadMyStudents trong script của teacher.html
 async function loadMyStudents() {
     const loading = document.getElementById('students-loading');
     const empty = document.getElementById('students-empty');
     const list = document.getElementById('students-list');
-
+    const dashboardstudentlist = document.getElementById('dashboard-students-list');
     loading.style.display = 'block';
     empty.style.display = 'none';
     list.innerHTML = '';
-
+    dashboardstudentlist.innerHTML = '';
     try {
         const teacherId = localStorage.getItem('userId');
         if (!teacherId) {
@@ -852,15 +848,73 @@ async function loadMyStudents() {
             return;
         }
 
-        // Render list
+        // Render list với style mới giống hình (không dùng ảnh thật, dùng placeholder màu)
         list.innerHTML = myStudents.map(student => `
-            <div class="student-card" style="margin-bottom:20px">
-                <div class="info">
-                    <h4>${student.name || 'Chưa đặt tên'}</h4>
+            <div style="
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                min-width: 200px;
+                width: auto;
+                text-align: center;
+                overflow: hidden;
+            ">
+                <div style="padding: 15px;">
+                    <h4>${student.name || student.username}</h4>
                     <p>@${student.username || student.id}</p>
-                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
+                    <p style="margin: 5px 0 10px; color: #666; font-size: 0.9rem;">
+                        Student
+                    </p>
+                    <button style="
+                        background: #1A64F0;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        width: 100%;
+                        font-size: 0.95rem;
+                    ">
+                        Contact
+                    </button>
                 </div>
-                <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
+            </div>
+        `).join('');
+        dashboardstudentlist.innerHTML = myStudents.map(student => `
+            <div style="
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                min-width: 200px;
+                width: auto;
+                text-align: center;
+                overflow: hidden;
+            ">
+                <div style="padding: 15px;">
+                    <h4>${student.name || student.username}</h4>
+                    <p>@${student.username || student.id}</p>
+                    <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
+                    <p style="margin: 5px 0 10px; color: #666; font-size: 0.9rem;">
+                        Student
+                    </p>
+                    <button style="
+                        background: #1A64F0;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        width: 100%;
+                        font-size: 0.95rem;
+                    ">
+                        Contact
+                    </button>
+                </div>
             </div>
         `).join('');
 
@@ -915,7 +969,9 @@ async function loadAvailableStudents() {
                 <div class="info">
                     <h4>${student.name || 'Chưa đặt tên'}</h4>
                     <p>@${student.username || student.id}</p>
-                    <p><i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}</p>
+                   <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}
+                            </p>
                 </div>
                 <div class="avatar">${student.name ? student.name.charAt(0).toUpperCase() : 'S'}</div>
                 <div class="actions">
