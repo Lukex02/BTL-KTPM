@@ -70,7 +70,7 @@ export class AssessmentController {
 
   @Get('quiz/findByUserId/:userId')
   @ApiOperation({ summary: 'Find quiz by user id' })
-  @ApiOkResponse({ type: Quiz })
+  @ApiOkResponse({ type: Quiz, isArray: true })
   async findQuizByUserId(@Param('userId', new ObjectIdPipe()) userId: string) {
     return await this.assessmentService.findQuizByUserId(userId);
   }
