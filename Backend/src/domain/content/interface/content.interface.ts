@@ -4,6 +4,7 @@ import { ContentItem } from '../models/content.model';
 
 export interface IContentRepository {
   getResource(filter: FilterDto): Promise<ContentItem[]>;
+  assignResource(resourceId: string, userId: string): Promise<any>;
   uploadResource(resource: ArticleDto | LessonDto | VideoDto): Promise<any>;
   updateResource(
     resourceId: string,

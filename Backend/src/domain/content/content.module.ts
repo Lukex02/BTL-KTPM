@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { Db } from 'mongodb';
 import { MongoModule } from 'src/database/mongodb/mongodb.module';
 import {
+  AssignResource,
   ContentService,
   DeleteResource,
   GetResource,
@@ -29,6 +30,7 @@ import { AuthModule } from 'src/auth/auth.module';
     },
     ContentService,
     GetResource,
+    AssignResource,
     UploadResource,
     UpdateResource,
     DeleteResource,
