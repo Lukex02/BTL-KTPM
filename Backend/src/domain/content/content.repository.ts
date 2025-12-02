@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { MongoDBRepo } from 'src/database/mongodb/mongodb.repository';
 import { IContentRepository } from './interface/content.interface';
 import {
@@ -31,10 +37,12 @@ export class MongoContentRepo
   ): Promise<ContentItem[]> {
     const { userId, ...rest } = filter;
     const checkUser = await this.UserService.findUserById(filter.userId);
-    if (!checkUser || !checkUser.assignedContentIds) return [];
 
-    const baseFilter = { ...rest };
+    if (!checkUser) return [];
 
+    const baseFilter = Object.fromEntries(
+      Object.entries(rest).filter(([_, v]) => v !== undefined),
+    );
     const query =
       checkUser.role === 'Admin'
         ? baseFilter
@@ -44,7 +52,7 @@ export class MongoContentRepo
               // 1. Content is assigned user
               {
                 _id: {
-                  $in: checkUser.assignedContentIds.map(
+                  $in: (checkUser?.assignedContentIds ?? []).map(
                     (id) => new ObjectId(id),
                   ),
                 },
@@ -54,7 +62,27 @@ export class MongoContentRepo
             ],
           };
 
-    const data = await this.findMany(query);
+    const data = await this.aggregate([
+      { $match: query },
+      // lookup creator
+      {
+        $lookup: {
+          from: 'user',
+          let: { creatorIdStr: '$creatorId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ['$_id', { $toObjectId: '$$creatorIdStr' }] },
+              },
+            },
+            { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
+          ],
+          as: 'creator',
+        },
+      },
+      { $unwind: '$creator' },
+      { $project: { creatorId: 0 } },
+    ]);
 
     if (!data) return [];
     return data.map((item) => {
@@ -63,14 +91,52 @@ export class MongoContentRepo
     });
   }
 
+  async assignResource(
+    resourceId: string,
+    userId: string,
+  ): Promise<UpdateResult> {
+    const user = await this.UserService.findUserById(userId);
+    if (!user) throw new NotFoundException('User not found');
+
+    const content = await this.findOne({ _id: new ObjectId(resourceId) });
+    if (!content) throw new NotFoundException('Content not found');
+
+    const userContent = await this.findOne(
+      { _id: new ObjectId(userId), assignedContentIds: resourceId },
+      'user',
+    );
+
+    if (userContent)
+      throw new BadRequestException('Content already assigned to user');
+
+    return await this.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $addToSet: {
+          assignedContentIds: userId,
+        },
+      },
+      'user',
+    );
+  }
+
   async uploadResource(
     resource: ArticleDto | LessonDto | VideoDto,
   ): Promise<InsertOneResult> {
-    return await this.insertOne({
+    const res = await this.insertOne({
       ...resource,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+    await this.updateOne(
+      { _id: new ObjectId(resource.creatorId) },
+      {
+        $addToSet: {
+          assignedContentIds: res.insertedId,
+        },
+      },
+    );
+    return res;
   }
 
   async updateResource(

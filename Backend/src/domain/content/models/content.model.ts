@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import { Creator } from 'src/domain/assessment/models/assessment.models';
 
 export abstract class ContentItem {
   @ApiProperty({
@@ -14,6 +15,12 @@ export abstract class ContentItem {
 
   @ApiProperty({ description: 'Content tags', example: ['math', 'english'] })
   tag: string[];
+
+  @ApiProperty({
+    description: 'Creator',
+    example: '507f1f77bcf86cd799439011',
+  })
+  creatorId: Creator;
 
   @ApiProperty({ description: 'Is content public', example: true })
   isPublic: boolean;

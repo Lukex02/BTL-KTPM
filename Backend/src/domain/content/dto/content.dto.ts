@@ -1,7 +1,10 @@
-import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, getSchemaPath } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsEmpty,
+  IsMongoId,
   IsNumber,
   IsOptional,
   IsString,
@@ -20,6 +23,9 @@ export abstract class ContentItemDto {
   @ApiProperty({ description: 'Content tags', example: ['math', 'english'] })
   @IsArray()
   tag: string[];
+
+  @ApiHideProperty()
+  creatorId: string;
 
   @ApiProperty({ description: 'Is content public', example: true })
   @IsBoolean()
@@ -57,4 +63,22 @@ export class LessonDto extends ContentItemDto {
   @ApiProperty({ description: 'Lesson difficulty', example: 'easy' })
   @IsString()
   difficulty: string;
+}
+
+export class AssignContentDto {
+  @ApiProperty({
+    description: 'Content id',
+    example: '507f1f77bcf86cd799439011',
+  })
+  @IsString()
+  @IsMongoId()
+  contentId: string;
+
+  @ApiProperty({
+    description: 'User id',
+    example: '507f1f77bcf86cd799439011',
+  })
+  @IsString()
+  @IsMongoId()
+  userId: string;
 }

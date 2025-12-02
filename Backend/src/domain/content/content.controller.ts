@@ -26,7 +26,12 @@ import { FilterDto } from './dto/filter.dto';
 import { ObjectIdPipe } from 'src/common/pipe/objectid.pipe';
 import { Article, Lesson, Video } from './models/content.model';
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { ArticleDto, LessonDto, VideoDto } from './dto/content.dto';
+import {
+  ArticleDto,
+  AssignContentDto,
+  LessonDto,
+  VideoDto,
+} from './dto/content.dto';
 
 const ContentSchema: SchemaObject = {
   oneOf: [
@@ -67,13 +72,47 @@ export class ContentController {
     return await this.contentService.getResource({ userId, ...filter });
   }
 
+  @Put('assign')
+  @Roles('Admin', 'Teacher')
+  @ApiOperation({ summary: 'Assign content' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Content assigned' },
+      },
+    },
+  })
+  async assignResource(@Body() body: AssignContentDto) {
+    return {
+      message: await this.contentService.assignResource(
+        body.contentId,
+        body.userId,
+      ),
+    };
+  }
+
   @Post('upload')
   @Roles('Admin', 'Teacher')
   @ApiOperation({ summary: 'Upload content' })
-  @ApiOkResponse({ schema: ContentSchema })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Content uploaded' },
+      },
+    },
+  })
   @ApiBody({ schema: ContentSchemaDto })
-  async uploadResource(@Body() resource: any) {
-    return { message: await this.contentService.uploadResource(resource) };
+  async uploadResource(@Req() req: any, @Body() resource: any) {
+    return {
+      message: await this.contentService.uploadResource({
+        ...resource,
+        creatorId: req.user.userId,
+      }),
+    };
   }
 
   @Put('update/:resourceId')

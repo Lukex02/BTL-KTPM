@@ -27,6 +27,23 @@ export class GetResource implements Command {
 }
 
 @Injectable()
+export class AssignResource implements Command {
+  constructor(
+    @Inject('ContentRepository')
+    private readonly contentRepo: IContentRepository,
+  ) {}
+
+  async execute(resourceId: string, userId: string): Promise<any> {
+    const res = await this.contentRepo.assignResource(resourceId, userId);
+    if (res.modifiedCount || res.matchedCount) {
+      return 'Content assigned';
+    } else {
+      throw new NotFoundException("Couldn't assign content");
+    }
+  }
+}
+
+@Injectable()
 export class UploadResource implements Command {
   constructor(
     @Inject('ContentRepository')
@@ -84,6 +101,7 @@ export class DeleteResource implements Command {
 export class ContentService {
   constructor(
     private readonly GetResource: GetResource,
+    private readonly AssignResource: AssignResource,
     private readonly UploadResource: UploadResource,
     private readonly UpdateResource: UpdateResource,
     private readonly DeleteResource: DeleteResource,
@@ -115,6 +133,10 @@ export class ContentService {
     filter: FilterDto & { userId: string },
   ): Promise<ContentItem[]> {
     return await this.GetResource.execute(filter);
+  }
+
+  async assignResource(resourceId: string, userId: string): Promise<string> {
+    return await this.AssignResource.execute(resourceId, userId);
   }
 
   async uploadResource(resource: any): Promise<string> {
