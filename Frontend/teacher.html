@@ -95,7 +95,8 @@
                 <div class="user-action">
                     <button><i class="far fa-bell"></i></button>
                     <div class="avatar-wrapper" id="avatar-wrapper" style="cursor: pointer;">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User" class="avatar-img">
+                        <!-- <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User" class="avatar-img"> -->
+                         <img src="./assets/Edit Avatar.png" alt="User" class="avatar-img">
                         <div class="user-dropdown" id="user-dropdown" style="margin-top: 2%;">
                             <a href="#" onclick="showChangePasswordModal(); return false;">Change Password</a>
                         </div>
@@ -159,8 +160,8 @@
                 </div>
 
                 <div class="tab-content" id="my-students">
-                    <h2>My Students</h2>
-                    <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+                    <h1>My Students</h1>
+                    <button class="btn-primary" onclick="showAddStudentModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add Student</button>
                 <p class="list-title">List of students you are in charge of</p>
 
                 <div id="students-loading" style="text-align:center; padding:40px; display:none;">
@@ -173,7 +174,7 @@
                     <p>Chưa có học sinh nào được giao cho bạn</p>
                 </div>
 
-                <div id="dashboard-students-list" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;"></div>
+                <div id="dashboard-students-list" class="student-grid"></div>
                 </div>
                 <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
             </div>
@@ -289,6 +290,10 @@
                                     <option value="private">Private</option>
                                 </select>
                             </div> -->
+                            <div class="form-group" id="current-assigned" style="display:none;">
+                                <label>Current Assigned Students</label>
+                                <p id="current-assigned-names"></p>
+                            </div>
                             <div class="form-group">
                                 <label for="assign-student">Assign to Student (Optional - Select one)</label>
                                 <select id="assign-student" class="form-control">
@@ -296,7 +301,7 @@
                                     <!-- Options sẽ được fill động bởi JS -->
                                 </select>
                             </div>
-                            <p class="form-info">Additional publish options...</p>
+                            <!-- <p class="form-info">Additional publish options...</p> -->
                         </div>
                                                 <div class="step-footer">
                             <button class="btn-outline" onclick="switchQuizStep('question')">Previous</button>
@@ -316,7 +321,7 @@
             <!-- Cập nhật phần HTML cho tab My Students (teacher.html) -->
         <div id="my-students-content" class="tab-pane">
             <div class="section-header">
-                <h2>My Students</h2>
+                <h1>My Students</h1>
                 <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
             </div>
             <p class="list-title">List of students you are in charge of</p>
@@ -387,9 +392,9 @@
 
             <!-- Add this inside the <div class="tab-content-wrapper">, after the existing tab-panes -->
             <div id="inst-settings-content" class="tab-pane">
-                <h2>Settings</h2>
+                <h1 style="margin-bottom: 10px;">Settings</h1>
                 <h3>Update Profile</h3>
-                <form id="update-profile-form">
+                <form id="update-profile-form" style="margin-top: 10px;">
                     <div class="form-group">
                         <label>Username</label>
                         <input type="text" id="profile-username" class="form-control" required>
@@ -439,7 +444,7 @@
         }
         // Hàm xử lý xóa quiz
         async function deleteQuiz(quizId) {
-            if (!confirm('Bạn có chắc chắn muốn xóa quiz này không?')) {
+            if (!confirm('Are you sure wanna delete this quiz?')) {
                 return;  // Hủy nếu không confirm
             }
 
@@ -482,6 +487,28 @@
                 select.appendChild(option);
             }
         }
+        async function populateAssignSelect(assignedIds = []) {
+            try {
+                const teacherId = localStorage.getItem('userId');
+                const students = await getMyStudentsAPI(teacherId);  // Lấy tất cả myStudents
+
+                // Filter chỉ giữ students chưa assign (không có ID trong assignedIds)
+                const availableStudents = students.filter(student => !assignedIds.includes(student.id));
+
+                const select = document.getElementById('assign-student');
+                select.innerHTML = '<option value="">-- Select a student --</option>';  // Reset
+
+                availableStudents.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.name || student.username} (@${student.username || student.id})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error populating assign select:', error);
+                // Optional: Hiển thị lỗi trong UI nếu cần
+            }
+        }
         function showCreateQuizForm() {
             document.getElementById('quiz-list-view').style.display = 'none';
             document.getElementById('quiz-form-view').style.display = 'block';
@@ -499,7 +526,7 @@
             document.getElementById('step-basic').classList.add('active');
             document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
             document.querySelector('.step-btn[onclick="switchQuizStep(\'basic\')"]').classList.add('active');  // Activate Basic button
-            populateAssignStudentDropdown();
+            populateAssignSelect();
         }
         function hideCreateQuizForm() {
             document.getElementById('quiz-form-view').style.display = 'none';
@@ -514,97 +541,128 @@
             fetchAndRenderQuizzes();  // Refresh list on back
         }
         // Hàm fetch và render quizzes động vào quiz-manager-grid
-        async function fetchAndRenderQuizzes() {
-            const grid = document.getElementById('quiz-manager-grid');
-            if (!grid) return;
+        // Sửa hàm fetchAndRenderQuizzes trong script của teacher.html để fetch full quiz details bao gồm assignee
+async function fetchAndRenderQuizzes() {
+    const grid = document.getElementById('quiz-manager-grid');
+    if (!grid) return;
 
-            const userId = localStorage.getItem('userId');
-            if (!userId) {
-                console.error('User ID not found. Please login again.');
-                grid.innerHTML = '<p>Error: Please login to view quizzes.</p>';
-                return;
-            }
+    grid.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
 
-            try {
-                const quizzes = await getQuizzesByUserIdAPI(userId); // Gọi hàm từ Post.js
-                if (quizzes && quizzes.length > 0) {
-                    grid.innerHTML = quizzes.map(quiz => `
-                        <div class="quiz-manage-card">
-                            <div class="q-info">
-                                <h4>${quiz.title}</h4>
-                                <p>${quiz.description}</p> <!-- Thay thế bằng description từ DB -->
-                            </div>
-                            <button class="btn-outline" onclick="editQuiz('${quiz.id}')">Edit</button> <!-- Có thể thêm onclick để edit quiz cụ thể -->
-                            <button type="button" class="btn-outlines" onclick="deleteQuiz('${quiz.id}')">Delete</button>
-                        </div>
-                    `).join('');
-                } else {
-                    grid.innerHTML = '<p>No quizzes found.</p>';
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        grid.innerHTML = '<p>Error: Please login to view quizzes.</p>';
+        return;
+    }
+
+    try {
+        let quizSummaries = await getQuizzesByUserIdAPI(userId);
+        if (quizSummaries && quizSummaries.length > 0) {
+            // Fetch full details cho mỗi quiz để lấy assignee
+            const quizzes = await Promise.all(quizSummaries.map(async (summary) => {
+                try {
+                    return await getQuizByIdAPI(summary.id);
+                } catch (err) {
+                    console.error(`Error fetching details for quiz ${summary.id}:`, err);
+                    return { ...summary, assignee: [] };  // Fallback nếu lỗi
                 }
-            } catch (error) {
-                console.error('Error fetching quizzes:', error);
-                grid.innerHTML = '<p>Error loading quizzes. Please try again later.</p>';
-            }
+            }));
+
+            grid.innerHTML = quizzes.map(quiz => `
+                <div class="quiz-manage-card">
+                    <div class="q-info">
+                        <h4>${quiz.title}</h4>
+                        <p>${quiz.description}</p>
+                        <p>Assigned to: ${quiz.assignee && quiz.assignee.length > 0 ? quiz.assignee.map(a => a.username).join(', ') : 'None'}</p>
+                    </div>
+                    <button class="btn-outline" onclick="editQuiz('${quiz.id}')">Edit</button>
+                    <button type="button" class="btn-outlines" onclick="deleteQuiz('${quiz.id}')">Delete</button>
+                </div>
+            `).join('');
+        } else {
+            grid.innerHTML = '<p>No quizzes found.</p>';
         }
-        // Hàm xử lý edit quiz
-        async function editQuiz(quizId) {
-            try {
-                const quiz = await getQuizByIdAPI(quizId);
-                showCreateQuizForm();  // Show form (resets to create, but we'll override)
-                document.getElementById('quiz-form-title').textContent = 'Edit Quiz';
-                document.getElementById('quiz-id').value = quiz.id;
-                document.getElementById('quiz-title').value = quiz.title;
-                document.getElementById('quiz-description').value = quiz.description;
-                document.getElementById('publish-button').textContent = 'Update Quiz';
-                // Clear existing questions
-                const container = document.getElementById('questions-container');
-                container.innerHTML = '';
-                questionId = 0;
-
-                // Populate questions
-                quiz.questions.forEach(q => {
-                    addQuestion();  // Creates a new question group and increments questionId
-                    const group = container.lastChild;  // Get the newly added group
-
-                    let baseQuestion = q.question;
-                    const typeSelect = group.querySelector('.question-type');
-                    typeSelect.value = q.type;
-                    toggleOptions(typeSelect);
-
-                    if (q.type === 'multiple-choice') {
-                        // Parse embedded options (format: "Question\nA. Opt1\nB. Opt2...")
-                        const lines = q.question.split('\n');
-                        baseQuestion = lines[0];
-                        const options = lines.slice(1).map(line => line.substring(3).trim());  // Remove "A. " (3 chars: letter + . + space)
-
-                        // Clear default option and rebuild
-                        const optsContainer = group.querySelector('.options-container');
-                        optsContainer.innerHTML = '<h4>Options</h4>';  // Reset options
-                        options.forEach((opt, i) => {
-                            const optGroup = document.createElement('div');
-                            optGroup.className = 'option-group';
-                            optGroup.innerHTML = `<input type="text" class="option-text" placeholder="Option ${i + 1}" value="${opt}">`;
-                            optsContainer.appendChild(optGroup);
-                        });
-                        // Re-append the "Add Option" button (it gets removed by innerHTML reset)
-                        const addBtn = document.createElement('button');
-                        addBtn.type = 'button';
-                        addBtn.className = 'add-option';
-                        addBtn.textContent = 'Add Option';
-                        addBtn.onclick = function() { addOption(this); };
-                        optsContainer.appendChild(addBtn);
-                    }
-
-                    group.querySelector('.question-text').value = baseQuestion;
-                    group.querySelector('.question-explanation').value = q.questionExplanation || '';
-                    group.querySelector('.answer-explanation').value = q.answerExplanation || '';
-                    group.querySelector('.correct-answer').value = q.correctAnswer || '';
-                });
-            } catch (error) {
-                alert('Error loading quiz for edit: ' + error.message);
-            }
+    } catch (error) {
+        console.error('Error fetching quizzes:', error);
+        grid.innerHTML = '<p>Error loading quizzes. Please try again later.</p>';
+    }
 }
-        let questionId = 1;
+
+// Sửa hàm editQuiz để load assigned student từ assignee field
+async function editQuiz(quizId) {
+    try {
+        const quiz = await getQuizByIdAPI(quizId);
+        showCreateQuizForm();  // Show form (resets to create, but we'll override)
+        document.getElementById('quiz-form-title').textContent = 'Edit Quiz';
+        document.getElementById('quiz-id').value = quiz.id;
+        document.getElementById('quiz-title').value = quiz.title;
+        document.getElementById('quiz-description').value = quiz.description;
+        document.getElementById('publish-button').textContent = 'Update Quiz';
+
+        const assignedIds = quiz.assignee ? quiz.assignee.map(a => a.id || a.userId) : [];  // Điều chỉnh field ID nếu khác
+
+        // Populate select chỉ với students chưa assign
+        populateAssignSelect(assignedIds);
+
+        // Hiển thị current assigned students
+        const currentAssigned = document.getElementById('current-assigned');
+        const assignedNames = document.getElementById('current-assigned-names');
+        if (quiz.assignee && quiz.assignee.length > 0) {
+            currentAssigned.style.display = 'block';
+            assignedNames.textContent = quiz.assignee.map(a => `${a.name || a.username} (@${a.username || a.userId})`).join(', ');
+        } else {
+            currentAssigned.style.display = 'none';
+            assignedNames.textContent = '';
+        }
+
+        // Clear existing questions
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+        questionId = 0;
+
+        // Populate questions (giữ nguyên code cũ)
+        quiz.questions.forEach(q => {
+            addQuestion();  // Creates a new question group and increments questionId
+            const group = container.lastChild;  // Get the newly added group
+
+            let baseQuestion = q.question;
+            const typeSelect = group.querySelector('.question-type');
+            typeSelect.value = q.type;
+            toggleOptions(typeSelect);
+
+            if (q.type === 'multiple-choice') {
+                // Parse embedded options (format: "Question\nA. Opt1\nB. Opt2...")
+                const lines = q.question.split('\n');
+                baseQuestion = lines[0];
+                const options = lines.slice(1).map(line => line.substring(3).trim());  // Remove "A. " (3 chars: letter + . + space)
+
+                // Clear default option and rebuild
+                const optsContainer = group.querySelector('.options-container');
+                optsContainer.innerHTML = '<h4>Options</h4>';  // Reset options
+                options.forEach((opt, i) => {
+                    const optGroup = document.createElement('div');
+                    optGroup.className = 'option-group';
+                    optGroup.innerHTML = `<input type="text" class="option-text" placeholder="Option ${i + 1}" value="${opt}">`;
+                    optsContainer.appendChild(optGroup);
+                });
+                // Re-append the "Add Option" button (it gets removed by innerHTML reset)
+                const addBtn = document.createElement('button');
+                addBtn.type = 'button';
+                addBtn.className = 'add-option';
+                addBtn.textContent = 'Add Option';
+                addBtn.onclick = function() { addOption(this); };
+                optsContainer.appendChild(addBtn);
+            }
+
+            group.querySelector('.question-text').value = baseQuestion;
+            group.querySelector('.question-explanation').value = q.questionExplanation || '';
+            group.querySelector('.answer-explanation').value = q.answerExplanation || '';
+            group.querySelector('.correct-answer').value = q.correctAnswer || '';
+        });
+    } catch (error) {
+        alert('Error loading quiz for edit: ' + error.message);
+    }
+} 
+       let questionId = 1;
         function addQuestion() {
             questionId++;
             const container = document.getElementById('questions-container');
@@ -657,103 +715,107 @@
 
                 // Handle submit form create quiz
         const createQuizForm = document.getElementById('create-quiz-form');
-        if (createQuizForm) {
-            createQuizForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                console.log('Submit event triggered!');
-                const userId = localStorage.getItem('userId');
-                if (!userId) {
-                    showMessage('quiz-message', 'User ID not found. Please login again.', 'error');
-                    return;
-                }
-
-                // Thu thập data
-                const title = document.getElementById('quiz-title').value;
-                const description = document.getElementById('quiz-description').value;
-                const questions = [];
-                const questionGroups = document.querySelectorAll('.question-group');
-                questionGroups.forEach((group, index) => {
-                        const type = group.querySelector('.question-type').value;
-                        let questionText = group.querySelector('.question-text').value;  // Start with base question
-                        const questionObj = {
-                            id: index + 1,
-                            question: questionText,  // Will update if multiple-choice
-                            type: type,
-                            questionExplanation: group.querySelector('.question-explanation').value || '',
-                            answerExplanation: group.querySelector('.answer-explanation').value || '',
-                            correctAnswer: group.querySelector('.correct-answer').value || ''
-                        };
-
-                        if (type === 'multiple-choice') {
-                            const options = [];
-                            group.querySelectorAll('.option-text').forEach(opt => {
-                                if (opt.value) options.push(opt.value);
-                            });
-                            // Embed options into question string (e.g., "What is...? A. Opt1 B. Opt2")
-                            questionObj.question += '\n' + options.map((o, i) => `${String.fromCharCode(65 + i)}. ${o}`).join('\n');
-                            // Assume correctAnswer is a letter like "A" or index like "1"
-                        }
-
-                        questions.push(questionObj);
-                    });
-
-                const quizId = document.getElementById('quiz-id').value;
-                let quizData;
-                let result;
-                if (quizId) {
-                    quizData = {
-                        quizId,  // Add for update (matches API spec)
-                        title,
-                        description,
-                        questions
-                    };
-                    console.log('Quiz Update Data to Send:', JSON.stringify(quizData, null, 2));
-                    result = await updateQuizAPI(quizId, quizData);
-                    const selectedStudentId = document.getElementById('assign-student').value;
-                    if (selectedStudentId) {
-                        await assignQuizToUserAPI(quizId, selectedStudentId); // Giả sử createdQuiz có id
-                        showMessage('quiz-message', 'Quiz assigned to student successfully!', 'success');
-                    }
-                    showMessage('quiz-message', 'Quiz updated successfully!', 'success');
-                } else {
-                    const beforeQuizzes = await getQuizzesByUserIdAPI(userId);
-                    console.log('Before Quizzes:', beforeQuizzes);
-                    quizData = {
-                        userId,  // Keep for create
-                        title,
-                        description,
-                        questions
-                    };
-                    console.log('Quiz Create Data to Send:', JSON.stringify(quizData, null, 2));
-                    result = await createQuizAPI(quizData);
-                    console.log(result);
-                    showMessage('quiz-message', 'Quiz created successfully!', 'success');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    const afterQuizzes = await getQuizzesByUserIdAPI(userId);
-                    console.log('After Quizzes:', afterQuizzes);
-                    const newQuiz = afterQuizzes.find(q => !beforeQuizzes.some(b => b.id === q.id));
-                    if (!newQuiz) {
-                        showMessage('quiz-message', 'Could not find newly created quiz. Please check the list.', 'error');
-                        return;
-                    }
-
-                    console.log('New Quiz ID:', newQuiz.id);  // Log để confirm
-                    const selectedStudentId = document.getElementById('assign-student').value;
-                    if (selectedStudentId) {
-                        await assignQuizToUserAPI(newQuiz.id, selectedStudentId); // Giả sử createdQuiz có id
-                        showMessage('quiz-message', 'Quiz assigned to student successfully!', 'success');
-                    }
-                }
-                console.log(result);
-                createQuizForm.reset();  // Reset form
-                document.getElementById('quiz-id').value = '';  // Clear to prevent issues on next create
-                // Refresh quizzes list
-                fetchAndRenderQuizzes();
-                setTimeout(() => {
-                    hideCreateQuizForm();
-                }, 2000);
-            });
+if (createQuizForm) {
+    createQuizForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('Submit event triggered!');
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            showMessage('quiz-message', 'User ID not found. Please login again.', 'error');
+            return;
         }
+
+        // Thu thập data (giữ nguyên)
+        const title = document.getElementById('quiz-title').value;
+        const description = document.getElementById('quiz-description').value;
+        const questions = [];
+        const questionGroups = document.querySelectorAll('.question-group');
+        questionGroups.forEach((group, index) => {
+            const type = group.querySelector('.question-type').value;
+            let questionText = group.querySelector('.question-text').value;  // Start with base question
+            const questionObj = {
+                id: index + 1,
+                question: questionText,  // Will update if multiple-choice
+                type: type,
+                questionExplanation: group.querySelector('.question-explanation').value || '',
+                answerExplanation: group.querySelector('.answer-explanation').value || '',
+                correctAnswer: group.querySelector('.correct-answer').value || ''
+            };
+
+            if (type === 'multiple-choice') {
+                const options = [];
+                group.querySelectorAll('.option-text').forEach(opt => {
+                    if (opt.value) options.push(opt.value);
+                });
+                // Embed options into question string (e.g., "What is...? A. Opt1 B. Opt2")
+                questionObj.question += '\n' + options.map((o, i) => `${String.fromCharCode(65 + i)}. ${o}`).join('\n');
+                // Assume correctAnswer is a letter like "A" or index like "1"
+            }
+
+            questions.push(questionObj);
+        });
+
+        const quizId = document.getElementById('quiz-id').value;
+        let quizData;
+        let result;
+        const selectedStudentId = document.getElementById('assign-student').value;
+
+        if (quizId) {
+            // Update quiz
+            quizData = {
+                quizId,  // Add for update (matches API spec)
+                title,
+                description,
+                questions
+            };
+            console.log('Quiz Update Data to Send:', JSON.stringify(quizData, null, 2));
+            result = await updateQuizAPI(quizId, quizData);
+            showMessage('quiz-message', 'Quiz updated successfully!', 'success');
+
+            // Assign thêm student nếu có select
+            if (selectedStudentId) {
+                await assignQuizToUserAPI(quizId, selectedStudentId);
+                showMessage('quiz-message', 'Additional student assigned successfully!', 'success');
+            }
+        } else {
+            // Create quiz (giữ nguyên)
+            const beforeQuizzes = await getQuizzesByUserIdAPI(userId);
+            console.log('Before Quizzes:', beforeQuizzes);
+            quizData = {
+                userId,  // Keep for create
+                title,
+                description,
+                questions
+            };
+            console.log('Quiz Create Data to Send:', JSON.stringify(quizData, null, 2));
+            result = await createQuizAPI(quizData);
+            console.log(result);
+            showMessage('quiz-message', 'Quiz created successfully!', 'success');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const afterQuizzes = await getQuizzesByUserIdAPI(userId);
+            console.log('After Quizzes:', afterQuizzes);
+            const newQuiz = afterQuizzes.find(q => !beforeQuizzes.some(b => b.id === q.id));
+            if (!newQuiz) {
+                showMessage('quiz-message', 'Could not find newly created quiz. Please check the list.', 'error');
+                return;
+            }
+
+            console.log('New Quiz ID:', newQuiz.id);  // Log để confirm
+            if (selectedStudentId) {
+                await assignQuizToUserAPI(newQuiz.id, selectedStudentId); // Assign cho create
+                showMessage('quiz-message', 'Quiz assigned to student successfully!', 'success');
+            }
+        }
+        console.log(result);
+        createQuizForm.reset();  // Reset form
+        document.getElementById('quiz-id').value = '';  // Clear to prevent issues on next create
+        // Refresh quizzes list
+        fetchAndRenderQuizzes();
+        setTimeout(() => {
+            hideCreateQuizForm();
+        }, 2000);
+    });
+}
 
         // Function showMessage (copy từ AuthPost.js nếu cần, hoặc define here)
         function showMessage(elementId, message, type) {
@@ -890,7 +952,7 @@ async function loadMyStudents() {
                         cursor: pointer;
                         width: 100%;
                         font-size: 0.95rem;
-                    ">
+                    "  onclick="goToMyStudentsTab()">
                         Contact
                     </button>
                 </div>
@@ -924,7 +986,7 @@ async function loadMyStudents() {
                         cursor: pointer;
                         width: 100%;
                         font-size: 0.95rem;
-                    ">
+                    "  onclick="goToMyStudentsTab()">
                         Contact
                     </button>
                 </div>
@@ -1043,7 +1105,7 @@ function filterStudents() {
 document.addEventListener('DOMContentLoaded', function() {
     // Load students cho preview trên dashboard luôn
     loadMyStudents();
-
+    loadUserGreeting();
     // Nếu đang ở tab quiz thì load quiz
     if (document.getElementById('create-quiz-content').classList.contains('active')) {
         fetchAndRenderQuizzes();
@@ -1118,13 +1180,35 @@ document.getElementById('update-profile-form').addEventListener('submit', async 
             if (dashboardBtn) {
                 switchTab(dashboardBtn, 'inst-dashboard');
             }
-        }, 3000);
+        }, 1000);
 
     } catch (err) {
         msgEl.textContent = err.message || 'Something went wrong';
         msgEl.style.color = '#e74c3c';
     }
 });
+
+////Update greeting
+async function loadUserGreeting() {
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            console.warn('User ID not found. Greeting will remain default.');
+            return;
+        }
+
+        const user = await getUserByIdAPI(userId);
+        const greetingH2 = document.querySelector('.greeting h2');
+        if (greetingH2 && user.name) {
+            greetingH2.textContent = `Good Morning, ${user.name}!`;
+        } else if (greetingH2 && user.username) {
+            // Fallback to username if name is not set
+            greetingH2.textContent = `Good Morning, ${user.username}!`;
+        }
+    } catch (err) {
+        console.error('Error loading user greeting:', err);
+    }
+}
 </script>
 </body>
 </html>
