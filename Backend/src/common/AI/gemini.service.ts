@@ -20,7 +20,7 @@ export class GeminiService extends AIService {
 
   async checkServiceOnline(): Promise<boolean> {
     try {
-      return false;
+      // return false;
       await this.client.models.generateContent({
         model: this.MODEL,
         contents: 'Return "Y"',
