@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import {
+  AssessmentResultDto,
   AssignQuizToUserRequestDto,
   CreateQuizRequestDto,
   GenQuizRequestDto,
@@ -200,7 +201,7 @@ export class AssessmentController {
       },
     },
   })
-  async saveAssessResult(@Body() assessRes: AssessmentResult) {
+  async saveAssessResult(@Body() assessRes: AssessmentResultDto) {
     return {
       message: await this.assessmentService.saveAssessResult(assessRes),
     };

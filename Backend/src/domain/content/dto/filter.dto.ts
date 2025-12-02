@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsDate, IsString } from 'class-validator';
+import { IsArray, IsDate, IsOptional, IsString } from 'class-validator';
 
 export class FilterDto {
   @ApiProperty({
@@ -9,6 +9,7 @@ export class FilterDto {
     type: String,
   })
   @IsArray()
+  @IsOptional()
   tag?: string[];
 
   @ApiProperty({
@@ -17,6 +18,7 @@ export class FilterDto {
     type: String,
   })
   @IsString()
+  @IsOptional()
   type?: string;
 
   @ApiProperty({
@@ -26,6 +28,7 @@ export class FilterDto {
   })
   @Type(() => Date)
   @IsDate()
+  @IsOptional()
   fromDate?: Date;
 
   @ApiProperty({
@@ -35,5 +38,6 @@ export class FilterDto {
   })
   @Type(() => Date)
   @IsDate()
+  @IsOptional()
   toDate?: Date;
 }

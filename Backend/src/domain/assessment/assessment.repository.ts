@@ -109,9 +109,48 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
   }
 
   async findQuizById(quizId: string): Promise<Quiz | null> {
-    const quiz = await this.findOne({ _id: new ObjectId(quizId) }, 'quiz');
+    // const quiz = await this.findOne({ _id: new ObjectId(quizId) }, 'quiz');
+    const quiz = await this.aggregate(
+      [
+        {
+          $match: {
+            _id: new ObjectId(quizId),
+          },
+        },
+        {
+          $lookup: {
+            from: 'user',
+            let: { quizId: '$_id' },
+            pipeline: [
+              {
+                $addFields: {
+                  assignedQuizIdsObj: {
+                    $map: {
+                      input: { $ifNull: ['$assignedQuizIds', []] },
+                      as: 'id',
+                      in: { $toObjectId: '$$id' }, // convert string → ObjectId
+                    },
+                  },
+                },
+              },
+              {
+                $match: {
+                  $expr: { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                },
+              },
+              { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
+            ],
+            as: 'users',
+          },
+        },
+        { $unwind: '$users' }, // chuyển array thành object
+        { $addFields: { creator: '$users' } }, // đổi tên field
+        { $project: { users: 0 } }, // bỏ field array cũ
+      ],
+      'quiz',
+    );
     if (!quiz) return null;
-    const { _id, ...rest } = quiz;
+    const { _id, ...rest } = quiz[0];
     return { id: _id.toString(), ...rest } as Quiz;
   }
 
@@ -120,7 +159,46 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
       (user) => user.assignedQuizIds?.map((id) => new ObjectId(id)),
     );
     if (!quizIdList || quizIdList.length === 0) return [];
-    const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
+    // const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
+    const quizzes = await this.aggregate(
+      [
+        {
+          $match: {
+            _id: { $in: quizIdList },
+          },
+        },
+        {
+          $lookup: {
+            from: 'user',
+            let: { quizId: '$_id' },
+            pipeline: [
+              {
+                $addFields: {
+                  assignedQuizIdsObj: {
+                    $map: {
+                      input: { $ifNull: ['$assignedQuizIds', []] },
+                      as: 'id',
+                      in: { $toObjectId: '$$id' }, // convert string → ObjectId
+                    },
+                  },
+                },
+              },
+              {
+                $match: {
+                  $expr: { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                },
+              },
+              { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
+            ],
+            as: 'users',
+          },
+        },
+        { $unwind: '$users' }, // chuyển array thành object
+        { $addFields: { creator: '$users' } }, // đổi tên field
+        { $project: { users: 0 } }, // bỏ field array cũ
+      ],
+      'quiz',
+    );
     if (!quizzes) return [];
     return quizzes.map((q) => {
       const { _id, ...rest } = q;
