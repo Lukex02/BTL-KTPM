@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import {
+  AssessmentResultDto,
   AssignQuizToUserRequestDto,
   CreateQuizRequestDto,
   GenQuizRequestDto,
@@ -70,7 +71,7 @@ export class AssessmentController {
 
   @Get('quiz/findByUserId/:userId')
   @ApiOperation({ summary: 'Find quiz by user id' })
-  @ApiOkResponse({ type: Quiz })
+  @ApiOkResponse({ type: Quiz, isArray: true })
   async findQuizByUserId(@Param('userId', new ObjectIdPipe()) userId: string) {
     return await this.assessmentService.findQuizByUserId(userId);
   }
@@ -200,7 +201,7 @@ export class AssessmentController {
       },
     },
   })
-  async saveAssessResult(@Body() assessRes: AssessmentResult) {
+  async saveAssessResult(@Body() assessRes: AssessmentResultDto) {
     return {
       message: await this.assessmentService.saveAssessResult(assessRes),
     };

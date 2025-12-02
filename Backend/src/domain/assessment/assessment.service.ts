@@ -3,6 +3,7 @@ import type { IQuizRepository } from './interface/quiz.interface';
 import type { IAssessResultRepository } from './interface/result.interface';
 import { Answer, AssessmentResult, Quiz } from './models/assessment.models';
 import {
+  AssessmentResultDto,
   AssignQuizToUserRequestDto,
   CreateQuizRequestDto,
   GenQuizRequestDto,
@@ -255,7 +256,7 @@ export class AssessmentService {
     return await this.DeleteAssessResult.execute(assessResId);
   }
 
-  async saveAssessResult(assessRes: AssessmentResult): Promise<string> {
+  async saveAssessResult(assessRes: AssessmentResultDto): Promise<string> {
     return await this.SaveAssessResult.execute({
       ...assessRes,
       createdAt: new Date(),

@@ -10,7 +10,7 @@ import {
 import { IAIService } from './ai.interface';
 
 export abstract class AIService implements IAIService {
-  LANGUAGE = 'Vietnamese';
+  LANGUAGE = 'English';
 
   generateQuizMessage(request: GenQuizRequestDto): string {
     const { topic, type, difficulty, numberOfQuestions } = request;

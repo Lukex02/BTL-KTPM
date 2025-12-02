@@ -95,4 +95,11 @@ export abstract class MongoDBRepo {
     );
     return await collection.deleteMany(filter);
   }
+
+  async aggregate(pipeline: any[], specificCollection?: string) {
+    const collection = this.db.collection(
+      specificCollection ?? this.collectionName,
+    );
+    return await collection.aggregate(pipeline).toArray();
+  }
 }

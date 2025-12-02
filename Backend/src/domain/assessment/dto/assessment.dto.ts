@@ -6,6 +6,7 @@ import {
   isMongoId,
   IsNotEmpty,
   IsNumber,
+  IsNumberString,
   IsString,
 } from 'class-validator';
 
@@ -66,7 +67,7 @@ export class GenQuizRequestDto {
     example: 1,
     required: true,
   })
-  @IsNumber()
+  @IsNumberString()
   numberOfQuestions: number;
 }
 
@@ -160,4 +161,43 @@ export class AssignQuizToUserRequestDto {
   @IsNotEmpty()
   @IsString()
   userId: string;
+}
+
+export class AssessmentResultDto {
+  @ApiProperty({
+    description: 'Student id',
+    example: 'Math',
+    required: true,
+  })
+  @IsString()
+  @IsMongoId()
+  @IsNotEmpty()
+  studentId: string;
+
+  @ApiProperty({
+    description: 'Quiz id',
+    example: 'Math',
+    required: true,
+  })
+  @IsString()
+  @IsMongoId()
+  @IsNotEmpty()
+  quizId: string;
+
+  @ApiProperty({
+    description: 'Rating',
+    example: 10,
+    required: true,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  rating: number;
+
+  @ApiProperty({
+    description: 'Assessment comment',
+    example: 'This is the assessment comment',
+    required: true,
+  })
+  @IsString()
+  comment: string;
 }
