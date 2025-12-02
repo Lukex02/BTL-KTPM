@@ -352,7 +352,10 @@ async function submitQuiz() {
             }
 
             // 5. HIỂN THỊ KẾT QUẢ
-            const resultToDisplay = { score: finalScore, feedback: feedbackText };
+            const resultToDisplay = { 
+                rating: finalScore, 
+                comment: feedbackText 
+            }; 
             showQuizResultOnDetail(resultToDisplay);
 
         } catch (error) {

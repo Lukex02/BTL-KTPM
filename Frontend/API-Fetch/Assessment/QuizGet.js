@@ -289,26 +289,48 @@ async function openQuizDetail(quizId) {
 
             if (response.ok) {
                 const allResults = await response.json();
+                // --- BẮT ĐẦU ĐOẠN SỬA ---
                 
-                // API trả về mảng, ta cần tìm kết quả khớp với quizId hiện tại
-                // Lưu ý: Chuyển về String để so sánh cho an toàn
-                const historyData = allResults.find(r => String(r.quizId) === String(quizId));
+                // 1. Lọc ra tất cả các lần làm bài của Quiz này (chuyển ID về String để so sánh chuẩn)
+                const myResults = allResults.filter(r => String(r.quizId) === String(quizId));
 
-                if (historyData) {
-                    console.log("Tìm thấy lịch sử làm bài:", historyData);
-                    
-                    // Hiển thị kết quả lên Mini Box
+                if (myResults.length > 0) {
+                    // 2. Sắp xếp: Ưu tiên lấy bài có Rating cao nhất (hoặc Mới nhất)
+                    // Ở đây tôi để logic: Có điểm số (rating) thì ưu tiên, sau đó đến mới nhất.
+                    myResults.sort((a, b) => {
+                        // Nếu muốn lấy bài MỚI NHẤT làm chuẩn:
+                        // Giả sử có trường createdAt, nếu không có thì so sánh ID (MongoID chứa timestamp)
+                        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                        return timeB - timeA; // Giảm dần (Mới nhất lên đầu)
+                    });
+
+                    // Lấy phần tử đầu tiên sau khi sắp xếp
+                    const historyData = myResults[0];
+
+                    console.log("Kết quả được chọn hiển thị:", historyData); // Bật Console xem log này để check
+
+                    // 3. Hiển thị lên giao diện
                     if (resultBox && scoreEl && feedbackEl) {
                         resultBox.style.display = 'block';
                         
-                        // Mapping dữ liệu theo hình ảnh API bạn gửi (rating & comment)
-                        scoreEl.innerText = historyData.rating !== undefined ? historyData.rating : "N/A";
-                        feedbackEl.innerText = historyData.comment || "No feedback.";
+                        // Kiểm tra kỹ null/undefined để tránh hiện N/A oan
+                        // Lưu ý: rating = 0 vẫn là hợp lệ, chỉ null/undefined mới là N/A
+                        const ratingValue = (historyData.rating !== undefined && historyData.rating !== null) 
+                                            ? historyData.rating 
+                                            : "N/A";
                         
-                        // Đổi nút Start thành Retake
-                        if(btnStart) btnStart.innerText = "Retake Quiz";
+                        scoreEl.innerText = ratingValue;
+                        feedbackEl.innerText = historyData.comment || "Không có nhận xét.";
+                        
+                        if(btnStart) btnStart.innerText = "Làm lại bài thi";
                     }
+                } else {
+                    // Chưa làm bài lần nào
+                     if (resultBox) resultBox.style.display = 'none';
+                     if(btnStart) btnStart.innerText = "Start Quiz";
                 }
+                // --- KẾT THÚC ĐOẠN SỬA ---
             }
         }
     } catch (error) {
