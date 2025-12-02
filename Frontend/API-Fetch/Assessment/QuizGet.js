@@ -236,7 +236,11 @@ window.changeQuizPage = function(page) {
 /**
  * 4. OPEN DETAIL & BACK (Logic chuyển tab)
  */
-function openQuizDetail(quizId) {
+/**
+ * 4. OPEN DETAIL & FETCH HISTORY
+ */
+async function openQuizDetail(quizId) {
+    // 1. Tìm thông tin bài Quiz trong danh sách đã fetch
     selectedQuiz = allFetchedQuizzes.find(q => String(q.id) === String(quizId));
 
     if (!selectedQuiz) {
@@ -244,38 +248,72 @@ function openQuizDetail(quizId) {
         return;
     }
 
-    // --- THÊM DÒNG NÀY: Ẩn bảng kết quả cũ đi ---
-    const miniBox = document.getElementById('mini-result-box');
-    if (miniBox) miniBox.style.display = 'none';
+    // 2. Reset UI (Ẩn kết quả cũ trước khi load)
+    const resultBox = document.getElementById('mini-result-box');
+    const scoreEl = document.getElementById('mini-score');
+    const feedbackEl = document.getElementById('mini-feedback');
+    const btnStart = document.getElementById('btn-start-quiz-action');
 
-    // Điền thông tin vào trang chi tiết
+    if (resultBox) resultBox.style.display = 'none';
+    if (btnStart) {
+        btnStart.innerText = "Start Quiz"; // Reset về mặc định
+        btnStart.onclick = function() {
+            if(typeof startQuizTaking === 'function') startQuizTaking(selectedQuiz); 
+        };
+    }
+
+    // 3. Điền thông tin cơ bản vào trang chi tiết
     document.getElementById('quiz-detail-title').innerText = selectedQuiz.title;
-    document.getElementById('quiz-detail-desc').innerText = selectedQuiz.description || "No description available.";
-    
+    document.getElementById('quiz-detail-desc').innerText = selectedQuiz.description || "No description.";
     const qCount = selectedQuiz.questions ? selectedQuiz.questions.length : 0;
     document.getElementById('quiz-detail-q-count').innerText = qCount;
-
+    
     // Ảnh chi tiết
     const detailImg = document.getElementById('quiz-detail-img');
     if(detailImg) detailImg.src = `https://picsum.photos/800/450?random=${selectedQuiz.id}`;
 
-    // Nút Start
-    const btnStart = document.getElementById('btn-start-quiz-action');
-    if(btnStart) {
-        btnStart.onclick = function() {
-            // Kiểm tra hàm startQuizTaking từ script.js
-            if(typeof startQuizTaking === 'function') {
-                startQuizTaking(selectedQuiz); 
-            } else {
-                alert("Chức năng làm bài chưa sẵn sàng.");
-            }
-        };
-    }
-
-    // Chuyển Tab
+    // 4. Chuyển Tab sang trang chi tiết ngay (để user không phải đợi)
     document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
     document.getElementById('quiz-detail-content').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 5. GỌI API KIỂM TRA LỊCH SỬ LÀM BÀI
+    // -----------------------------------------------------------
+    try {
+        const studentId = localStorage.getItem('userId');
+        if(studentId) {
+            // Gọi API lấy TẤT CẢ kết quả của user này
+            const response = await authFetch(`${QUIZ_API_URL}/assessment/result/user/${studentId}`, {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                const allResults = await response.json();
+                
+                // API trả về mảng, ta cần tìm kết quả khớp với quizId hiện tại
+                // Lưu ý: Chuyển về String để so sánh cho an toàn
+                const historyData = allResults.find(r => String(r.quizId) === String(quizId));
+
+                if (historyData) {
+                    console.log("Tìm thấy lịch sử làm bài:", historyData);
+                    
+                    // Hiển thị kết quả lên Mini Box
+                    if (resultBox && scoreEl && feedbackEl) {
+                        resultBox.style.display = 'block';
+                        
+                        // Mapping dữ liệu theo hình ảnh API bạn gửi (rating & comment)
+                        scoreEl.innerText = historyData.rating !== undefined ? historyData.rating : "N/A";
+                        feedbackEl.innerText = historyData.comment || "No feedback.";
+                        
+                        // Đổi nút Start thành Retake
+                        if(btnStart) btnStart.innerText = "Retake Quiz";
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.warn("Lỗi khi tải lịch sử làm bài:", error);
+    }
 }
 
 function backToQuizList() {

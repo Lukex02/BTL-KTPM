@@ -73,7 +73,7 @@
         <a href="#" class="tab-btn active" onclick="switchTab(this, 'inst-dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
         <a href="#" class="tab-btn" onclick="switchTab(this, 'create-quiz')"><i class="fas fa-plus-circle"></i> Quiz Manager</a>
         <a href="#" class="tab-btn" onclick="switchTab(this, 'my-students')"><i class="fas fa-user-graduate"></i> My Students</a>
-        <a href="#" class="tab-btn" onclick="switchTab(this, 'resources')"><i class="fas fa-folder-open"></i> Resources</a>
+        <a href="#" class="tab-btn" onclick="switchTab(this, 'resources'); loadContents()"><i class="fas fa-folder-open"></i> Resources</a>
         <!-- <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-message')"><i class="fas fa-comment-dots"></i> Message <span class="badge-mini">3</span></a> -->
         <a href="#" class="tab-btn" onclick="switchTab(this, 'inst-settings')"><i class="fas fa-cog"></i> Settings</a>
         
@@ -414,11 +414,12 @@
     <script src="API-Fetch/Assessment/Post.js"></script>
     <script src="script.js"></script>
     <script src="API-Fetch/Auth/auth.js"></script>
+    <script src="API-Fetch/Content/ContentGet.js"></script>
     <!-- <script src="API-Fetch/User/Get.js"></script> -->
     
     <script>
         function switchTab(btn, id) {
-            // Active button
+            // Active buttonF
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
 

@@ -174,73 +174,73 @@ function scrollToQuestion(qNum) {
 }
 
 
-/* =========================================
-   3. SUBMIT QUIZ LOGIC (SHOW RESULT IN DETAIL PAGE)
-   ========================================= */
+// /* =========================================
+//    3. SUBMIT QUIZ LOGIC (SHOW RESULT IN DETAIL PAGE)
+//    ========================================= */
 
-async function submitQuiz() {
-    if (!currentActiveQuiz) return;
-    const studentId = localStorage.getItem('userId');
+// async function submitQuiz() {
+//     if (!currentActiveQuiz) return;
+//     const studentId = localStorage.getItem('userId');
     
-    if (!studentId) {
-        alert("Bạn cần đăng nhập để nộp bài.");
-        return;
-    }
+//     if (!studentId) {
+//         alert("Bạn cần đăng nhập để nộp bài.");
+//         return;
+//     }
 
-    const totalQ = currentActiveQuiz.questions.length;
-    const answeredCount = Object.keys(userAnswers).length;
+//     const totalQ = currentActiveQuiz.questions.length;
+//     const answeredCount = Object.keys(userAnswers).length;
 
-    if (!confirm(`Bạn có chắc chắn muốn nộp bài?\nĐã làm: ${answeredCount}/${totalQ} câu.`)) {
-        return;
-    }
+//     if (!confirm(`Bạn có chắc chắn muốn nộp bài?\nĐã làm: ${answeredCount}/${totalQ} câu.`)) {
+//         return;
+//     }
 
-    const submitBtn = document.querySelector('.btn-submit');
-    const originalText = submitBtn ? submitBtn.innerText : 'Submit';
-    if (submitBtn) {
-        submitBtn.innerText = "Đang chấm điểm...";
-        submitBtn.disabled = true;
-    }
+//     const submitBtn = document.querySelector('.btn-submit');
+//     const originalText = submitBtn ? submitBtn.innerText : 'Submit';
+//     if (submitBtn) {
+//         submitBtn.innerText = "Đang chấm điểm...";
+//         submitBtn.disabled = true;
+//     }
 
-    try {
-        const answersPayload = currentActiveQuiz.questions.map((q, index) => {
-            return {
-                question: q.question, 
-                answer: userAnswers[index] || "" 
-            };
-        });
+//     try {
+//         const answersPayload = currentActiveQuiz.questions.map((q, index) => {
+//             return {
+//                 question: q.question, 
+//                 answer: userAnswers[index] || "" 
+//             };
+//         });
 
-        const payload = {
-            quizId: currentActiveQuiz.id,
-            studentId: studentId,
-            answers: answersPayload
-        };
+//         const payload = {
+//             quizId: currentActiveQuiz.id,
+//             studentId: studentId,
+//             answers: answersPayload
+//         };
 
-        const response = await authFetch(`http://localhost:3000/assessment/result/ai/grade`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
+//         const response = await authFetch(`http://localhost:3000/assessment/result/ai/grade`, {
+//             method: 'POST',
+//             body: JSON.stringify(payload)
+//         });
 
-        if (!response.ok) {
-            const errText = await response.text();
-            throw new Error(errText || "Lỗi khi chấm điểm");
-        }
+//         if (!response.ok) {
+//             const errText = await response.text();
+//             throw new Error(errText || "Lỗi khi chấm điểm");
+//         }
 
-        const result = await response.json();
-        console.log("Grading Result:", result);
+//         const result = await response.json();
+//         console.log("Grading Result:", result);
 
-        // --- THAY ĐỔI Ở ĐÂY: Hiển thị kết quả trên trang chi tiết ---
-        showQuizResultOnDetail(result);
+//         // --- THAY ĐỔI Ở ĐÂY: Hiển thị kết quả trên trang chi tiết ---
+//         showQuizResultOnDetail(result);
 
-    } catch (error) {
-        console.error("Submit Error:", error);
-        alert(`Có lỗi xảy ra: ${error.message}`);
-    } finally {
-        if (submitBtn) {
-            submitBtn.innerText = originalText;
-            submitBtn.disabled = false;
-        }
-    }
-}
+//     } catch (error) {
+//         console.error("Submit Error:", error);
+//         alert(`Có lỗi xảy ra: ${error.message}`);
+//     } finally {
+//         if (submitBtn) {
+//             submitBtn.innerText = originalText;
+//             submitBtn.disabled = false;
+//         }
+//     }
+// }
 
 /**
  * Hàm mới: Quay về trang chi tiết và hiện bảng điểm
@@ -269,6 +269,102 @@ function showQuizResultOnDetail(result) {
         // Thêm hiệu ứng nhấp nháy nhẹ để người dùng chú ý
         resultBox.style.animation = "fadeIn 0.5s ease-in-out";
     }
+}
+
+/* =========================================
+   3. SUBMIT QUIZ LOGIC (LOCAL GRADING & SCORING)
+   ========================================= */
+
+// Hàm tạo MongoDB ObjectId giả (24 ký tự hex) để vượt qua validation của Server
+function generateMongoId() {
+    const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+    return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
+        return (Math.random() * 16 | 0).toString(16);
+    }).toLowerCase();
+}
+
+async function submitQuiz() {
+    if (!currentActiveQuiz) return;
+    const studentId = localStorage.getItem('userId');
+    if (!studentId) { alert("Bạn cần đăng nhập."); return; }
+
+    const totalQ = currentActiveQuiz.questions.length;
+    const answeredCount = Object.keys(userAnswers).length;
+
+    if (!confirm(`Bạn có chắc chắn muốn nộp bài?\nĐã làm: ${answeredCount}/${totalQ} câu.`)) return;
+
+    const submitBtn = document.querySelector('.btn-submit');
+    const originalText = submitBtn ? submitBtn.innerText : 'Submit';
+    if (submitBtn) {
+        submitBtn.innerText = "Đang xử lý...";
+        submitBtn.disabled = true;
+    }
+
+    setTimeout(async () => {
+        try {
+            // 1. TÍNH ĐIỂM
+            let correctCount = 0;
+            currentActiveQuiz.questions.forEach((q, index) => {
+                const userAns = userAnswers[index];
+                const correctAns = q.correctAnswer;
+                if (userAns && correctAns) {
+                    const u = userAns.trim().toLowerCase();
+                    const c = correctAns.trim().toLowerCase();
+                    if (u.includes(c) || c.includes(u)) correctCount++;
+                }
+            });
+
+            let rawScore = (correctCount / totalQ) * 10;
+            let finalScore = Math.round(rawScore); 
+            const feedbackText = finalScore >= 5 
+                ? `Làm tốt lắm! Bạn đúng ${correctCount}/${totalQ} câu.` 
+                : `Cần cố gắng hơn. Bạn đúng ${correctCount}/${totalQ} câu.`;
+
+            // 2. TẠO NGÀY (dd/MM/yyyy) - Định dạng chuỗi ngày chuẩn
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            const yyyy = today.getFullYear();
+            const dateString = `${dd}/${mm}/${yyyy}`; 
+
+            // 3. CHUẨN BỊ PAYLOAD (Đã fix ID và Date)
+            const savePayload = {
+                studentId: studentId,
+                quizId: currentActiveQuiz.id,
+                rating: finalScore,
+                comment: feedbackText,
+            };
+
+            console.log("Payload chuẩn bị gửi:", JSON.stringify(savePayload, null, 2));
+
+            // 4. GỌI API
+            const response = await authFetch(`http://localhost:3000/assessment/result/save`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(savePayload)
+            });
+
+            if (response.ok) {
+                console.log("Lưu thành công!");
+            } else {
+                const errText = await response.text();
+                console.warn(`Lưu thất bại (Code ${response.status}):`, errText);
+            }
+
+            // 5. HIỂN THỊ KẾT QUẢ
+            const resultToDisplay = { score: finalScore, feedback: feedbackText };
+            showQuizResultOnDetail(resultToDisplay);
+
+        } catch (error) {
+            console.error("Lỗi:", error);
+            alert("Có lỗi khi nộp bài.");
+        } finally {
+            if (submitBtn) {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+    }, 800);
 }
 
 /**

@@ -1,6 +1,6 @@
 // @ts-nocheck
 const API_BASE_URL = "http://localhost:3000";
-const AUTH_API_URL = `${API_BASE_URL}/auth`;  // Define here if not global from auth.js
+const AUTH_API = `${API_BASE_URL}/auth`;  // Define here if not global from auth.js
 
 async function refreshAccessToken() {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -10,7 +10,7 @@ async function refreshAccessToken() {
     }
 
     try {
-        const response = await fetch(`${AUTH_API_URL}/refresh`, {
+        const response = await fetch(`${AUTH_API}/refresh`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',

@@ -1,7 +1,12 @@
 // @ts-nocheck
 // Cấu hình URL Server
-const API_BASE_URL = "http://localhost:3000";
-const AUTH_API_URL = `${API_BASE_URL}/auth`;
+if (typeof API_BASE === 'undefined') {
+    var API_BASE = "http://localhost:3000";
+}
+
+if (typeof AUTH_API_URL === 'undefined') {
+    var AUTH_API_URL = `${API_BASE}/auth`;
+}
 
 /* ===========================
    1. CÁC HÀM TIỆN ÍCH AUTH
