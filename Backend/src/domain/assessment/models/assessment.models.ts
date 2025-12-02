@@ -6,8 +6,39 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
+
+export class Creator {
+  @ApiProperty({
+    description: 'User id',
+    example: '0000',
+    required: true,
+  })
+  @IsString()
+  @IsMongoId()
+  @IsNotEmpty()
+  userId: string;
+
+  @ApiProperty({
+    description: 'User username',
+    example: 'john',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @ApiProperty({
+    description: 'User name',
+    example: 'john@example.com',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
 
 export class Question {
   @ApiProperty({ description: 'Question id', example: 1, required: true })
@@ -53,8 +84,13 @@ export class Quiz {
   @ApiProperty({ description: 'Quiz id', example: '0000', required: true })
   id: string;
 
-  // @ApiProperty({ description: 'Quiz version', example: '1.0', required: true })
-  // version: string;
+  @ApiProperty({
+    description: 'Quiz creator',
+    example: '0000',
+    required: true,
+  })
+  @IsOptional()
+  creator: Creator;
 
   @ApiProperty({
     description: 'Quiz title',

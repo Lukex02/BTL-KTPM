@@ -169,6 +169,20 @@ describe('AssessmentController (integration with mongodb-memory-server)', () => 
     expect([200, 400, 404]).toContain(res.status);
   });
 
+  it('POST /assessment/result/save -> saves assessment result', async () => {
+    const payload = {
+      studentId: seededUserId,
+      quizId: new (require('mongodb').ObjectId)().toString(),
+      rating: 10,
+      comment: 'This is the assessment comment',
+    };
+    const res = await request(app.getHttpServer())
+      .post('/assessment/result/save')
+      .send(payload);
+    expect(res.status).toBe(201);
+    expect(res.body).toEqual({ message: 'Assessment result saved' });
+  });
+
   it('GET /assessment/result/user/:studentId -> returns assessment results', async () => {
     const res = await request(app.getHttpServer()).get(
       `/assessment/result/user/${seededUserId}`,
