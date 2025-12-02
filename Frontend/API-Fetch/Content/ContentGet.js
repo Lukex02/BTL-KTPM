@@ -253,18 +253,23 @@ async function handleContentSubmit(e) {
     }
 }
 
-// Thêm đoạn này vào hàm showUploadContentModal của bạn
 function showUploadContentModal() {
-    // ... code hiện modal cũ ...
-    
-    // QUAN TRỌNG: Reset form và ID ẩn về rỗng để chuyển sang chế độ "Tạo mới"
+    // 1. Reset form và ID ẩn
     document.getElementById('upload-content-form').reset();
     document.getElementById('content-id-hidden').value = ""; 
     
-    // Đổi lại tiêu đề
+    // 2. Đổi tiêu đề về "Create"
     document.querySelector('#upload-content-modal h3').textContent = "Create New Content";
     const btn = document.querySelector('#upload-content-form button[type="submit"]');
     if(btn) btn.textContent = "Save Content";
+    
+    // 3. QUAN TRỌNG: Lệnh mở Modal (Code cũ của bạn đang thiếu dòng này)
+    document.getElementById('upload-content-modal').classList.add('show');
+}
+
+// Thêm hàm đóng modal này vào ngay bên dưới (vì code cũ cũng đang thiếu)
+function hideUploadContentModal() {
+    document.getElementById('upload-content-modal').classList.remove('show');
 }
 
 /**
@@ -458,3 +463,9 @@ function initContentManager() {
 window.loadContents = loadContents;
 window.initContentManager = initContentManager;
 window.deleteContent = deleteContent;
+
+// --- BỔ SUNG CÁC DÒNG QUAN TRỌNG NÀY ---
+window.showUploadContentModal = showUploadContentModal;
+// window.hideUploadContentModal = hideUploadContentModal;
+window.openEditContentModal = openEditContentModal;
+window.handleContentSubmit = handleContentSubmit; // Public luôn hàm này để chắc chắn
