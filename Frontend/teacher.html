@@ -173,7 +173,7 @@
                     <p>Chưa có học sinh nào được giao cho bạn</p>
                 </div>
 
-                <div id="dashboard-students-list" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start;"></div>
+                <div id="dashboard-students-list" class="student-grid"></div>
                 </div>
                 <button class="btn-see-more" onclick="goToMyStudentsTab()">See More</button>
             </div>
@@ -387,9 +387,9 @@
 
             <!-- Add this inside the <div class="tab-content-wrapper">, after the existing tab-panes -->
             <div id="inst-settings-content" class="tab-pane">
-                <h2>Settings</h2>
+                <h2 style="margin-bottom: 10px;">Settings</h2>
                 <h3>Update Profile</h3>
-                <form id="update-profile-form">
+                <form id="update-profile-form" style="margin-top: 10px;">
                     <div class="form-group">
                         <label>Username</label>
                         <input type="text" id="profile-username" class="form-control" required>
