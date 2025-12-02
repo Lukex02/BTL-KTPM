@@ -143,11 +143,12 @@ export class MongoContentRepo
     resourceId: string,
     resource: ArticleDto | LessonDto | VideoDto,
   ): Promise<UpdateResult> {
+    const { creatorId, ...rest } = resource;
     return await this.updateOne(
       { _id: new ObjectId(resourceId) },
       {
         $set: {
-          ...resource,
+          ...rest,
           updatedAt: new Date(),
         },
       },
