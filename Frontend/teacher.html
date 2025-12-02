@@ -525,6 +525,14 @@
             document.getElementById('step-basic').classList.add('active');
             document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
             document.querySelector('.step-btn[onclick="switchQuizStep(\'basic\')"]').classList.add('active');  // Activate Basic button
+            const currentAssigned = document.getElementById('current-assigned');
+            const assignedNames = document.getElementById('current-assigned-names');
+            if (currentAssigned) {
+                currentAssigned.style.display = 'none';
+            }
+            if (assignedNames) {
+                assignedNames.textContent = '';
+            }
             populateAssignSelect();
         }
         function hideCreateQuizForm() {
