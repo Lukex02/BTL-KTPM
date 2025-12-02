@@ -117,10 +117,27 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
             _id: new ObjectId(quizId),
           },
         },
+        // lookup creator
         {
           $lookup: {
             from: 'user',
-            let: { quizId: '$_id' },
+            let: { userIdStr: '$userId' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', { $toObjectId: '$$userIdStr' }] },
+                },
+              },
+              { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
+            ],
+            as: 'creator',
+          },
+        },
+        // lookup assignee
+        {
+          $lookup: {
+            from: 'user',
+            let: { quizId: '$_id', creatorId: '$userId' },
             pipeline: [
               {
                 $addFields: {
@@ -135,17 +152,21 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
               },
               {
                 $match: {
-                  $expr: { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                  $expr: {
+                    $and: [
+                      { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                      { $ne: ['$_id', { $toObjectId: '$$creatorId' }] }, // loại creator
+                    ],
+                  },
                 },
               },
               { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
             ],
-            as: 'users',
+            as: 'assignee',
           },
         },
-        { $unwind: '$users' }, // chuyển array thành object
-        { $addFields: { creator: '$users' } }, // đổi tên field
-        { $project: { users: 0 } }, // bỏ field array cũ
+        { $unwind: '$creator' }, // biến array creator thành object
+        { $project: { userId: 0 } }, // bỏ field userId cũ
       ],
       'quiz',
     );
@@ -159,18 +180,35 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
       (user) => user.assignedQuizIds?.map((id) => new ObjectId(id)),
     );
     if (!quizIdList || quizIdList.length === 0) return [];
-    // const quizzes = await this.findMany({ _id: { $in: quizIdList } }, 'quiz');
+
     const quizzes = await this.aggregate(
       [
         {
           $match: {
-            _id: { $in: quizIdList },
+            _id: { $in: quizIdList }, // quizIdList là ObjectId[]
           },
         },
+        // lookup creator
         {
           $lookup: {
             from: 'user',
-            let: { quizId: '$_id' },
+            let: { userIdStr: '$userId' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', { $toObjectId: '$$userIdStr' }] },
+                },
+              },
+              { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
+            ],
+            as: 'creator',
+          },
+        },
+        // lookup assignee
+        {
+          $lookup: {
+            from: 'user',
+            let: { quizId: '$_id', creatorId: '$userId' },
             pipeline: [
               {
                 $addFields: {
@@ -185,20 +223,25 @@ export class MongoQuizRepo extends MongoDBRepo implements IQuizRepository {
               },
               {
                 $match: {
-                  $expr: { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                  $expr: {
+                    $and: [
+                      { $in: ['$$quizId', '$assignedQuizIdsObj'] },
+                      { $ne: ['$_id', { $toObjectId: '$$creatorId' }] }, // loại creator
+                    ],
+                  },
                 },
               },
               { $project: { id: '$_id', _id: 0, username: 1, email: 1 } },
             ],
-            as: 'users',
+            as: 'assignee',
           },
         },
-        { $unwind: '$users' }, // chuyển array thành object
-        { $addFields: { creator: '$users' } }, // đổi tên field
-        { $project: { users: 0 } }, // bỏ field array cũ
+        { $unwind: '$creator' }, // biến array creator thành object
+        { $project: { userId: 0 } }, // bỏ field userId cũ
       ],
       'quiz',
     );
+
     if (!quizzes) return [];
     return quizzes.map((q) => {
       const { _id, ...rest } = q;
