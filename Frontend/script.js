@@ -6,6 +6,14 @@
 function switchTab(button, tabName) {
     // 1. Loại bỏ active cũ
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    // THÊM ĐOẠN NÀY:
+    if (tabName === 'dashboard') {
+        // Kiểm tra xem hàm đã được định nghĩa chưa để tránh lỗi
+        if (typeof loadDashboardStats === 'function') {
+            loadDashboardStats();
+        }
+    }
     
     // 2. Active nút hiện tại
     if (button) {
@@ -22,6 +30,7 @@ function switchTab(button, tabName) {
     
     // Cuộn lên đầu
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
 }
 
 /* =========================================
@@ -444,3 +453,90 @@ function switchQuizStep(stepId) {
         progressFill.style.width = width;
     }
 }
+
+/* =========================================
+   DASHBOARD MANAGER: LOAD STATISTICS
+   ========================================= */
+
+async function loadDashboardStats() {
+    // 1. Lấy các element hiển thị số
+    const quizCountEl = document.getElementById('dash-quiz-count');
+    const subTeacherCountEl = document.getElementById('dash-sub-teacher-count');
+    const allTeacherCountEl = document.getElementById('dash-all-teacher-count');
+
+    // Nếu không ở trang dashboard hoặc thiếu element thì dừng
+    if (!quizCountEl || !subTeacherCountEl || !allTeacherCountEl) return;
+
+    // Hiển thị loading nhẹ
+    quizCountEl.innerText = "-";
+    subTeacherCountEl.innerText = "-";
+    allTeacherCountEl.innerText = "-";
+
+    const userId = localStorage.getItem('userId');
+    const API_URL = "http://localhost:3000"; // Đảm bảo đúng port backend
+
+    if (!userId) {
+        console.warn("Chưa đăng nhập, không thể tải thống kê Dashboard.");
+        return;
+    }
+
+    try {
+        // --- GỌI 3 API SONG SONG ĐỂ TỐI ƯU TỐC ĐỘ ---
+        // 1. API lấy Quiz được assign (Tham khảo QuizGet.js)
+        const quizPromise = authFetch(`${API_URL}/assessment/quiz/findByUserId/${userId}`, { method: 'GET' });
+        
+        // 2. API lấy thông tin bản thân để đếm Subscribed Teachers (Tham khảo TeacherGet.js)
+        const selfPromise = authFetch(`${API_URL}/user/self`, { method: 'GET' });
+
+        // 3. API lấy toàn bộ Teacher (Tham khảo TeacherGet.js)
+        const allTeacherPromise = authFetch(`${API_URL}/user/findUsersByRole/Teacher`, { method: 'GET' });
+
+        // Chờ tất cả API trả về
+        const [quizRes, selfRes, allTeacherRes] = await Promise.all([quizPromise, selfPromise, allTeacherPromise]);
+
+        // --- XỬ LÝ DỮ LIỆU ---
+
+        // 1. Xử lý số lượng Quiz
+        if (quizRes.ok) {
+            const quizData = await quizRes.json();
+            // Nếu là mảng thì lấy length, nếu là object đơn thì là 1, ngược lại là 0
+            const count = Array.isArray(quizData) ? quizData.length : (quizData ? 1 : 0);
+            quizCountEl.innerText = count;
+        } else {
+            quizCountEl.innerText = "0";
+        }
+
+        // 2. Xử lý số lượng Subscribed Teacher
+        if (selfRes.ok) {
+            const selfData = await selfRes.json();
+            // Đếm số lượng trong mảng teachersInCharge
+            const count = (selfData.teachersInCharge && Array.isArray(selfData.teachersInCharge)) 
+                          ? selfData.teachersInCharge.length 
+                          : 0;
+            subTeacherCountEl.innerText = count;
+        } else {
+            subTeacherCountEl.innerText = "0";
+        }
+
+        // 3. Xử lý số lượng All Teachers
+        if (allTeacherRes.ok) {
+            const allTeacherData = await allTeacherRes.json();
+            const count = Array.isArray(allTeacherData) ? allTeacherData.length : 0;
+            allTeacherCountEl.innerText = count;
+        } else {
+            allTeacherCountEl.innerText = "0";
+        }
+
+    } catch (error) {
+        console.error("Lỗi tải thống kê Dashboard:", error);
+        // Nếu lỗi thì hiển thị 0
+        quizCountEl.innerText = "0";
+        subTeacherCountEl.innerText = "0";
+        allTeacherCountEl.innerText = "0";
+    }
+}
+
+// Gọi hàm này ngay khi tải trang để Dashboard có dữ liệu luôn
+document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardStats();
+});

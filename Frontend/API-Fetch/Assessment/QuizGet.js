@@ -45,11 +45,28 @@ async function loadUserQuizzes() {
 
         if (!quizRes || !quizRes.ok) throw new Error('Failed to fetch quizzes');
 
-        // Xử lý dữ liệu Quiz thô
+        // Xử lý dữ liệu Quiz thô (MỚI - Đã lọc trùng ID)
         let rawQuizzes = [];
         const quizData = await quizRes.json();
-        if (Array.isArray(quizData)) rawQuizzes = quizData;
-        else if (quizData && typeof quizData === 'object') rawQuizzes = [quizData];
+        
+        let tempArr = [];
+        if (Array.isArray(quizData)) tempArr = quizData;
+        else if (quizData && typeof quizData === 'object') tempArr = [quizData];
+
+        // --- BẮT ĐẦU LỌC TRÙNG ---
+        // Sử dụng Map để chỉ giữ lại 1 bản ghi duy nhất cho mỗi ID
+        const uniqueMap = new Map();
+        tempArr.forEach(quiz => {
+            // Chuyển ID về chuỗi để so sánh chính xác
+            const idKey = String(quiz.id);
+            if (!uniqueMap.has(idKey)) {
+                uniqueMap.set(idKey, quiz);
+            }
+        });
+        
+        // Chuyển lại thành mảng để dùng tiếp
+        rawQuizzes = Array.from(uniqueMap.values());
+        // --- KẾT THÚC LỌC TRÙNG ---
 
         // Xử lý dữ liệu User Self -> Lấy danh sách ID giáo viên
         let myTeacherIds = [];
