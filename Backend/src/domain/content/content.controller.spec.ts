@@ -11,6 +11,7 @@ import {
   UploadResource,
   UpdateResource,
   DeleteResource,
+  AssignResource,
 } from './content.service';
 import { MongoContentRepo } from './content.repository';
 import { UserService } from '../user/user.service';
@@ -68,6 +69,7 @@ describe('ContentController (integration with mongodb-memory-server)', () => {
         // content domain providers (replicates ContentModule providers)
         ContentService,
         GetResource,
+        AssignResource,
         UploadResource,
         UpdateResource,
         DeleteResource,
