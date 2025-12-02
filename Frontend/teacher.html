@@ -95,7 +95,8 @@
                 <div class="user-action">
                     <button><i class="far fa-bell"></i></button>
                     <div class="avatar-wrapper" id="avatar-wrapper" style="cursor: pointer;">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User" class="avatar-img">
+                        <!-- <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="User" class="avatar-img"> -->
+                         <img src="./assets/Edit Avatar.png" alt="User" class="avatar-img">
                         <div class="user-dropdown" id="user-dropdown" style="margin-top: 2%;">
                             <a href="#" onclick="showChangePasswordModal(); return false;">Change Password</a>
                         </div>
@@ -159,8 +160,8 @@
                 </div>
 
                 <div class="tab-content" id="my-students">
-                    <h2>My Students</h2>
-                    <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+                    <h1>My Students</h1>
+                    <button class="btn-primary" onclick="showAddStudentModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add Student</button>
                 <p class="list-title">List of students you are in charge of</p>
 
                 <div id="students-loading" style="text-align:center; padding:40px; display:none;">
@@ -316,7 +317,7 @@
             <!-- Cập nhật phần HTML cho tab My Students (teacher.html) -->
         <div id="my-students-content" class="tab-pane">
             <div class="section-header">
-                <h2>My Students</h2>
+                <h1>My Students</h1>
                 <button class="btn-primary" onclick="showAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
             </div>
             <p class="list-title">List of students you are in charge of</p>
@@ -387,7 +388,7 @@
 
             <!-- Add this inside the <div class="tab-content-wrapper">, after the existing tab-panes -->
             <div id="inst-settings-content" class="tab-pane">
-                <h2 style="margin-bottom: 10px;">Settings</h2>
+                <h1 style="margin-bottom: 10px;">Settings</h1>
                 <h3>Update Profile</h3>
                 <form id="update-profile-form" style="margin-top: 10px;">
                     <div class="form-group">
@@ -438,7 +439,7 @@
         }
         // Hàm xử lý xóa quiz
         async function deleteQuiz(quizId) {
-            if (!confirm('Bạn có chắc chắn muốn xóa quiz này không?')) {
+            if (!confirm('Are you sure wanna delete this quiz?')) {
                 return;  // Hủy nếu không confirm
             }
 
@@ -889,7 +890,7 @@ async function loadMyStudents() {
                         cursor: pointer;
                         width: 100%;
                         font-size: 0.95rem;
-                    ">
+                    "  onclick="goToMyStudentsTab()">
                         Contact
                     </button>
                 </div>
@@ -923,7 +924,7 @@ async function loadMyStudents() {
                         cursor: pointer;
                         width: 100%;
                         font-size: 0.95rem;
-                    ">
+                    "  onclick="goToMyStudentsTab()">
                         Contact
                     </button>
                 </div>
@@ -1042,7 +1043,7 @@ function filterStudents() {
 document.addEventListener('DOMContentLoaded', function() {
     // Load students cho preview trên dashboard luôn
     loadMyStudents();
-
+    loadUserGreeting();
     // Nếu đang ở tab quiz thì load quiz
     if (document.getElementById('create-quiz-content').classList.contains('active')) {
         fetchAndRenderQuizzes();
@@ -1117,13 +1118,35 @@ document.getElementById('update-profile-form').addEventListener('submit', async 
             if (dashboardBtn) {
                 switchTab(dashboardBtn, 'inst-dashboard');
             }
-        }, 3000);
+        }, 1000);
 
     } catch (err) {
         msgEl.textContent = err.message || 'Something went wrong';
         msgEl.style.color = '#e74c3c';
     }
 });
+
+////Update greeting
+async function loadUserGreeting() {
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            console.warn('User ID not found. Greeting will remain default.');
+            return;
+        }
+
+        const user = await getUserByIdAPI(userId);
+        const greetingH2 = document.querySelector('.greeting h2');
+        if (greetingH2 && user.name) {
+            greetingH2.textContent = `Good Morning, ${user.name}!`;
+        } else if (greetingH2 && user.username) {
+            // Fallback to username if name is not set
+            greetingH2.textContent = `Good Morning, ${user.username}!`;
+        }
+    } catch (err) {
+        console.error('Error loading user greeting:', err);
+    }
+}
 </script>
 </body>
 </html>
