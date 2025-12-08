@@ -25,7 +25,9 @@ export abstract class AIService implements IAIService {
         - type is ${type}.
         - correctAnswer type must be type correct with the question type.
       Text is written in ${this.LANGUAGE}.
+      If the question is a multiple choice question, the possible answer is included in the question field, seperated by \\n.
       Make sure all the text is valid for JSON parsing.
+      All of the field value except id must be a string.
       Only return JSON object.
     `;
   }
