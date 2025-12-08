@@ -4,7 +4,7 @@
    1. GLOBAL NAVIGATION (CHUYỂN TAB)
    ========================================= */
 function switchTab(button, tabName) {
-    // 1. Loại bỏ active cũ
+    
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
     // THÊM ĐOẠN NÀY:

@@ -25,7 +25,7 @@ async function getAllUsersAPI() {
    ========================================= */
 function renderStudents(containerId, data) {
     const container = document.getElementById(containerId);
-    if (!container) return; // Nếu không tìm thấy ID thì thoát, tránh lỗi
+    if (!container) return;
 
     if (!data || data.length === 0) {
         container.innerHTML = '<p style="text-align:center; color:#888; width:100%; padding:20px;">No students found.</p>';
@@ -33,10 +33,8 @@ function renderStudents(containerId, data) {
     }
 
     container.innerHTML = data.map(s => {
-        // Xử lý dữ liệu thiếu
         const name = s.name || s.username || 'Unknown User';
         const role = s.role || 'Student';
-        // Avatar mặc định nếu không có ảnh
         const imgSrc = s.img || s.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`;
 
         return `
@@ -58,24 +56,17 @@ function renderStudents(containerId, data) {
    3. CONTROLLER (ĐIỀU KHIỂN CHÍNH)
    ========================================= */
 async function initTeacherPageData() {
-    // Chỉ chạy logic này nếu đang ở trang có chứa grid sinh viên
+   
     if (!document.getElementById('all-students-grid') && !document.getElementById('recent-students-grid')) return;
 
     try {
-        // 1. Lấy dữ liệu
         const allUsers = await getAllUsersAPI();
         
-        // 2. Lọc lấy Student (Tùy chỉnh logic lọc nếu cần)
-        // const studentsOnly = allUsers.filter(u => u.role === 'student');
-        const studentsOnly = allUsers; // Tạm thời lấy hết để test
+        const studentsOnly = allUsers;
 
-        // 3. Render Recent Students (Lấy 4 người đầu)
         renderStudents('recent-students-grid', studentsOnly.slice(0, 4));
-
-        // 4. Render All Students (Tab My Students)
         renderStudents('all-students-grid', studentsOnly);
 
-        // 5. Xử lý hiển thị phân trang (Tùy chọn)
         const pageDiv = document.getElementById('student-pagination');
         if (pageDiv) {
             pageDiv.style.display = studentsOnly.length > 0 ? 'flex' : 'none';
@@ -86,5 +77,4 @@ async function initTeacherPageData() {
     }
 }
 
-// Tự động chạy khi file JS được load và DOM đã sẵn sàng
 document.addEventListener('DOMContentLoaded', initTeacherPageData);

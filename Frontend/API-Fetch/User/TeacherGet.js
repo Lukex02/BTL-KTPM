@@ -45,17 +45,13 @@ async function loadAllTeachers() {
 
         if (!teachersRes || !teachersRes.ok) throw new Error('Failed to fetch teachers list');
         
-        // Xử lý danh sách giáo viên
         allFetchedTeachers = await teachersRes.json();
 
-        // Xử lý danh sách giáo viên đã liên kết của tôi
         myLinkedTeacherIds = [];
         if (myProfileRes && myProfileRes.ok) {
             const myData = await myProfileRes.json();
             
-            // Lấy danh sách teachersInCharge từ API user/self
             if (myData && Array.isArray(myData.teachersInCharge)) {
-                // Chuyển hết về String để so sánh cho chuẩn
                 myLinkedTeacherIds = myData.teachersInCharge.map(id => String(id));
             }
         }
@@ -91,11 +87,8 @@ function renderTeachersByPage(page) {
         const name = teacher.fullname || teacher.username || "Giáo viên";
         const email = teacher.email || "No Email";
         
-        // LOGIC CHECK MỚI: Cực nhanh và chính xác
-        // Kiểm tra ID của giáo viên này có nằm trong danh sách "teachersInCharge" của tôi không
         const isLinked = myLinkedTeacherIds.includes(String(teacher.id));
 
-        // Avatar Logic
         let avatarHTML;
         if (teacher.avatar && teacher.avatar.trim() !== '') {
             avatarHTML = `<img src="${teacher.avatar}" class="teacher-avatar-img" onerror="this.parentNode.innerHTML='<div class=\'avatar-placeholder gradient-1\'>${getInitials(name)}</div>'">`;
@@ -104,7 +97,6 @@ function renderTeachersByPage(page) {
             avatarHTML = `<div class="avatar-placeholder gradient-${colorIdx}">${getInitials(name)}</div>`;
         }
 
-        // Button Logic
         let actionBtn;
         if (isLinked) {
             actionBtn = `
@@ -139,10 +131,6 @@ function renderTeachersByPage(page) {
 
     renderTeacherPaginationInternal(allFetchedTeachers.length, page);
 }
-
-/* =========================================
-   3. HANDLE ACTIONS (LINK/UNLINK)
-   ========================================= */
 
 function openConfirmBar(teacherId, type, teacherName) {
     pendingAction = { teacherId, type, teacherName };

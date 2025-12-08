@@ -4,7 +4,6 @@
    trong tab "Account Settings"
    ========================================= */
 
-// Đổi tên biến URL để tránh trùng
 const SETTINGS_API_URL = "http://localhost:3000/user"; 
 
 function showUpdateMessage(message, type) {
@@ -18,13 +17,12 @@ function showUpdateMessage(message, type) {
     setTimeout(() => { msgBox.style.display = 'none'; }, 3000);
 }
 
-// 1. HÀM LOAD DỮ LIỆU VÀO FORM (GET)
+
 async function loadSettingsForm() {
     const userId = localStorage.getItem('userId');
     if (!userId || !localStorage.getItem('accessToken')) return;
 
     try {
-        // Gọi API
         const response = await authFetch(`${SETTINGS_API_URL}/self`, {
             method: 'GET'
         });
@@ -33,7 +31,6 @@ async function loadSettingsForm() {
 
         const data = await response.json();
 
-        // Điền dữ liệu vào các ô Input có ID mới
         const idInput = document.getElementById('user-id');
         const roleInput = document.getElementById('user-role');
         const nameInput = document.getElementById('user-name');
@@ -55,7 +52,6 @@ async function loadSettingsForm() {
 const updateForm = document.getElementById('form-update-user');
 
 if (updateForm) {
-    // Load dữ liệu ngay khi tìm thấy form
     loadSettingsForm();
 
     updateForm.addEventListener('submit', async (e) => {
@@ -87,7 +83,7 @@ if (updateForm) {
             // Thành công
             if (updateData.username) {
                 localStorage.setItem('username', updateData.username);
-                // Gọi lại hàm của UserGet.js để cập nhật Header ngay lập tức (nếu muốn)
+            
                 if (typeof fetchDashboardProfile === 'function') {
                     fetchDashboardProfile(); 
                 }
@@ -110,12 +106,11 @@ async function loadSettingsForm() {
     if (!userId || !localStorage.getItem('accessToken')) return;
 
     try {
-        // Gọi API
         const response = await authFetch(`${SETTINGS_API_URL}/self`, {
             method: 'GET'
         });
 
-        if (!response.ok) return; // Lỗi thì im lặng, không làm phiền user
+        if (!response.ok) return; 
 
         const data = await response.json();
 
@@ -142,12 +137,10 @@ async function loadSettingsForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const passwordForm = document.getElementById('form-change-password');
-    
-    // Nếu không tìm thấy form (ví dụ đang ở trang khác) thì dừng lại
+
     if (!passwordForm) return;
 
     // 1. XỬ LÝ ẨN/HIỆN MẬT KHẨU (Eye Icon)
-    // Chỉ áp dụng cho các icon bên trong form password này để tránh conflict
     passwordForm.querySelectorAll('.toggle-pass').forEach(icon => {
         icon.addEventListener('click', () => {
             const input = icon.previousElementSibling;
@@ -173,15 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = passwordForm.querySelector('.btn-save');
         const msgBox = document.getElementById('password-msg');
 
-        // Helper hiển thị thông báo
-        // const showMsg = (text, type) => {
-        //     msgBox.innerText = text;
-        //     msgBox.className = `message-box ${type}`; // css class: error hoặc success
-        //     msgBox.style.display = 'block';
-        //     setTimeout(() => msgBox.style.display = 'none', 3000);
-        // };
-
-        // --- VALIDATION ---
         if (newPass !== confirmPass) {
             showUpdateMessage("Mật khẩu xác nhận không khớp!", "error");
             return;
@@ -191,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- CALL API ---
         const userId = localStorage.getItem('userId');
         if (!userId) {
             showUpdateMessage("Lỗi phiên đăng nhập. Hãy đăng nhập lại.", "error");
@@ -203,8 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
 
         try {
-            // Sử dụng authFetch từ auth.js để tự động gắn Token
-            // Endpoint: PUT /user/changePassword (Cần khớp với Backend của bạn)
             const response = await authFetch(`${SETTINGS_API_URL}/changePassword`, {
                 method: 'PUT',
                 body: JSON.stringify({
@@ -214,8 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     confirmNewPassword: confirmPass
                 })
             });
-
-            // authFetch trả về response thô, cần parse json
             const data = await response.json();
 
             if (!response.ok) {
@@ -223,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             showUpdateMessage("Đổi mật khẩu thành công!", "success");
-            // passwordForm.reset(); // Xóa trắng form
 
         } catch (error) {
             console.error(error);
