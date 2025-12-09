@@ -53,3 +53,8 @@ function switchTab(btn, id) {
         fetchAndRenderQuizzes();
     }
 });
+setInterval(async () => {
+
+    await refreshAccessToken();  // Refresh mỗi 14 phút
+
+}, 14 * 60 * 1000);
