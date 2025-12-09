@@ -50,8 +50,8 @@
             
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab(this, 'dashboard')">Dashboard</button>
-                <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz')">Quizz</button>
-                <button class="tab-btn" onclick="switchTab(this, 'teachers')">Teachers</button>
+                <button class="tab-btn" id="btn-quiz" onclick="switchTab(this, 'quizz'); loadUserQuizzes()">Quizz</button>
+                <button class="tab-btn" onclick="switchTab(this, 'teachers'); loadAllTeachers()">Teachers</button>
                 <button class="tab-btn" onclick="switchTab(this, 'message')">Message</button>
                 <button class="tab-btn" onclick="switchTab(this, 'settings')">Settings</button>
             </div>
@@ -64,16 +64,27 @@
                 
                 <div class="stats-grid">
                     <div class="stat-card bg-peach">
-                        <div class="icon-box text-orange"><i class="far fa-play-circle"></i></div>
-                        <div class="stat-info"><h3>957</h3><p>Active Quizz</p></div>
+                        <div class="icon-box text-orange"><i class="fas fa-book-open"></i></div>
+                        <div class="stat-info">
+                            <h3 id="dash-quiz-count">...</h3> 
+                            <p>All Quizzes</p>
+                        </div>
                     </div>
+
                     <div class="stat-card bg-purple">
-                        <div class="icon-box text-purple"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <div class="stat-info"><h3>6</h3><p>Active Teachers</p></div>
+                        <div class="icon-box text-purple"><i class="fas fa-user-check"></i></div>
+                        <div class="stat-info">
+                            <h3 id="dash-sub-teacher-count">...</h3>
+                            <p>Subscribed Teachers</p>
+                        </div>
                     </div>
+
                     <div class="stat-card bg-green">
-                        <div class="icon-box text-green"><i class="fas fa-trophy"></i></div>
-                        <div class="stat-info"><h3>951</h3><p>Completed Quizz</p></div>
+                        <div class="icon-box text-green"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="stat-info">
+                            <h3 id="dash-all-teacher-count">...</h3>
+                            <p>All Teachers</p>
+                        </div>
                     </div>
                 </div>
 
@@ -128,12 +139,12 @@
             </div>
 
             <div id="quizz-content" class="tab-pane">
-                <h3 class="section-title text-center">Dashboard</h3>
+                <!-- <h3 class="section-title text-center">Dashboard</h3>
                 <div class="stats-grid">
                     <div class="stat-card bg-peach"><div class="icon-box text-orange"><i class="far fa-play-circle"></i></div><div class="stat-info"><h3>957</h3><p>Active Quizz</p></div></div>
                     <div class="stat-card bg-purple"><div class="icon-box text-purple"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3>6</h3><p>Active Teachers</p></div></div>
                     <div class="stat-card bg-green"><div class="icon-box text-green"><i class="fas fa-trophy"></i></div><div class="stat-info"><h3>951</h3><p>Completed Quizz</p></div></div>
-                </div>
+                </div> -->
 
                 <div class="section-wrapper">
                     <div class="section-header">
@@ -223,45 +234,85 @@
 
             <div id="settings-content" class="tab-pane">
                 <h3 class="section-title">Account settings</h3>
-                <div class="settings-layout">
-                    <div class="photo-col">
-                        <div class="photo-box">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" id="preview-img">
-                            <label for="upload-input" class="upload-overlay"><i class="fas fa-upload"></i> Upload</label>
-                            <input type="file" id="upload-input" hidden onchange="previewImage(event)">
-                        </div>
-                        <p class="small-note">Image size under 1MB. Ratio 1:1</p>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Full name</label>
-                            <div class="form-row">
-                                <input type="text" class="form-control" value="Lê Nguyễn" placeholder="First name">
-                                <input type="text" class="form-control" value="Nam Khánh" placeholder="Last name">
+
+                <div id="update-msg" class="message-box" style="display:none; margin-bottom: 20px;"></div>
+
+                <form id="form-update-user" style="width: 100%;">
+                    <div class="settings-layout">
+                        <div class="photo-col">
+                            <div class="photo-box">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" id="preview-img">
+                                <label for="upload-input" class="upload-overlay"><i class="fas fa-upload"></i> Upload</label>
+                                <input type="file" id="upload-input" hidden onchange="previewImage(event)">
                             </div>
+                            <p class="small-note">Image size under 1MB. Ratio 1:1</p>
                         </div>
-                        <div class="form-group"><label>Username</label><input type="text" class="form-control" value="namkhanh"></div>
-                        <div class="form-group"><label>Email</label><input type="email" class="form-control" value="namkhanh@example.com"></div>
-                        <div class="form-group"><label>Title</label><input type="text" class="form-control" placeholder="Your title..."></div>
-                        <button class="btn-save">Save Changes</button>
+                        
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" id="user-id" class="form-control" disabled style="background-color: #eee; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Role</label>
+                                <input type="text" id="user-role" class="form-control" disabled style="background-color: #eee; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Full name</label>
+                                <input type="text" id="user-name" class="form-control" placeholder="Enter full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="user-username" class="form-control" placeholder="Enter new username">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="user-email" class="form-control" placeholder="namkhanh@example.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" class="form-control" placeholder="Your title...">
+                            </div>
+
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
                     </div>
-                </div>
+                </form>
 
                 <h3 class="section-title mt-40">Change password</h3>
                 <div class="password-box">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <div class="pass-field"><input type="password" class="form-control"><i class="far fa-eye"></i></div>
-                    </div>
-                    <button class="btn-save">Change Password</button>
+                    <form id="form-change-password" class="password-box">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="current-pass" class="form-control" placeholder="Enter current password" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="new-pass" class="form-control" placeholder="Enter new password (min 6 chars)" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="pass-field">
+                                <input type="password" id="confirm-pass" class="form-control" placeholder="Confirm new password" required>
+                                <i class="far fa-eye toggle-pass"></i>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-save">Update Password</button>
+                    </form>
                 </div>
                 
                 <h3 class="section-title mt-40" style="color: #dc2626;">Danger Zone</h3>
@@ -275,21 +326,39 @@
 
             <div id="quiz-detail-content" class="tab-pane">
                 <div class="detail-card">
-                    <h2 class="text-blue">Calculus 1 - Quiz 1</h2>
-                    <p class="sub-text">Teacher: Wade Warren</p>
+                    <h2 class="text-blue" id="quiz-detail-title">Loading...</h2>
+                    <p class="sub-text" id="quiz-detail-desc">Loading description...</p>
+                    
                     <div class="detail-flex">
                         <div class="video-box">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" class="video-thumb" id="quiz-detail-img">
                             <div class="play-icon"><i class="fas fa-play"></i></div>
                         </div>
-                        <div class="info-box">
-                            <div class="info-line"><span>Date:</span> <span>28/07/2021</span></div>
-                            <div class="info-line"><span>Time Limit:</span> <span>15 Mins</span></div>
-                            <div class="info-line"><span>Attempts:</span> <span>2</span></div>
-                            <div class="info-line"><span>Pass Points:</span> <span>80 Points</span></div>
-                            <div class="btn-row">
-                                <button class="btn-start" onclick="startQuizTaking()">Start Quiz</button>
-                                <button class="btn-back" onclick="backToQuizList()">Go Back</button>
+
+                        <div class="info-box" style="position: relative;">
+                            <div class="info-line"><span>Total Questions:</span> <span id="quiz-detail-q-count">0</span></div>
+                            <div class="info-line"><span>Time Limit:</span> <span>Unset</span></div>
+                            <div class="info-line"><span>Pass Points:</span> <span>50%</span></div>
+                            
+                            <div class="btn-row" style="margin-bottom: 20px;">
+                                <button class="btn-start" id="btn-start-quiz-action">Start Quiz</button>
+                                <button class="btn-back" onclick="backToQuizList()">Go Back List</button>
+                            </div>
+
+                            <div id="mini-result-box" style="display: none; border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 10px;">
+                                <h4 style="font-size: 1rem; margin-bottom: 10px; color: #333;">
+                                    <i class="fas fa-history" style="color: #888; margin-right: 5px;"></i> Latest Result
+                                </h4>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #555;">Score:</span>
+                                    <span id="mini-score" style="font-weight: bold; color: #1A64F0; font-size: 1.1rem;">--</span>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                    <strong style="display:block; margin-bottom:4px; color:#333;">AI Feedback:</strong>
+                                    <span id="mini-feedback">--</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -337,9 +406,23 @@
         <div class="footer-bottom"><p>© 2025 Academic Hub. All rights reserved.</p></div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="teacherRender.js"></script>
-    <script src="messageLogic.js"></script>
-    <script src="settingsLogic.js"></script>
+    <script src="API-Fetch/Auth/Setting.js"></script>
+    <script src="API-Fetch/Auth/auth.js"></script>
+    <script src="API-Fetch/User/UserGet.js"></script>
+    <script src="API-Fetch/User/UserUpdate.js"></script>
+    <script src="API-Fetch/User/TeacherGet.js"></script>
+    <script src="API-Fetch/Assessment/QuizGet.js"></script>
+    <!-- <script src="teacherRender.js"></script> -->
+
+    <div id="action-confirm-bar" class="confirm-bar">
+        <div class="confirm-content">
+            <i class="fas fa-question-circle"></i>
+            <span id="confirm-text">Bạn có chắc chắn muốn thực hiện hành động này?</span>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn-cancel" onclick="closeConfirmBar()">Hủy bỏ</button>
+            <button id="btn-confirm-yes" class="btn-confirm" onclick="executeTeacherAction()">Xác nhận</button>
+        </div>
+    </div>
 </body>
 </html>

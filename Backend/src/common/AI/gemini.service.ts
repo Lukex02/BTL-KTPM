@@ -13,14 +13,14 @@ import {
 
 @Injectable()
 export class GeminiService extends AIService {
-  MODEL = 'gemini-2.0-flash-lite';
+  MODEL = 'gemini-2.5-flash';
   private readonly client = new GoogleGenAI({
     apiKey: 'AIzaSyAR3ZvwI5FjlBkvuFNtRIMSyo70B1obRBk',
   });
 
   async checkServiceOnline(): Promise<boolean> {
     try {
-      return false;
+      // return false;
       await this.client.models.generateContent({
         model: this.MODEL,
         contents: 'Return "Y"',

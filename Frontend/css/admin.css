@@ -1,0 +1,286 @@
+/* =========================================
+   1. RESET & VARIABLES
+   ========================================= */
+:root {
+    --primary: #1A64F0;
+    --primary-dark: #103095;
+    --text-dark: #1D2026;
+    --text-gray: #6E7485;
+    --bg-light: #F5F7FA;
+    --white: #ffffff;
+    --border: #E9EAF0;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    --danger: #D92D20;
+    --success: #039855;
+    --warning: #F79009;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: var(--bg-light); color: var(--text-dark); display: flex; min-height: 100vh; }
+
+/* =========================================
+   2. SIDEBAR (ADMIN)
+   ========================================= */
+.sidebar {
+    width: 260px; height: 100vh; background: #1E1E1E; /* Màu đen cho Admin */
+    color: #fff; position: fixed; left: 0; top: 0; padding: 30px 20px;
+    display: flex; flex-direction: column; z-index: 100;
+}
+.logo-area { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; padding-left: 10px; }
+.logo-icon { font-size: 1.5rem; color: var(--primary); }
+.logo-text { font-size: 1.3rem; font-weight: 700; }
+
+nav a {
+    display: flex; align-items: center; gap: 15px; padding: 14px 20px;
+    color: #A0A0A0; text-decoration: none; border-radius: 8px;
+    margin-bottom: 5px; font-weight: 500; transition: 0.2s;
+}
+nav a:hover, nav a.active { background: var(--primary); color: #fff; }
+nav a i { width: 20px; text-align: center; }
+
+.logout-btn { margin-top: auto; color: #FFB0B0; display: flex; align-items: center; gap: 15px; padding: 14px 20px; text-decoration: none; }
+
+/* =========================================
+   3. MAIN CONTENT
+   ========================================= */
+.main-content { flex: 1; margin-left: 260px; padding: 30px 40px; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+header h2 { font-size: 1.6rem; font-weight: 700; }
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+.search-box { position: relative; width: 300px; }
+.search-box input { width: 100%; padding: 10px 15px 10px 40px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
+.search-box i { position: absolute; left: 15px; top: 13px; color: #999; }
+
+.admin-profile { display: flex; align-items: center; gap: 15px; background: #fff; padding: 5px 15px 5px 5px; border-radius: 30px; border: 1px solid var(--border); }
+.admin-profile img { width: 36px; height: 36px; border-radius: 50%; }
+.admin-profile span { font-weight: 600; font-size: 0.9rem; }
+.notif { position: relative; cursor: pointer; margin-right: 10px; font-size: 1.2rem; color: #666; }
+.notif .dot { position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: red; border-radius: 50%; }
+
+/* =========================================
+   4. DASHBOARD CARDS
+   ========================================= */
+.tab-content { display: none; animation: fadeIn 0.3s; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 30px; }
+.card { background: #fff; border-radius: 12px; padding: 25px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+.stat-card { display: flex; align-items: center; gap: 20px; }
+
+.icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+.blue { background: #EBEBFF; color: var(--primary); }
+.purple { background: #F4EBFF; color: #7F56D9; }
+.orange { background: #FFFAEB; color: #B54708; }
+.green { background: #ECFDF3; color: #027A48; }
+
+.stat-card h3 { font-size: 1.6rem; margin-bottom: 2px; }
+.stat-card p { color: var(--text-gray); font-size: 0.85rem; }
+
+/* Recent Activity */
+.recent-section h3 { margin-bottom: 20px; font-size: 1.1rem; }
+.activity-list { list-style: none; }
+.activity-list li { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+.activity-list li:last-child { border-bottom: none; }
+.time { margin-left: auto; color: #999; font-size: 0.8rem; }
+
+/* =========================================
+   5. TABLES & LISTS
+   ========================================= */
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.btn-primary { background: var(--primary); color: #fff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.btn-outline { background: #fff; border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 10px; }
+
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 15px; background: #F9FAFB; color: #666; font-size: 0.85rem; font-weight: 600; }
+.data-table td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.user-cell { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.avatar-sm { width: 32px; height: 32px; border-radius: 50%; }
+
+.badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badge.active { background: #ECFDF3; color: #027A48; }
+.badge.warning { background: #FFFAEB; color: #B54708; }
+.btn-sm { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+
+/* =========================================
+   6. QUIZ & CONTENT STYLE
+   ========================================= */
+.quiz-list-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; background: #fff; transition: 0.2s; }
+.quiz-list-item:hover { box-shadow: var(--card-shadow); border-color: var(--primary); }
+.q-info h4 { margin-bottom: 5px; font-size: 1rem; }
+.q-info p { color: #888; font-size: 0.85rem; }
+.btn-icon { width: 35px; height: 35px; border: none; border-radius: 6px; cursor: pointer; margin-left: 5px; color: #555; background: #F2F4F7; }
+.btn-icon:hover { background: #E4E7EC; }
+.btn-icon.edit { color: var(--primary); background: #EFF8FF; }
+.btn-icon.delete { color: var(--danger); background: #FEF3F2; }
+
+/* Teacher Grid */
+.teacher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+.teacher-card { background: #fff; border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
+.teacher-card img { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px; }
+.teacher-card h4 { margin-bottom: 5px; }
+.teacher-card p { color: #666; font-size: 0.85rem; margin-bottom: 15px; }
+.t-stats { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; font-size: 0.85rem; background: #F9FAFB; padding: 10px; border-radius: 8px; }
+.btn-block { width: 100%; padding: 8px; background: #fff; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; cursor: pointer; }
+
+/* Upload Zone */
+.upload-zone { border: 2px dashed var(--border); text-align: center; padding: 50px; margin-bottom: 30px; border-radius: 12px; color: #888; }
+.upload-zone i { font-size: 3rem; margin-bottom: 15px; color: #ccc; }
+.upload-zone button { margin-top: 20px; }
+
+/* Tags */
+.tag { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-right: 5px; }
+.tag-blue { background: #EFF8FF; color: #175CD3; }
+.tag-green { background: #ECFDF3; color: #027A48; }
+.tag-red { background: #FEF3F2; color: #B42318; }
+
+/* =========================================
+   7. MODAL & QUIZ DETAIL (FIXED SCROLL)
+   ========================================= */
+
+/* Modal Wrapper */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+
+/* Modal Content: Flex Column + Max Height 85vh */
+.modal-content { background-color: #fff; margin: auto; width: 90%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: slideIn 0.3s; display: flex; flex-direction: column; max-height: 85vh; position: relative; }
+
+/* Header & Body Split */
+.profile-header { padding: 20px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; border-radius: 12px 12px 0 0; flex-shrink: 0; display: flex; align-items: center; gap: 15px; }
+.modal-body { padding: 25px; overflow-y: auto; flex-grow: 1; background: #fff; border-radius: 0 0 12px 12px; }
+
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar { width: 8px; }
+.modal-body::-webkit-scrollbar-track { background: #F1F5F9; }
+.modal-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+
+/* Close Button */
+.close-modal { position: absolute; right: 20px; top: 15px; font-size: 1.5rem; cursor: pointer; color: #999; z-index: 10; transition: 0.2s; }
+.close-modal:hover { color: var(--danger); transform: scale(1.1); }
+
+/* Form Elements inside Modal */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
+.form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; }
+
+/* Quiz Grid & Cards Styling */
+.quiz-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 10px; }
+.quiz-detail-card { background: #fff; border: 1px solid #E0E0E0; border-radius: 10px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.3s ease; }
+.quiz-detail-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--primary); }
+
+/* Typography inside Card */
+.quiz-detail-card h4 { color: var(--text-dark); margin-bottom: 8px; font-size: 1.1rem; font-weight: 700; border-bottom: 2px solid #F1F5F9; padding-bottom: 8px; }
+.quiz-meta { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.quiz-desc { font-size: 0.9rem; color: #475569; margin-bottom: 15px; line-height: 1.5; font-style: italic; background: #F8FAFC; padding: 8px; border-radius: 6px; }
+
+/* Questions List (Dropdown) */
+.question-dropdown { margin-top: 15px; border-top: 1px dashed #CBD5E1; padding-top: 10px; display: none; }
+.question-dropdown.active { display: block; animation: fadeIn 0.3s ease; }
+.q-item { background: #F1F5F9; padding: 10px; border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; }
+.q-item strong { color: var(--primary); display: block; margin-bottom: 4px; }
+.q-correct { color: var(--success); font-weight: 600; font-size: 0.85rem; margin-top: 4px; display: block; }
+
+/* Buttons inside Modal */
+.btn-toggle-q { background: #EFF8FF; color: var(--primary); border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
+.btn-toggle-q:hover { background: #D1E9FF; }
+
+/* =========================================
+   8. QUIZ REPOSITORY BEAUTIFY (NÂNG CẤP GIAO DIỆN QUIZ)
+   ========================================= */
+
+/* Container danh sách */
+#system-quiz-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
+
+/* Thẻ Quiz (Card) - Tạo điểm nhấn với viền trái màu xanh */
+.quiz-list-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #f1f5f9; border-left: 5px solid #1A64F0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+
+/* Hiệu ứng khi di chuột vào thẻ */
+.quiz-list-item:hover { transform: translateX(5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-color: #1A64F0; }
+
+/* Phần thông tin chữ */
+.q-info { flex: 1; padding-right: 20px; }
+.q-info h4 { font-size: 1.15rem; color: #1e293b; margin-bottom: 10px; font-weight: 700; letter-spacing: -0.5px; }
+
+/* Dòng meta info (Tác giả, số câu hỏi...) */
+.q-info p { font-size: 0.9rem; color: #64748b; display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+/* Làm đẹp tên Tác giả (Giáo viên) */
+.q-info strong { color: #1A64F0; background: #eff6ff; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; border: 1px solid #dbeafe; display: inline-flex; align-items: center; gap: 5px; }
+.q-info strong::before { content: '\f51c'; font-family: "Font Awesome 5 Free"; font-weight: 900; font-size: 0.75rem; }
+
+/* Badge hiển thị loại Quiz (Type) */
+.q-type-badge { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500; }
+
+/* Khu vực các nút bấm (Actions) */
+.q-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Style chung cho nút icon */
+.btn-icon { width: 42px; height: 42px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 1.1}
+
+/* =========================================
+   FIX UI: FILTER BAR & QUIZ CARD
+   ========================================= */
+
+/* 1. KHU VỰC FILTER (Làm đẹp 2 ô chọn) */
+.filter-bar { display: flex; align-items: center; gap: 15px; margin-top: 15px; margin-bottom: 25px; }
+
+.filter-bar select {
+    padding: 8px 16px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    /* Thêm icon mũi tên tùy chỉnh (optional) hoặc để mặc định */
+    min-width: 150px;
+}
+
+.filter-bar select:hover { border-color: #1A64F0; background-color: #F8FAFC; }
+.filter-bar select:focus { border-color: #1A64F0; box-shadow: 0 0 0 3px rgba(26, 100, 240, 0.1); }
+
+
+/* 2. QUIZ CARD (Sửa thanh màu xanh bên trái cho mượt) */
+.quiz-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 25px 25px 25px 30px; /* Tăng padding trái để tránh chữ dính vạch màu */
+    border-radius: 12px;
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden; /* Quan trọng để bo góc mượt */
+}
+
+/* Tạo vạch màu xanh bằng ::before thay vì border-left */
+.quiz-list-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px; /* Độ dày của vạch màu */
+    background: #1A64F0;
+    border-radius: 4px 0 0 4px; /* Bo nhẹ góc trái của vạch màu nếu muốn */
+}
+
+/* Hiệu ứng Hover card */
+.quiz-list-item:hover {
+    transform: translateY(-3px); /* Nổi lên nhẹ */
+    box-shadow: 0 10px 20px rgba(26, 100, 240, 0.08);
+    border-color: #E0E7FF;
+}
+
+/* Chỉnh lại khoảng cách tiêu đề cho thoáng */
+.q-info h4 { margin-bottom: 12px; font-size: 1.2rem; }
+
+/* Animations */
+@keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }

@@ -125,6 +125,35 @@
         .form-row { display: flex; gap: 15px; }
         .form-row .input-group { flex: 1; }
 
+        /* MESSAGE BOX STYLING (Cập nhật) */
+        .message-box {
+            padding: 12px 15px;        /* Tăng padding để thoáng hơn */
+            margin-bottom: 25px;       /* Tăng khoảng cách dưới để không dính vào form */
+            border-radius: 8px; 
+            font-size: 0.9rem; 
+            text-align: center; 
+            display: none;             /* Mặc định ẩn */
+            font-weight: 500;
+            animation: fadeIn 0.3s ease-in-out; /* Hiệu ứng hiện ra nhẹ nhàng */
+        }
+
+        .message-box.error { 
+            background: #FEE2E2; 
+            color: #DC2626; 
+            border: 1px solid #FECACA; 
+        }
+
+        .message-box.success { 
+            background: #DCFCE7; 
+            color: #16A34A; 
+            border: 1px solid #BBF7D0; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* --- 6. OPTIONS & BUTTONS --- */
         .options { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -277,16 +306,18 @@
                 
                 <h2>Login</h2>
                 <p class="sub-title">Login to access your travelwise account</p>
+
+                <div id="login-msg" class="message-box"></div>
                 
-                <form>
+                <form id="form-login">
                     <div class="input-group">
-                        <label class="input-label">Email</label>
-                        <input type="email" class="input-field" value="john.doe@gmail.com">
+                        <label class="input-label">Username</label>
+                        <input type="text" id="login-username" class="input-field" value="ngvana" required> 
                     </div>
 
                     <div class="input-group">
                         <label class="input-label">Password</label>
-                        <input type="password" class="input-field" value="password123">
+                        <input type="password" id="login-password" class="input-field" value="123456" required>
                         <i class="far fa-eye-slash toggle-password"></i>
                     </div>
 
@@ -294,11 +325,11 @@
                         <p class="role-label">Login as:</p>
                         <div class="role-options">
                             <label class="role-item">
-                                <input type="radio" name="user_role" value="student" checked>
+                                <input type="radio" name="user_role" value="Student" checked>
                                 <span class="role-box">Student</span>
                             </label>
                             <label class="role-item">
-                                <input type="radio" name="user_role" value="instructor">
+                                <input type="radio" name="user_role" value="teacher">
                                 <span class="role-box">Instructor</span>
                             </label>
                             <label class="role-item">
@@ -379,10 +410,12 @@
         </div>
 
     </div>
+    <script src="API-Fetch/Auth/auth.js"></script>
     <script src="API-Fetch/Auth/AuthPost.js"></script>
-    <script src="script.js"></script>
+    
+     <script src="API-Fetch/Auth/Setting.js"></script>
    <script>
-        // Chỉ giữ lại logic UI (Chuyển form, Toggle Password) ở đây
+       
         const container = document.querySelector('.container');
         document.querySelector('#sign-up-btn').addEventListener('click', () => container.classList.add('sign-up-mode'));
         document.querySelector('#sign-in-btn').addEventListener('click', () => container.classList.remove('sign-up-mode'));
