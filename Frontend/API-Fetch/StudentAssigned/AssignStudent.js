@@ -37,7 +37,7 @@ async function loadAvailableStudents() {
         list.innerHTML = available.map(student => `
             <div class="student-card" style="margin-bottom:20px">
                 <div class="info">
-                    <h4>${student.name || 'Chưa đặt tên'}</h4>
+                    <h4>${student.name || student.username}</h4>
                     <p>@${student.username || student.id}</p>
                    <p style="margin: 5px 0; color: #666; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <i class="fas fa-envelope"></i> ${student.email || 'Chưa có email'}

@@ -3,11 +3,12 @@ const API_BASE_URL = "http://localhost:3000";
 const AUTH_API_URL = `${API_BASE_URL}/auth`;  // Define here if not global from auth.js
 
 async function refreshAccessToken() {
+    console.log('Refresh called')
     const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-        window.location.href = 'login.html';
-        return null;
-    }
+    // if (!refreshToken) {
+    //     window.location.href = 'login.html';
+    //     return null;
+    // }
 
     try {
         const response = await fetch(`${AUTH_API_URL}/refresh`, {
@@ -34,17 +35,17 @@ async function refreshAccessToken() {
         } else {
             // Chỉ khi thực sự bị từ chối mới logout
             console.error("Refresh token bị từ chối:", response.status);
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            window.location.href = 'login.html';
+            // localStorage.removeItem('accessToken');
+            // localStorage.removeItem('refreshToken');
+            // window.location.href = 'login.html';
             return null;
         }
     } catch (error) {
         console.error("Lỗi mạng khi refresh token:", error);
         // Chỉ logout khi thực sự lỗi mạng nghiêm trọng, không phải do token hết hạn
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        window.location.href = 'login.html';
+        // localStorage.removeItem('accessToken');
+        // localStorage.removeItem('refreshToken');
+        // window.location.href = 'login.html';
         return null;
     }
 }
